@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 尝试自动播放背景音乐（可能受浏览器策略限制）
     function tryPlayMusic() {
         if (backgroundMusic) {
-            backgroundMusic.volume = 0.3; // 设置音量为30%
+            backgroundMusic.volume = 0.8; // 设置音量为60%
             backgroundMusic.play().catch(error => {
                 console.log('自动播放失败，等待用户交互:', error);
             });
@@ -165,11 +165,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// 性能优化：检测设备类型
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+const isLowPerformance = isMobile || window.innerWidth < 768;
+
 // 创建粒子效果
 function createParticles() {
     const particlesContainer = document.getElementById('particles');
-    const particleCount = 150;
-    const batchSize = 30;
+    // 根据设备性能调整粒子数量
+    const particleCount = isLowPerformance ? 50 : 100;
+    const batchSize = isLowPerformance ? 10 : 20;
     let createdCount = 0;
     
     // 使用requestAnimationFrame批量创建粒子，提高性能
@@ -183,7 +188,9 @@ function createParticles() {
         createdCount = batchEnd;
         
         if (createdCount < particleCount) {
-            requestAnimationFrame(createParticleBatch);
+            // 在低性能设备上增加延迟，减少CPU负担
+            const delay = isLowPerformance ? 50 : 16;
+            setTimeout(createParticleBatch, delay);
         }
     }
     
@@ -227,18 +234,22 @@ function createSingleParticle() {
 
 // 创建更多发光圆圈
 function createMoreGlowCircles() {
-    const circleCount = 6;
+    // 根据设备性能调整圆圈数量
+    const circleCount = isLowPerformance ? 2 : 3;
+    
+    // 使用DocumentFragment优化DOM操作
+    const fragment = document.createDocumentFragment();
     
     for (let i = 0; i < circleCount; i++) {
         const circle = document.createElement('div');
         circle.classList.add('glow-circle');
         
-        // 随机大小和位置
-        const size = Math.random() * 200 + 100;
+        // 随机位置和参数，根据设备性能调整
         const top = Math.random() * 100;
         const left = Math.random() * 100;
-        const duration = Math.random() * 20 + 15;
-        const delay = Math.random() * 5;
+        const size = isLowPerformance ? Math.random() * 100 + 50 : Math.random() * 150 + 80; // 减小尺寸
+        const duration = Math.random() * 25 + 20; // 增加持续时间减少更新频率
+        const delay = Math.random() * 8; // 增加延迟分散更新
         
         // 从CSS变量获取颜色
         const root = document.documentElement;
@@ -247,7 +258,7 @@ function createMoreGlowCircles() {
         
         // 随机选择主色或辅助色
         const color = Math.random() > 0.5 ? primaryColor : secondaryColor;
-        const opacity = Math.random() * 0.15 + 0.05;
+        const opacity = isLowPerformance ? Math.random() * 0.08 + 0.02 : Math.random() * 0.12 + 0.03; // 降低透明度
         
         // 设置样式
         circle.style.width = `${size}px`;
@@ -258,20 +269,27 @@ function createMoreGlowCircles() {
         circle.style.animationDuration = `${duration}s`;
         circle.style.animationDelay = `${delay}s`;
         
+        // 在低性能设备上简化模糊效果
+        const blurAmount = isLowPerformance ? Math.random() * 5 + 3 : Math.random() * 10 + 5;
+        circle.style.filter = `blur(${blurAmount}px)`;
+        
         // 随机方向
         if (Math.random() > 0.5) {
             circle.style.animationDirection = 'reverse';
         }
         
-        document.body.appendChild(circle);
+        fragment.appendChild(circle);
     }
+    
+    document.body.appendChild(fragment);
 }
 
 // 创建星空背景
 function createStars() {
     const starsContainer = document.getElementById('stars');
-    const starCount = 400;
-    const batchSize = 50;
+    // 根据设备性能调整星星数量
+    const starCount = isLowPerformance ? 100 : 200;
+    const batchSize = isLowPerformance ? 20 : 30;
     let createdCount = 0;
     
     // 批量创建星星以提高性能
@@ -302,9 +320,11 @@ function createStars() {
             star.style.setProperty('--twinkle-duration', `${duration}s`);
             star.style.animationDelay = `${delay}s`;
             
-            // 根据大小设置不同的Z轴深度，增加3D效果
-            const zIndex = Math.floor(size * 3);
-            star.style.zIndex = zIndex;
+            // 在低性能设备上简化3D效果
+            if (!isLowPerformance) {
+                const zIndex = Math.floor(size * 3);
+                star.style.zIndex = zIndex;
+            }
             
             fragment.appendChild(star);
         }
@@ -313,7 +333,9 @@ function createStars() {
         createdCount = batchEnd;
         
         if (createdCount < starCount) {
-            requestAnimationFrame(createStarBatch);
+            // 在低性能设备上增加延迟
+            const delay = isLowPerformance ? 100 : 16;
+            setTimeout(createStarBatch, delay);
         }
     }
     
@@ -501,21 +523,35 @@ function createParticleTrails() {
     }
     
     function createTrailPoint(x, y, color, fragment) {
+        // 在低性能设备上减少轨迹点创建频率
+        if (isLowPerformance && Math.random() > 0.5) return;
+        
         const trailPoint = document.createElement('div');
         trailPoint.classList.add('particle-trail');
         trailPoint.style.left = `${x}px`;
         trailPoint.style.top = `${y}px`;
         trailPoint.style.background = color;
-        trailPoint.style.opacity = '0.3';
+        trailPoint.style.opacity = '0.2'; // 降低透明度以减少视觉负担
+        
+        // 减小粒子大小
+        const size = isLowPerformance ? Math.random() * 2 + 1 : Math.random() * 3 + 1;
+        trailPoint.style.width = `${size}px`;
+        trailPoint.style.height = `${size}px`;
         
         fragment.appendChild(trailPoint);
         
-        // 200ms后移除轨迹点
+        // 动画结束后移除，在低性能设备上使用更短的持续时间
+        const duration = isLowPerformance ? 150 : 200;
         setTimeout(() => {
             if (trailPoint.parentNode) {
-                trailPoint.parentNode.removeChild(trailPoint);
+                // 使用requestAnimationFrame优化DOM操作
+                requestAnimationFrame(() => {
+                    if (trailPoint.parentNode) {
+                        trailPoint.parentNode.removeChild(trailPoint);
+                    }
+                });
             }
-        }, 200);
+        }, duration);
     }
     
     // 开始更新轨迹
@@ -524,7 +560,8 @@ function createParticleTrails() {
 
 // 创建动态光束效果
 function createBeams() {
-    const beamCount = 10;
+    // 根据设备性能调整光束数量
+    const beamCount = isLowPerformance ? 2 : 4;
     const fragment = document.createDocumentFragment();
     
     for (let i = 0; i < beamCount; i++) {
@@ -532,22 +569,20 @@ function createBeams() {
         beam.classList.add('beam');
         
         // 设置光束样式
-        const width = Math.random() * 300 + 100;
-        const height = Math.random() * 3 + 1;
+        const width = Math.random() * 200 + 50; // 减小宽度
+        const height = Math.random() * 2 + 1; // 减小高度
         const top = Math.random() * 100;
         const left = Math.random() * 100;
         const angle = Math.random() * 360;
-        const duration = Math.random() * 20 + 10;
-        const delay = Math.random() * 5;
+        const duration = Math.random() * 30 + 20; // 增加持续时间减少更新频率
+        const delay = Math.random() * 8; // 增加延迟分散更新
         
         // 从CSS变量获取颜色
         const root = document.documentElement;
         const primaryColor = getComputedStyle(root).getPropertyValue('--primary-color').trim();
-        const secondaryColor = getComputedStyle(root).getPropertyValue('--secondary-color').trim();
         
-        // 随机选择颜色
-        const color = Math.random() > 0.7 ? secondaryColor : primaryColor;
-        const opacity = Math.random() * 0.1 + 0.05;
+        // 降低透明度
+        const opacity = Math.random() * 0.08 + 0.03;
         
         // 应用样式
         beam.style.position = 'absolute';
@@ -555,10 +590,14 @@ function createBeams() {
         beam.style.height = `${height}px`;
         beam.style.top = `${top}%`;
         beam.style.left = `${left}%`;
-        beam.style.background = `linear-gradient(90deg, transparent, ${color}${Math.round(opacity * 255).toString(16).padStart(2, '0')}, transparent)`;
+        beam.style.background = `linear-gradient(90deg, transparent, ${primaryColor}${Math.round(opacity * 255).toString(16).padStart(2, '0')}, transparent)`;
         beam.style.transform = `rotate(${angle}deg)`;
         beam.style.transformOrigin = 'left center';
-        beam.style.filter = 'blur(2px)';
+        
+        // 在低性能设备上简化模糊效果
+        const blurAmount = isLowPerformance ? '1px' : '2px';
+        beam.style.filter = `blur(${blurAmount})`;
+        
         beam.style.animation = `beamGlow ${duration}s infinite ease-in-out`;
         beam.style.animationDelay = `${delay}s`;
         beam.style.zIndex = '1';
@@ -711,15 +750,18 @@ function throttle(func, limit) {
     };
 }
 
-// 窗口大小变化时重新计算布局
+// 窗口大小变化时优化处理
 window.addEventListener('resize', throttle(function() {
-    // 移除所有动态创建的元素
-    document.querySelectorAll('.glow-circle:not(.circle-1):not(.circle-2)').forEach(el => el.remove());
-    document.querySelectorAll('.beam').forEach(el => el.remove());
-    
-    // 重新创建元素
-    setTimeout(() => {
-        createMoreGlowCircles();
-        createBeams();
-    }, 100);
-}, 200));
+    // 在低性能设备上减少重新创建频率
+    if (!isLowPerformance) {
+        // 移除所有动态创建的元素
+        document.querySelectorAll('.glow-circle:not(.circle-1):not(.circle-2)').forEach(el => el.remove());
+        document.querySelectorAll('.beam').forEach(el => el.remove());
+        
+        // 重新创建元素
+        setTimeout(() => {
+            createMoreGlowCircles();
+            createBeams();
+        }, 100);
+    }
+}, 300)); // 增加节流时间
