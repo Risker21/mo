@@ -55,6 +55,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // 添加星空背景
     createStars();
     
+    // 处理背景音乐
+    const backgroundMusic = document.getElementById('backgroundMusic');
+    
+    // 尝试自动播放背景音乐（可能受浏览器策略限制）
+    function tryPlayMusic() {
+        if (backgroundMusic) {
+            backgroundMusic.volume = 0.3; // 设置音量为30%
+            backgroundMusic.play().catch(error => {
+                console.log('自动播放失败，等待用户交互:', error);
+            });
+        }
+    }
+    
+    // 立即尝试播放
+    tryPlayMusic();
+    
+    // 添加用户交互事件以触发播放
+    document.addEventListener('click', tryPlayMusic, { once: true });
+    document.addEventListener('keydown', tryPlayMusic, { once: true });
+    document.addEventListener('touchstart', tryPlayMusic, { once: true });
+    
     // 添加鼠标光晕效果
     document.addEventListener('mousemove', throttle(function(e) {
         if (isAnimating) {
