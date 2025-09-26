@@ -1,53 +1,1145 @@
 /* 全局样式重置 */
+/* 基础重置 */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* 根元素样式 */
+/* 主题颜色系统 - 重新设计以增强文字突出效果 */
 :root {
+    /* 核心颜色 - 高对比度设计 */
     --primary-color: #00f7ff;
     --secondary-color: #ff00c8;
     --accent-color: #ffea00;
     --text-color: #ffffff;
+    
+    /* TRAE logo 风格颜色 */
+    --logo-bg-color: #00ff6a;
+    --logo-text-color: #000000;
+    --logo-font-weight: 900;
+    --logo-letter-spacing: -1px;
+    
+    /* 背景渐变 */
     --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-    /* 星空背景变量 */
-    --star-color-1: #ffffff;
-    --star-color-2: #00f7ff;
-    --star-color-3: #ffea00;
-    --star-size-small: 1px;
-    --star-size-medium: 2px;
-    --star-size-large: 3px;
+    
+    /* 增强发光效果变量，提高可读性 */
+    --theme-glow-1: 0 0 15px rgba(255, 255, 255, 0.8);
+    --theme-glow-2: 0 0 25px currentColor, 0 0 40px rgba(255, 255, 255, 0.6);
+    --theme-glow-hover: 0 0 35px currentColor, 0 0 50px rgba(255, 255, 255, 0.8);
+    
+    /* 文字间距和大小 */
+    --text-margin: 1.2rem 0;
+    --text-padding: 0.5rem 1rem;
+    --text-font-size: clamp(1.5rem, 8vw, 4rem);
+    --text-letter-spacing: 2px;
+    
+    /* 文字阴影强度变量 - 提高对比度 */
+    --text-shadow-base: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
 }
 
-/* 基础样式 */
-body {
-    font-family: 'Arial', sans-serif;
-    background: var(--bg-gradient);
-    min-height: 100vh;
-    overflow-x: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    margin: 0;
-    padding: 0;
+/* 国庆节主题 */
+.theme-nationalday {
+    --primary-color: #ff0000;
+    --secondary-color: #ffd700;
+    --accent-color: #ffffff;
+    --bg-gradient: linear-gradient(135deg, #000033, #000066, #000033);
+    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(255, 0, 0, 0.5), 0 0 45px rgba(255, 215, 0, 0.3);
 }
 
-/* 主容器 */
-.container {
+/* 国庆节主题特定样式 */
+.theme-nationalday #stars-container,
+.theme-nationalday .particles-container {
+    display: none;
+}
+
+/* 国庆节特色：国旗元素 */
+.theme-nationalday .national-flag {
+    display: block;
+    position: absolute;
+    width: 30px;
+    height: 20px;
+    background: var(--primary-color);
+    border: 1px solid var(--secondary-color);
+    animation: float-flag 8s ease-in-out infinite;
+    transform-origin: center top;
+}
+
+.theme-nationalday .national-flag::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 48%, var(--secondary-color) 49%, var(--secondary-color) 51%, transparent 52%);
+    background-size: 10px 10px;
+}
+
+/* 为不同位置的国旗设置不同的动画延迟和位置 */
+.theme-nationalday .flag-1 { top: 10%; left: 5%; animation-delay: 0s; }
+.theme-nationalday .flag-2 { top: 15%; left: 15%; animation-delay: 0.5s; }
+.theme-nationalday .flag-3 { top: 5%; left: 25%; animation-delay: 1s; }
+.theme-nationalday .flag-4 { top: 20%; left: 35%; animation-delay: 1.5s; }
+.theme-nationalday .flag-5 { top: 10%; left: 45%; animation-delay: 2s; }
+.theme-nationalday .flag-6 { top: 25%; left: 55%; animation-delay: 2.5s; }
+.theme-nationalday .flag-7 { top: 15%; left: 65%; animation-delay: 3s; }
+.theme-nationalday .flag-8 { top: 30%; left: 75%; animation-delay: 3.5s; }
+.theme-nationalday .flag-9 { top: 20%; left: 85%; animation-delay: 4s; }
+.theme-nationalday .flag-10 { top: 35%; left: 95%; animation-delay: 4.5s; }
+.theme-nationalday .flag-11 { bottom: 10%; left: 5%; animation-delay: 5s; }
+.theme-nationalday .flag-12 { bottom: 15%; left: 15%; animation-delay: 5.5s; }
+.theme-nationalday .flag-13 { bottom: 5%; left: 25%; animation-delay: 6s; }
+.theme-nationalday .flag-14 { bottom: 20%; left: 35%; animation-delay: 6.5s; }
+.theme-nationalday .flag-15 { bottom: 10%; left: 45%; animation-delay: 7s; }
+.theme-nationalday .flag-16 { bottom: 25%; left: 55%; animation-delay: 7.5s; }
+.theme-nationalday .flag-17 { bottom: 15%; left: 65%; animation-delay: 8s; }
+.theme-nationalday .flag-18 { bottom: 30%; left: 75%; animation-delay: 8.5s; }
+.theme-nationalday .flag-19 { bottom: 20%; left: 85%; animation-delay: 9s; }
+.theme-nationalday .flag-20 { bottom: 35%; left: 95%; animation-delay: 9.5s; }
+
+/* 国庆节特色：烟花容器 */
+.theme-nationalday .fireworks-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* 国庆节特色：烟花效果 */
+.theme-nationalday .firework {
+    position: absolute;
+    bottom: 0;
+    background: var(--secondary-color);
+    border-radius: 50%;
+    opacity: 1;
+    animation: firework-launch 2s ease-out forwards;
+}
+
+/* 国庆节特色：文字效果 */
+.theme-nationalday .text-line {
+    text-shadow: 0 0 15px var(--primary-color), 0 0 30px var(--secondary-color), 0 0 45px rgba(255, 255, 255, 0.5);
+    animation: national-glow 3s ease-in-out infinite alternate;
+}
+
+/* 周一主题 - 太空科技风格 */
+.theme-monday {
+    --primary-color: #00ffcc;
+    --secondary-color: #6a00ff;
+    --accent-color: #ff00cc;
+    --bg-gradient: linear-gradient(135deg, #050020, #1a0b3c, #050020);
+    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(0, 255, 204, 0.5), 0 0 45px rgba(106, 0, 255, 0.3);
+}
+
+/* 中秋节主题 */
+.theme-midautumn {
+    --primary-color: #f1c40f;
+    --secondary-color: #e74c3c;
+    --accent-color: #3498db;
+    --bg-gradient: linear-gradient(135deg, #0a0a1f, #1a1a3f, #0a0a1f);
+    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(241, 196, 15, 0.5), 0 0 45px rgba(231, 76, 60, 0.3);
+}
+
+/* 中秋节主题特定样式 */
+.theme-midautumn #stars-container,
+.theme-midautumn .particles-container {
+    display: none;
+}
+
+/* 中秋节特色：月亮元素 */
+.theme-midautumn .moon {
+    position: absolute;
+    top: 10%;
+    left: 80%;
+    width: 150px;
+    height: 150px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    box-shadow: 0 0 60px var(--primary-color), 0 0 120px rgba(241, 196, 15, 0.3);
+    animation: moon-rotate 20s linear infinite;
+}
+
+/* 中秋节特色：月亮光晕 */
+.theme-midautumn .moon-glow {
+    position: absolute;
+    top: 10%;
+    left: 80%;
+    width: 150px;
+    height: 150px;
+    background: transparent;
+    border-radius: 50%;
+    box-shadow: 0 0 80px var(--primary-color), 0 0 160px rgba(241, 196, 15, 0.2);
+    animation: moon-glow-pulse 4s ease-in-out infinite;
+    z-index: -1;
+}
+
+/* 中秋节特色：月饼元素 */
+.theme-midautumn .mooncake {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: #d4a017;
+    border-radius: 50%;
+    border: 3px solid #8b4513;
+    animation: float-mooncake 8s ease-in-out infinite;
+}
+
+.theme-midautumn .mooncake::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, #e3c989 0%, #d4a017 70%);
+    border-radius: 50%;
+}
+
+.theme-midautumn .mooncake::after {
+    content: '福';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #8b4513;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+/* 不同位置的月饼 */
+.theme-midautumn .mooncake-1 { bottom: 10%; left: 10%; animation-delay: 0s; }
+.theme-midautumn .mooncake-2 { bottom: 5%; left: 25%; animation-delay: 2s; }
+.theme-midautumn .mooncake-3 { bottom: 15%; left: 40%; animation-delay: 4s; }
+
+/* 中秋节特色：灯笼元素 */
+.theme-midautumn .lantern {
+    position: absolute;
+    width: 60px;
+    height: 80px;
+    background: var(--secondary-color);
+    border-radius: 50% 50% 10% 10%;
+    border: 2px solid #333;
+    animation: lantern-swing 4s ease-in-out infinite;
+    transform-origin: top center;
+}
+
+.theme-midautumn .lantern::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 20px;
+    background: #333;
+}
+
+.theme-midautumn .lantern::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    box-shadow: 0 0 20px var(--primary-color);
+}
+
+/* 不同位置的灯笼 */
+.theme-midautumn .lantern-1 { top: 20%; left: 15%; animation-delay: 0s; }
+.theme-midautumn .lantern-2 { top: 30%; left: 25%; animation-delay: 1s; }
+.theme-midautumn .lantern-3 { top: 25%; left: 35%; animation-delay: 2s; }
+.theme-midautumn .lantern-4 { top: 35%; left: 45%; animation-delay: 3s; }
+
+/* 中秋节特色：文字效果 */
+.theme-midautumn .text-line {
+    text-shadow: 0 0 15px var(--primary-color), 0 0 30px rgba(241, 196, 15, 0.7), 0 0 45px rgba(231, 76, 60, 0.5);
+    animation: midautumn-glow 3s ease-in-out infinite alternate;
+}
+
+/* 周二主题 - 自然清新风格 */
+.theme-tuesday {
+    --primary-color: #00ff9d;
+    --secondary-color: #00a8ff;
+    --accent-color: #ffeb3b;
+    --bg-gradient: linear-gradient(135deg, #004d40, #006064, #0097a7);
+    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(0, 255, 157, 0.5), 0 0 45px rgba(0, 168, 255, 0.3);
+}
+
+/* 周三主题 - 活力四射风格 */
+.theme-wednesday {
+    --primary-color: #ff4081;
+    --secondary-color: #303f9f;
+    --accent-color: #ffab00;
+    --bg-gradient: linear-gradient(135deg, #311b92, #5c6bc0, #311b92);
+    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(255, 64, 129, 0.5), 0 0 45px rgba(48, 63, 159, 0.3);
+}
+
+/* 周三主题 - 波浪动态风格特定样式 */
+.theme-wednesday #stars-container,
+.theme-wednesday .particles-container {
+    display: none;
+}
+
+/* 周三特色：波浪效果 */
+.theme-wednesday .wave {
+    display: block;
+    position: absolute;
+    width: 200%;
+    height: 100px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    opacity: 0.3;
+    transform-origin: center bottom;
+    animation: 
+        wave 10s ease-in-out infinite alternate,
+        color-shift 15s ease-in-out infinite alternate;
+}
+
+.theme-wednesday .wave-1 {
+    top: 30%;
+    left: -50%;
+    animation-delay: 0s, 0s;
+}
+
+.theme-wednesday .wave-2 {
+    top: 50%;
+    left: -50%;
+    background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+    animation: 
+        wave 15s ease-in-out infinite alternate-reverse,
+        color-shift 12s ease-in-out infinite alternate;
+    animation-delay: 0.5s, 0.5s;
+}
+
+.theme-wednesday .wave-3 {
+    top: 70%;
+    left: -50%;
+    background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+    animation: 
+        wave 12s ease-in-out infinite alternate,
+        color-shift 18s ease-in-out infinite alternate;
+    animation-delay: 1s, 1s;
+}
+
+/* 周三特色：新增波浪 */
+.theme-wednesday .wave-4 {
+    display: block;
+    position: absolute;
+    width: 200%;
+    height: 50px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    opacity: 0.2;
+    top: 10%;
+    left: -50%;
+    transform-origin: center bottom;
+    animation: 
+        wave 8s ease-in-out infinite alternate-reverse,
+        color-shift 10s ease-in-out infinite alternate;
+    animation-delay: 0.2s, 0.2s;
+}
+
+/* 周三特色：文字弹跳效果 */
+.theme-wednesday .text-line {
+    text-shadow: 0 0 15px var(--primary-color), 0 0 25px rgba(255, 64, 129, 0.5);
+    animation: text-bounce 5s ease-in-out infinite;
+}
+
+.theme-wednesday .text-line[data-line="1"] {
+    animation-delay: 0s;
+}
+
+.theme-wednesday .text-line[data-line="2"] {
+    animation-delay: 0.5s;
+}
+
+.theme-wednesday .text-line[data-line="3"] {
+    animation-delay: 1s;
+}
+
+/* 周四主题 - 复古温暖风格 */
+.theme-thursday {
+    --primary-color: #ff9800;
+    --secondary-color: #795548;
+    --accent-color: #ffeb3b;
+    --bg-gradient: linear-gradient(135deg, #3e2723, #5d4037, #8d6e63);
+    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(255, 152, 0, 0.5), 0 0 45px rgba(121, 85, 72, 0.3);
+}
+
+/* 周四主题 - 温暖光斑风格特定样式 */
+.theme-thursday #stars-container,
+.theme-thursday .particles-container {
+    display: none;
+}
+
+/* 周四特色：温暖光斑效果 */
+.theme-thursday .light-spot {
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(50px);
+    opacity: 0.5;
+    animation: spot-pulse 8s ease-in-out infinite alternate, spot-move 20s linear infinite;
+}
+
+.theme-thursday .spot-1 {
+    width: 300px;
+    height: 300px;
+    background: var(--primary-color);
+    top: -100px;
+    left: -100px;
+    animation-delay: 0s, 0s;
+}
+
+.theme-thursday .spot-2 {
+    width: 250px;
+    height: 250px;
+    background: var(--secondary-color);
+    bottom: -50px;
+    right: -50px;
+    animation-delay: 2s, 5s;
+}
+
+.theme-thursday .spot-3 {
+    width: 200px;
+    height: 200px;
+    background: var(--accent-color);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: 1s, 10s;
+}
+
+/* 周四特色：新增光斑 */
+.theme-thursday .spot-4 {
+    display: block;
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.4;
+    top: 20%;
+    right: 20%;
+    animation: spot-pulse 6s ease-in-out infinite alternate, spot-move 15s linear infinite reverse;
+    animation-delay: 1.5s, 2s;
+}
+
+/* 周四特色：木纹纹理背景 */
+.theme-thursday body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(0, 0, 0, 0.1),
+        rgba(0, 0, 0, 0.1) 10px,
+        rgba(0, 0, 0, 0.05) 10px,
+        rgba(0, 0, 0, 0.05) 20px
+    );
+    pointer-events: none;
     z-index: 1;
 }
 
-/* 星空背景容器 */
+/* 周四特色：文字温暖发光效果 */
+.theme-thursday .text-line {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 0 0 15px var(--primary-color), 0 0 30px rgba(255, 152, 0, 0.3);
+    animation: warm-glow 4s ease-in-out infinite alternate;
+}
+
+/* 周五主题 - 霓虹派对风格 */
+.theme-friday {
+    --primary-color: #ff00cc;
+    --secondary-color: #00ffff;
+    --accent-color: #ffff00;
+    --bg-gradient: linear-gradient(135deg, #1a001a, #00004d, #1a001a);
+    --text-shadow-base: 0 0 20px var(--primary-color), 0 0 40px rgba(255, 0, 204, 0.6), 0 0 60px rgba(0, 255, 255, 0.4);
+}
+
+/* 周五主题 - 霓虹灯效果特定样式 */
+.theme-friday #stars-container,
+.theme-friday .particles-container {
+    display: none;
+}
+
+/* 周五特色：霓虹灯线条 */
+.theme-friday .neon-line {
+    display: block;
+    position: absolute;
+    background: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+    animation: neon-pulse 2s ease-in-out infinite alternate;
+}
+
+.theme-friday .line-1 {
+    width: 2px;
+    height: 100%;
+    top: 0;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.theme-friday .line-2 {
+    width: 2px;
+    height: 100%;
+    top: 0;
+    right: 20%;
+    background: var(--secondary-color);
+    box-shadow: 0 0 10px var(--secondary-color), 0 0 20px var(--secondary-color);
+    animation-delay: 0.5s;
+}
+
+.theme-friday .line-3 {
+    width: 100%;
+    height: 2px;
+    top: 30%;
+    left: 0;
+    background: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
+    animation-delay: 1s;
+}
+
+.theme-friday .line-4 {
+    width: 100%;
+    height: 2px;
+    bottom: 30%;
+    left: 0;
+    background: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+    animation-delay: 1.5s;
+}
+
+/* 周五特色：新增霓虹灯效果 */
+.theme-friday .neon-circle {
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid var(--secondary-color);
+    box-shadow: 0 0 15px var(--secondary-color), 0 0 30px rgba(0, 255, 255, 0.5);
+    animation: neon-pulse 3s ease-in-out infinite alternate, rotate 20s linear infinite;
+}
+
+.theme-friday .neon-circle-1 {
+    width: 150px;
+    height: 150px;
+    top: 20%;
+    left: 30%;
+    opacity: 0.6;
+}
+
+.theme-friday .neon-circle-2 {
+    width: 100px;
+    height: 100px;
+    bottom: 15%;
+    right: 25%;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 15px var(--accent-color), 0 0 30px rgba(255, 255, 0, 0.5);
+    opacity: 0.5;
+}
+
+/* 周五特色：网格背景 */
+.theme-friday body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 周五特色：文字霓虹灯闪烁效果 */
+.theme-friday .text-line {
+    text-shadow: 0 0 5px #fff, 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+    animation: neon-flicker 1.5s infinite alternate;
+}
+
+/* 周六主题 - 梦幻多彩风格 */
+.theme-saturday {
+    --primary-color: #ea80fc;
+    --secondary-color: #82b1ff;
+    --accent-color: #b9f6ca;
+    --bg-gradient: linear-gradient(135deg, #651fff, #536dfe, #8c9eff);
+    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(234, 128, 252, 0.5), 0 0 45px rgba(130, 177, 255, 0.3);
+}
+
+/* 周六主题 - 自然风景风格特定样式 */
+.theme-saturday #stars-container,
+.theme-saturday .particles-container {
+    display: none;
+}
+
+/* 周六特色：梦幻云朵效果 */
+.theme-saturday .cloud {
+    display: block;
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    filter: blur(10px);
+}
+
+.theme-saturday .cloud-1 {
+    width: 150px;
+    height: 100px;
+    top: 10%;
+    left: -100px;
+    animation: float-cloud 60s linear infinite, cloud-pulse 8s ease-in-out infinite alternate;
+}
+
+.theme-saturday .cloud-2 {
+    width: 200px;
+    height: 120px;
+    top: 15%;
+    right: -150px;
+    animation: float-cloud 80s linear infinite reverse, cloud-pulse 10s ease-in-out infinite alternate;
+    animation-delay: 0s, 2s;
+}
+
+.theme-saturday .cloud-3 {
+    width: 100px;
+    height: 70px;
+    bottom: 10%;
+    left: 30%;
+    animation: float-cloud 40s linear infinite, cloud-pulse 6s ease-in-out infinite alternate;
+    animation-delay: 0s, 1s;
+}
+
+/* 周六特色：新增云朵 */
+.theme-saturday .cloud-4 {
+    display: block;
+    position: absolute;
+    width: 120px;
+    height: 80px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.7;
+    filter: blur(8px);
+    bottom: 20%;
+    right: 10%;
+    animation: float-cloud 70s linear infinite, cloud-pulse 7s ease-in-out infinite alternate;
+    animation-delay: 0s, 1.5s;
+}
+
+/* 周六特色：彩虹光晕 */
+.theme-saturday .rainbow-glow {
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.5;
+    filter: blur(80px);
+    animation: rainbow-shift 20s ease-in-out infinite alternate;
+}
+
+.theme-saturday .rainbow-glow-1 {
+    width: 400px;
+    height: 400px;
+    top: -200px;
+    right: -200px;
+    background: var(--primary-color);
+}
+
+.theme-saturday .rainbow-glow-2 {
+    width: 300px;
+    height: 300px;
+    bottom: -150px;
+    left: -150px;
+    background: var(--secondary-color);
+    animation-delay: 2s;
+}
+
+/* 周六特色：文字梦幻渐变效果 */
+.theme-saturday .text-line {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color), var(--primary-color));
+    background-size: 400% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradient-shift 10s ease-in-out infinite, dreamy-float 6s ease-in-out infinite;
+}
+
+/* 周日主题 - 宇宙星空风格 */
+.theme-sunday {
+    --primary-color: #00d5ff;
+    --secondary-color: #7c4dff;
+    --accent-color: #ff4081;
+    --bg-gradient: linear-gradient(135deg, #000a12, #1a237e, #000a12);
+    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(0, 213, 255, 0.5), 0 0 45px rgba(124, 77, 255, 0.3);
+}
+
+/* 周日主题 - 宇宙星云风格特定样式 */
+.theme-sunday #stars-container {
+    display: block;
+}
+
+.theme-sunday .particles-container {
+    display: none;
+}
+
+/* 周日特色：星云效果 */
+.theme-sunday .nebula {
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.3;
+    animation: nebula-pulse 15s ease-in-out infinite alternate;
+}
+
+.theme-sunday .nebula-1 {
+    width: 400px;
+    height: 400px;
+    top: -200px;
+    left: 20%;
+    background: var(--primary-color);
+}
+
+.theme-sunday .nebula-2 {
+    width: 300px;
+    height: 300px;
+    bottom: -150px;
+    right: 20%;
+    background: var(--secondary-color);
+    animation-delay: 2s;
+}
+
+.theme-sunday .nebula-3 {
+    width: 250px;
+    height: 250px;
+    top: 40%;
+    right: 10%;
+    background: var(--accent-color);
+    animation: nebula-pulse 20s ease-in-out infinite alternate;
+    animation-delay: 4s;
+}
+
+/* 周日特色：流星效果 */
+.theme-sunday .meteor {
+    display: block;
+    position: absolute;
+    background: linear-gradient(to right, transparent, white, rgba(255,255,255,0.5));
+    border-radius: 50%;
+    opacity: 0;
+}
+
+.theme-sunday .meteor-1 {
+    width: 200px;
+    height: 2px;
+    top: 15%;
+    left: -100px;
+    transform: rotate(15deg);
+    animation: meteor-shower 15s linear infinite;
+}
+
+.theme-sunday .meteor-2 {
+    width: 150px;
+    height: 2px;
+    top: 65%;
+    left: -80px;
+    transform: rotate(-10deg);
+    animation: meteor-shower 18s linear infinite;
+    animation-delay: 3s;
+}
+
+.theme-sunday .meteor-3 {
+    width: 180px;
+    height: 2px;
+    top: 40%;
+    left: -90px;
+    transform: rotate(25deg);
+    animation: meteor-shower 20s linear infinite;
+    animation-delay: 7s;
+}
+
+/* 周日特色：文字宇宙发光效果 */
+.theme-sunday .text-line {
+    text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color), 0 0 30px var(--secondary-color);
+    animation: cosmic-glow 5s ease-in-out infinite alternate;
+}
+
+/* 基础页面样式 */
+body {
+    font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    transition: background 1.5s ease-in-out;
+}
+
+/* 主容器样式 */
+.container {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 20px;
+    max-width: 1000px;
+    width: 100%;
+}
+
+/* 主题元素容器 */
+.theme-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+/* 周一主题 - 星空粒子风格特定样式 */
+.theme-monday #stars-container {
+    display: block;
+}
+
+.theme-monday .particles-container {
+    display: block;
+}
+
+/* 周一特色：星光轨迹 */
+.theme-monday .star {
+    animation: twinkle 3s infinite ease-in-out, move-star 20s infinite linear;
+}
+
+/* 周一特色：粒子颜色变化 */
+.theme-monday .particle {
+    animation: float-particle 15s ease-in-out infinite, particle-color-change 8s infinite alternate;
+}
+
+/* 周一特色：文字星光效果 */
+.theme-monday .text-line {
+    text-shadow: 
+        0 0 10px var(--primary-color), 
+        0 0 20px var(--secondary-color), 
+        0 0 30px rgba(0, 0, 0, 0.5),
+        0 0 40px var(--primary-color);
+    animation: text-glow 5s infinite alternate;
+}
+
+/* 周二主题 - 几何图形风格特定样式 */
+.theme-tuesday #stars-container,
+.theme-tuesday .particles-container {
+    display: none;
+}
+
+/* 周二特色：几何图形容器 */
+.theme-tuesday .geometric-shape {
+    display: block;
+    position: absolute;
+    opacity: 0.7;
+    box-shadow: 0 0 30px var(--primary-color);
+    animation: 
+        rotate 30s linear infinite,
+        scale 8s ease-in-out infinite alternate,
+        opacity-pulse 4s ease-in-out infinite;
+}
+
+/* 周二特色：圆形 */
+.theme-tuesday .shape-1 {
+    width: 200px;
+    height: 200px;
+    border: 3px solid var(--primary-color);
+    border-radius: 50%;
+    top: 10%;
+    left: 10%;
+    background: radial-gradient(circle, transparent 60%, var(--primary-color) 100%);
+    animation-delay: 0s, 1s, 0.5s;
+}
+
+/* 周二特色：正方形 */
+.theme-tuesday .shape-2 {
+    width: 150px;
+    height: 150px;
+    border: 3px solid var(--secondary-color);
+    transform: rotate(45deg);
+    bottom: 15%;
+    right: 15%;
+    background: linear-gradient(135deg, transparent 50%, var(--secondary-color) 100%);
+    animation-delay: 0.5s, 0s, 1s;
+}
+
+/* 周二特色：三角形 */
+.theme-tuesday .shape-3 {
+    width: 100px;
+    height: 100px;
+    border: 3px solid var(--accent-color);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(to bottom, var(--accent-color) 0%, transparent 100%);
+    animation-delay: 1s, 1.5s, 0s;
+}
+
+/* 周二特色：新增几何图形 */
+.theme-tuesday .shape-4 {
+    display: block;
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border: 3px solid var(--primary-color);
+    top: 30%;
+    right: 20%;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    opacity: 0.6;
+    animation: rotate 25s linear infinite reverse, scale 10s ease-in-out infinite alternate;
+}
+
+/* 周二特色：文字渐变动画 */
+.theme-tuesday .text-line {
+    background: linear-gradient(
+        90deg, 
+        var(--primary-color), 
+        var(--secondary-color), 
+        var(--accent-color), 
+        var(--primary-color)
+    );
+    background-size: 400% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradient-shift 8s linear infinite;
+}
+
+/* 周三主题 - 波浪动态风格特定样式 */
+.theme-wednesday #stars-container,
+.theme-wednesday .particles-container {
+    display: none;
+}
+
+.theme-wednesday .wave {
+    display: block;
+    position: absolute;
+    width: 200%;
+    height: 100px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    opacity: 0.3;
+    transform-origin: center bottom;
+}
+
+.theme-wednesday .wave-1 {
+    top: 30%;
+    left: -50%;
+    animation: wave 10s ease-in-out infinite alternate;
+}
+
+.theme-wednesday .wave-2 {
+    top: 50%;
+    left: -50%;
+    animation: wave 15s ease-in-out infinite alternate-reverse;
+}
+
+.theme-wednesday .wave-3 {
+    top: 70%;
+    left: -50%;
+    animation: wave 12s ease-in-out infinite alternate;
+}
+
+.theme-wednesday .text-line {
+    text-shadow: 0 0 15px var(--primary-color);
+}
+
+/* 周四主题 - 温暖光斑风格特定样式 */
+.theme-thursday #stars-container,
+.theme-thursday .particles-container {
+    display: none;
+}
+
+.theme-thursday .light-spot {
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(50px);
+    opacity: 0.5;
+}
+
+.theme-thursday .spot-1 {
+    width: 300px;
+    height: 300px;
+    background: var(--primary-color);
+    top: -100px;
+    left: -100px;
+}
+
+.theme-thursday .spot-2 {
+    width: 250px;
+    height: 250px;
+    background: var(--secondary-color);
+    bottom: -50px;
+    right: -50px;
+}
+
+.theme-thursday .spot-3 {
+    width: 200px;
+    height: 200px;
+    background: var(--accent-color);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.theme-thursday .text-line {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+/* 周五主题 - 霓虹灯效果特定样式 */
+.theme-friday #stars-container,
+.theme-friday .particles-container {
+    display: none;
+}
+
+.theme-friday .neon-line {
+    display: block;
+    position: absolute;
+    background: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+}
+
+.theme-friday .line-1 {
+    width: 2px;
+    height: 100%;
+    top: 0;
+    left: 20%;
+}
+
+.theme-friday .line-2 {
+    width: 2px;
+    height: 100%;
+    top: 0;
+    right: 20%;
+    background: var(--secondary-color);
+    box-shadow: 0 0 10px var(--secondary-color), 0 0 20px var(--secondary-color);
+}
+
+.theme-friday .line-3 {
+    width: 100%;
+    height: 2px;
+    top: 30%;
+    left: 0;
+    background: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
+}
+
+.theme-friday .line-4 {
+    width: 100%;
+    height: 2px;
+    bottom: 30%;
+    left: 0;
+    background: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+}
+
+.theme-friday .text-line {
+    text-shadow: 0 0 5px #fff, 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+    animation: neon-flicker 1.5s infinite alternate;
+}
+
+/* 周六主题 - 自然风景风格特定样式 */
+.theme-saturday #stars-container,
+.theme-saturday .particles-container {
+    display: none;
+}
+
+.theme-saturday .cloud {
+    display: block;
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.8;
+}
+
+.theme-saturday .cloud-1 {
+    width: 150px;
+    height: 100px;
+    top: 10%;
+    left: -100px;
+    animation: float-cloud 60s linear infinite;
+}
+
+.theme-saturday .cloud-2 {
+    width: 200px;
+    height: 120px;
+    top: 15%;
+    right: -150px;
+    animation: float-cloud 80s linear infinite reverse;
+}
+
+.theme-saturday .cloud-3 {
+    width: 100px;
+    height: 70px;
+    bottom: 10%;
+    left: 30%;
+    animation: float-cloud 40s linear infinite;
+}
+
+.theme-saturday .text-line {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* 周日主题 - 宇宙星云风格特定样式 */
+.theme-sunday #stars-container {
+    display: block;
+}
+
+.theme-sunday .particles-container {
+    display: none;
+}
+
+.theme-sunday .nebula {
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.3;
+}
+
+.theme-sunday .nebula-1 {
+    width: 600px;
+    height: 600px;
+    background: var(--primary-color);
+    top: -300px;
+    left: -200px;
+}
+
+.theme-sunday .nebula-2 {
+    width: 500px;
+    height: 500px;
+    background: var(--secondary-color);
+    bottom: -250px;
+    right: -200px;
+}
+
+.theme-sunday .text-line {
+    text-shadow: 0 0 15px var(--accent-color);
+}
+
+/* 星空背景容器 - 默认样式 */
 #stars-container {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -57,118 +1149,176 @@ body {
     pointer-events: none;
 }
 
-/* 文字容器 */
+/* 粒子容器 - 默认样式 */
+.particles-container {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* 文字容器 - 确保三行文字布局稳定 */
 .text-container {
     text-align: center;
-    z-index: 2;
+    z-index: 10;
     padding: 2rem;
     max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 40vh;
 }
 
-/* 文字行样式 */
+/* TRAE Logo 风格文字效果 */
+.text-line.logo-style {
+    background-color: var(--logo-bg-color);
+    color: var(--logo-text-color);
+    font-weight: var(--logo-font-weight);
+    letter-spacing: var(--logo-letter-spacing);
+    text-shadow: none;
+    border-radius: 0;
+    padding: 0.25rem 0.5rem;
+    margin: 0.5rem 0;
+    transform: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* 基础文字行样式 - 确保文字突出醒目 */
 .text-line {
     color: var(--text-color);
-    font-size: clamp(1.5rem, 8vw, 4rem);
+    font-size: var(--text-font-size);
     font-weight: 900;
-    margin: 0.5rem 0;
+    margin: var(--text-margin);
+    padding: var(--text-padding);
     opacity: 0;
     transform: translateY(50px);
-    letter-spacing: 2px;
+    letter-spacing: var(--text-letter-spacing);
     position: relative;
     display: block;
-    width: 100%;
+    width: auto;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.2;
     cursor: default;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: text-shadow, transform;
+    text-align: center;
+    clear: both;
+    z-index: 10;
+    /* 增强文字清晰度的滤镜 */
+    filter: contrast(1.2) brightness(1.1);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* 增强的文字发光效果 */
+/* 确保文字不会换行 */
+.text-line {
+    overflow: visible;
+    text-overflow: clip;
+}
+
+/* 不同行的颜色和动画延迟设置 - 增强对比度和清晰度 */
 .text-line[data-line="1"] {
     color: var(--primary-color);
     animation-delay: 0.3s;
-    text-shadow: 
-        0 0 10px rgba(0, 247, 255, 0.7),
-        0 0 20px rgba(0, 247, 255, 0.5),
-        0 0 30px rgba(0, 247, 255, 0.3),
-        0 0 40px rgba(0, 247, 255, 0.1);
+    text-shadow: var(--text-shadow-base), 0 0 10px var(--primary-color), 0 0 20px rgba(0, 0, 0, 0.5);
+    font-size: clamp(2.5rem, 12vw, 6rem);
+    z-index: 12;
 }
 
 .text-line[data-line="2"] {
     color: var(--secondary-color);
     animation-delay: 0.8s;
-    text-shadow: 
-        0 0 10px rgba(255, 0, 200, 0.7),
-        0 0 20px rgba(255, 0, 200, 0.5),
-        0 0 30px rgba(255, 0, 200, 0.3),
-        0 0 40px rgba(255, 0, 200, 0.1);
+    text-shadow: var(--text-shadow-base), 0 0 10px var(--secondary-color), 0 0 20px rgba(0, 0, 0, 0.5);
+    font-size: clamp(2rem, 10vw, 5rem);
+    z-index: 11;
 }
 
 .text-line[data-line="3"] {
     color: var(--accent-color);
     animation-delay: 1.3s;
-    text-shadow: 
-        0 0 10px rgba(255, 234, 0, 0.7),
-        0 0 20px rgba(255, 234, 0, 0.5),
-        0 0 30px rgba(255, 234, 0, 0.3),
-        0 0 40px rgba(255, 234, 0, 0.1);
+    text-shadow: var(--text-shadow-base), 0 0 10px var(--accent-color), 0 0 20px rgba(0, 0, 0, 0.5);
+    font-size: clamp(2rem, 10vw, 5rem);
+    z-index: 10;
 }
 
-/* 文字悬停效果 */
+/* 文字悬停效果 - 增强交互体验 */
 .text-line:hover {
     transform: translateY(-5px) scale(1.02);
+    text-shadow: var(--theme-glow-hover);
 }
 
-.text-line[data-line="1"]:hover {
-    text-shadow: 
-        0 0 15px rgba(0, 247, 255, 0.9),
-        0 0 30px rgba(0, 247, 255, 0.7),
-        0 0 50px rgba(0, 247, 255, 0.5),
-        0 0 70px rgba(0, 247, 255, 0.3);
+/* 鼠标移动时的文字效果 - 增强破碎感和像素化 */
+.text-line.mouse-active {
+    animation: mousePixelGlitch 0.2s ease-in-out forwards;
+    transition: all 0.05s ease;
+    position: relative;
+    display: inline-block;
 }
 
-.text-line[data-line="2"]:hover {
-    text-shadow: 
-        0 0 15px rgba(255, 0, 200, 0.9),
-        0 0 30px rgba(255, 0, 200, 0.7),
-        0 0 50px rgba(255, 0, 200, 0.5),
-        0 0 70px rgba(255, 0, 200, 0.3);
-}
-
-.text-line[data-line="3"]:hover {
-    text-shadow: 
-        0 0 15px rgba(255, 234, 0, 0.9),
-        0 0 30px rgba(255, 234, 0, 0.7),
-        0 0 50px rgba(255, 234, 0, 0.5),
-        0 0 70px rgba(255, 234, 0, 0.3);
-}
-
-/* 文字动画 */
-.text-line.animate {
-    animation: fadeInUp 1.5s ease forwards;
-}
-
-/* 第一行文字特殊效果 */
-.text-line[data-line="1"] {
-    color: var(--primary-color);
-    animation-delay: 0.3s;
-}
-
-/* 第二行文字特殊效果 */
-.text-line[data-line="2"] {
-    color: var(--secondary-color);
-    animation-delay: 0.8s;
-}
-
-/* 第三行文字特殊效果 */
-.text-line[data-line="3"] {
+/* 鼠标跟随效果的伪元素 - 增强多重影像效果 */
+.text-line.mouse-active::before {
+    content: attr(data-text);
+    position: absolute;
+    left: -3px;
+    top: 0;
     color: var(--accent-color);
-    animation-delay: 1.3s;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    animation: mousePixelGlitch 0.3s linear infinite alternate-reverse;
+    opacity: 0.8;
+    z-index: 1;
+    filter: blur(0.5px);
 }
 
-/* 文字发光效果 */
+.text-line.mouse-active::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 3px;
+    top: 0;
+    color: var(--primary-color);
+    clip-path: polygon(0 45%, 100% 45%, 100% 100%, 0 100%);
+    animation: mousePixelGlitch 0.3s linear infinite alternate-reverse;
+    animation-delay: 0.1s;
+    opacity: 0.8;
+    z-index: 1;
+    filter: blur(0.5px);
+}
+
+/* 额外的伪元素 - 增强像素化和破碎效果 */
+.text-line.mouse-active span {
+    position: relative;
+    display: inline-block;
+    animation: pixelShake 0.1s infinite alternate;
+}
+
+/* 像素抖动效果 */
+@keyframes pixelShake {
+    0% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(1px, -1px);
+    }
+    100% {
+        transform: translate(-1px, 1px);
+    }
+}
+
+/* 文字动画 - 统一入场效果 */
+.text-line.animate {
+    animation: fadeInUp 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+
+
+/* 文字发光效果 - 优化可读性 */
 .text-line::before,
 .text-line::after {
     content: attr(data-line);
@@ -177,22 +1327,23 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 0.8;
+    opacity: 0.6;
     z-index: -1;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
 }
 
 .text-line::before {
     color: var(--primary-color);
-    filter: blur(10px);
-    transform: translateX(-5px) translateY(5px);
-    animation: glitch 3s infinite;
+    filter: blur(8px);
+    transform: translateX(-4px) translateY(4px);
+    animation: glitch 4s infinite;
 }
 
 .text-line::after {
     color: var(--secondary-color);
-    filter: blur(10px);
-    transform: translateX(5px) translateY(-5px);
-    animation: glitch 2.5s infinite reverse;
+    filter: blur(8px);
+    transform: translateX(4px) translateY(-4px);
+    animation: glitch 3.5s infinite reverse;
 }
 
 /* 粒子容器 */
@@ -226,6 +1377,370 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* 国庆节主题特色动画 */
+@keyframes float-flag {
+    0%, 100% {
+        transform: rotate(-5deg) scale(1);
+    }
+    50% {
+        transform: rotate(5deg) scale(1.05);
+    }
+}
+
+@keyframes firework-launch {
+    0% {
+        transform: translateY(0) scale(0.5);
+        opacity: 1;
+    }
+    90% {
+        transform: translateY(-60vh) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-60vh) scale(3);
+        opacity: 0;
+    }
+}
+
+@keyframes national-glow {
+    0% {
+        text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--secondary-color), 0 0 30px rgba(255, 255, 255, 0.3);
+    }
+    100% {
+        text-shadow: 0 0 20px var(--primary-color), 0 0 40px var(--secondary-color), 0 0 60px rgba(255, 255, 255, 0.7);
+    }
+}
+
+/* 中秋节主题特色动画 */
+@keyframes moon-rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes moon-glow-pulse {
+    0%, 100% {
+        box-shadow: 0 0 80px var(--primary-color), 0 0 160px rgba(241, 196, 15, 0.2);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 120px var(--primary-color), 0 0 240px rgba(241, 196, 15, 0.4);
+        transform: scale(1.1);
+    }
+}
+
+@keyframes float-mooncake {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-20px) scale(1.1);
+    }
+}
+
+@keyframes lantern-swing {
+    0%, 100% {
+        transform: rotate(-10deg);
+    }
+    50% {
+        transform: rotate(10deg);
+    }
+}
+
+@keyframes midautumn-glow {
+    0% {
+        text-shadow: 0 0 10px var(--primary-color), 0 0 20px rgba(241, 196, 15, 0.5), 0 0 30px rgba(231, 76, 60, 0.3);
+    }
+    100% {
+        text-shadow: 0 0 20px var(--primary-color), 0 0 40px rgba(241, 196, 15, 0.8), 0 0 60px rgba(231, 76, 60, 0.6);
+    }
+}
+
+/* 周一主题特色动画 */
+@keyframes move-star {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    100% {
+        transform: translateX(100vw) translateY(50vh);
+    }
+}
+
+@keyframes particle-color-change {
+    0% {
+        background-color: var(--primary-color);
+        box-shadow: 0 0 15px var(--primary-color);
+    }
+    100% {
+        background-color: var(--secondary-color);
+        box-shadow: 0 0 15px var(--secondary-color);
+    }
+}
+
+@keyframes text-glow {
+    0% {
+        text-shadow: 
+            0 0 10px var(--primary-color), 
+            0 0 20px var(--secondary-color), 
+            0 0 30px rgba(0, 0, 0, 0.5),
+            0 0 40px var(--primary-color);
+    }
+    100% {
+        text-shadow: 
+            0 0 15px var(--primary-color), 
+            0 0 30px var(--secondary-color), 
+            0 0 40px rgba(0, 0, 0, 0.5),
+            0 0 60px var(--primary-color);
+    }
+}
+
+/* 周二主题特色动画 */
+@keyframes scale {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.2);
+    }
+}
+
+@keyframes opacity-pulse {
+    0%, 100% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 0.4;
+    }
+}
+
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+/* 周三主题特色动画 */
+@keyframes color-shift {
+    0% {
+        filter: hue-rotate(0deg);
+        opacity: 0.3;
+    }
+    50% {
+        filter: hue-rotate(180deg);
+        opacity: 0.4;
+    }
+    100% {
+        filter: hue-rotate(360deg);
+        opacity: 0.3;
+    }
+}
+
+@keyframes text-bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    25% {
+        transform: translateY(-10px);
+    }
+    75% {
+        transform: translateY(5px);
+    }
+}
+
+/* 周四主题特色动画 */
+@keyframes spot-pulse {
+    0% {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0.6;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes spot-move {
+    0% {
+        transform: translate(0, 0);
+    }
+    25% {
+        transform: translate(30px, 30px);
+    }
+    50% {
+        transform: translate(15px, 15px);
+    }
+    75% {
+        transform: translate(45px, 10px);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes warm-glow {
+    0% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 0 0 15px var(--primary-color), 0 0 30px rgba(255, 152, 0, 0.3);
+    }
+    100% {
+        text-shadow: 0 0 8px rgba(255, 255, 255, 1), 0 0 25px var(--primary-color), 0 0 45px rgba(255, 152, 0, 0.5), 0 0 60px rgba(255, 235, 59, 0.3);
+    }
+}
+
+/* 周五主题特色动画 */
+@keyframes neon-pulse {
+    0% {
+        opacity: 0.7;
+        box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 20px var(--primary-color), 0 0 40px var(--primary-color), 0 0 60px rgba(255, 0, 204, 0.8);
+    }
+    100% {
+        opacity: 0.7;
+        box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+    }
+}
+
+/* 周六主题特色动画 */
+@keyframes cloud-pulse {
+    0% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0.9;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes dreamy-float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    25% {
+        transform: translateY(-5px);
+    }
+    50% {
+        transform: translateY(5px);
+    }
+    75% {
+        transform: translateY(-3px);
+    }
+}
+
+@keyframes rainbow-shift {
+    0% {
+        opacity: 0.4;
+        transform: scale(1) rotate(0deg);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scale(1.1) rotate(15deg);
+    }
+    100% {
+        opacity: 0.4;
+        transform: scale(1) rotate(30deg);
+    }
+}
+
+/* 周日主题特色动画 */
+@keyframes nebula-pulse {
+    0% {
+        opacity: 0.2;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0.4;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes meteor-shower {
+    0% {
+        opacity: 0;
+        transform: translateX(-100px) translateY(0) rotate(15deg);
+    }
+    5% {
+        opacity: 1;
+        transform: translateX(100px) translateY(30px) rotate(15deg);
+    }
+    10% {
+        opacity: 0;
+        transform: translateX(300px) translateY(60px) rotate(15deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(500px) translateY(100px) rotate(15deg);
+    }
+}
+
+@keyframes cosmic-glow {
+    0% {
+        text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color), 0 0 30px var(--secondary-color);
+    }
+    100% {
+        text-shadow: 0 0 15px var(--primary-color), 0 0 30px var(--primary-color), 0 0 50px var(--secondary-color), 0 0 70px rgba(255, 64, 129, 0.6);
+    }
+} 
+
+/* 鼠标移动时的像素故障效果 - 增强破碎感 */
+@keyframes mousePixelGlitch {
+    0%, 100% {
+        clip-path: inset(0 0 0 0);
+        transform: translate(0, 0);
+    }
+    10% {
+        clip-path: inset(40% 0 60% 0);
+        transform: translate(-3px, 2px);
+    }
+    20% {
+        clip-path: inset(20% 0 80% 0);
+        transform: translate(2px, -3px);
+    }
+    30% {
+        clip-path: inset(70% 0 30% 0);
+        transform: translate(-4px, 1px);
+    }
+    40% {
+        clip-path: inset(30% 0 70% 0);
+        transform: translate(3px, -2px);
+    }
+    50% {
+        clip-path: inset(50% 0 50% 0);
+        transform: translate(-2px, 3px);
+    }
+    60% {
+        clip-path: inset(10% 0 90% 0);
+        transform: translate(4px, -1px);
+    }
+    70% {
+        clip-path: inset(80% 0 20% 0);
+        transform: translate(-1px, 4px);
+    }
+    80% {
+        clip-path: inset(20% 0 80% 0);
+        transform: translate(2px, -2px);
+    }
+    90% {
+        clip-path: inset(60% 0 40% 0);
+        transform: translate(-3px, 1px);
+    }
+}
+
+/* 鼠标移动时的文字效果容器 */
+.mouse-fx-container {
+    position: relative;
+    display: inline-block;
+    perspective: 1000px;
 }
 
 @keyframes glitch {
@@ -275,41 +1790,264 @@ body {
     }
 }
 
-/* 响应式设计 */
-@media (max-width: 768px) {
+/* 响应式设计 - 确保在所有屏幕尺寸上都显示为三行 */
+@media (max-width: 1024px) {
+    .text-container {
+        padding: 1.5rem;
+    }
+    
     .text-line {
-        font-size: clamp(1.2rem, 7vw, 3rem);
-        margin: 0.5rem 0;
-        line-height: 1.2;
+        margin: 1rem 0;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --text-font-size: clamp(1.2rem, 9vw, 3rem);
+        --text-margin: 0.8rem 0;
+        --text-letter-spacing: 1.5px;
+        /* 在小屏幕上增强发光效果 */
+        --theme-glow-1: 0 0 10px rgba(255, 255, 255, 0.9);
+        --theme-glow-2: 0 0 20px currentColor, 0 0 30px rgba(255, 255, 255, 0.7);
     }
     
     .text-container {
-        padding: 1.5rem;
+        padding: 1rem;
+    }
+    
+    .text-line {
+        white-space: normal;
+        word-break: keep-all;
+        max-width: 95vw;
+        text-shadow: var(--theme-glow-1), var(--theme-glow-2), 0 0 15px rgba(255, 255, 255, 0.8);
     }
 }
 
 @media (max-width: 480px) {
+    :root {
+        --text-font-size: clamp(1rem, 8vw, 2.5rem);
+        --text-margin: 0.6rem 0;
+        --text-padding: 0.3rem 0.5rem;
+        --text-letter-spacing: 1px;
+    }
+    
     .text-container {
-        padding: 1rem;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        padding: 0.8rem;
+        min-height: 50vh;
     }
     
     .text-line {
-        font-size: clamp(1rem, 6vw, 2rem);
-        margin: 0.4rem 0;
-        letter-spacing: 1px;
-        line-height: 1.1;
+        font-size: clamp(1rem, 8vw, 2.2rem);
+    }
+    
+    .text-line[data-line="1"] {
+        font-size: clamp(1.5rem, 10vw, 3rem);
     }
 }
 
 /* 提升性能的样式 */
-.text-line {
-    will-change: opacity, transform;
+.text-line, .particle, .star, .geometric-shape, .wave, .neon-line, .cloud {
+    will-change: transform, opacity;
 }
 
-.particle {
-    will-change: transform, opacity;
+/* 主题特定动画效果 */
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes wave {
+    0% {
+        transform: translateX(0) rotate(0deg);
+    }
+    100% {
+        transform: translateX(-50%) rotate(5deg);
+    }
+}
+
+@keyframes neon-flicker {
+    0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+        opacity: 1;
+        text-shadow: 0 0 5px #fff, 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+    }
+    20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+        opacity: 0.6;
+        text-shadow: 0 0 2px #fff;
+    }
+}
+
+@keyframes float-cloud {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(calc(100vw + 200px));
+    }
+}
+
+/* 增强文字动效 - 额外的文字悬停动画 */
+.text-line:hover {
+    animation: text-hover 0.5s ease-out forwards;
+}
+
+@keyframes text-hover {
+    0% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-8px) scale(1.05);
+    }
+    100% {
+        transform: translateY(-5px) scale(1.02);
+    }
+}
+
+/* 添加装饰元素 - 页面角落装饰 */
+.corner-decoration {
+    position: fixed;
+    width: 150px;
+    height: 150px;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.corner-decoration.top-left {
+    top: -50px;
+    left: -50px;
+    border-top: 3px solid var(--primary-color);
+    border-left: 3px solid var(--primary-color);
+    opacity: 0.7;
+}
+
+.corner-decoration.top-right {
+    top: -50px;
+    right: -50px;
+    border-top: 3px solid var(--secondary-color);
+    border-right: 3px solid var(--secondary-color);
+    opacity: 0.7;
+}
+
+.corner-decoration.bottom-left {
+    bottom: -50px;
+    left: -50px;
+    border-bottom: 3px solid var(--accent-color);
+    border-left: 3px solid var(--accent-color);
+    opacity: 0.7;
+}
+
+.corner-decoration.bottom-right {
+    bottom: -50px;
+    right: -50px;
+    border-bottom: 3px solid var(--primary-color);
+    border-right: 3px solid var(--primary-color);
+    opacity: 0.7;
+}
+
+/* 优化交互反馈 - 点击波纹效果 */
+.ripple-effect {
+    position: fixed;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(0);
+    pointer-events: none;
+    z-index: 9999;
+    animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* 背景效果增强 - 网格背景 */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+    opacity: 0.7;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+    opacity: 0.9;
+}
+
+/* 打印样式优化 */
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    
+    .theme-elements, .particles-container, #stars-container {
+        display: none !important;
+    }
+    
+    .text-line {
+        color: black !important;
+        text-shadow: none !important;
+        margin: 1rem 0;
+        font-size: 1.5rem;
+    }
+}
+
+/* TRAE Logo 风格文字效果增强 */
+.text-line.logo-style::before,
+.text-line.logo-style::after {
+    display: none; /* 移除默认的发光效果 */
+}
+
+/* Logo 风格悬停动画 */
+.text-line.logo-style:hover {
+    transform: scale(1.05);
+    letter-spacing: 1px;
+    box-shadow: 5px 5px 0 var(--logo-text-color);
+    animation: none; /* 禁用其他动画 */
+}
+
+/* Logo 风格特定动画 */
+@keyframes logo-pop {
+    0% {
+        transform: scale(0.95);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Logo 风格入场动画 */
+.text-line.logo-style.animate {
+    animation: logo-pop 0.6s ease-out forwards;
 }
