@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const titleInterval = setInterval(() => {
         currentTitleIndex = (currentTitleIndex + 1) % titles.length;
         document.title = titles[currentTitleIndex];
-    }, 4000);
+    }, 3000);
     
     // 初始化主题元素容器 - 优化DOM结构
     function createThemeElementsContainer() {
