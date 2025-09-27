@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let particles = [];
     
     // 标题轮换功能 - 增强用户体验
-    const titles = ['未来探索', 'Momo祝你今天愉快', '万事顺 长安宁'];
+    const titles = ['万事顺 长安宁', 'Momo祝你今天愉快', '钱包鼓鼓，胖了也酷'];
     let currentTitleIndex = 0;
     
     // 设置标题轮换定时器，每隔4秒更换一次
@@ -65,22 +65,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 设置每日主题 - 核心功能
     function setDailyTheme() {
-        const now = new Date();
+        const today = new Date();
         
         // 检查是否是国庆节期间 (10月1日-7日)
-        if (isNationalDay(now)) {
-            // 检查国庆节期间是否包含中秋节
-            if (isMidAutumnDay(now)) {
-                setMidAutumnTheme();
-            } else {
-                setNationalDayTheme();
-            }
-            return;
+        if (isNationalDay(today)) {
+            // 国庆节期间显示国庆主题
+            setNationalDayTheme();
+        } else {
+            // 非国庆节期间根据星期几显示对应的主题
+            const dayOfWeek = today.getDay();
+            setThemeByDay(dayOfWeek);
         }
-        
-        // 正常工作日主题
-        const dayOfWeek = now.getDay(); // 0-6，0是星期日，1是星期一，以此类推
-        setThemeByDay(dayOfWeek);
     }
     
     // 检查是否是国庆节期间 (10月1日-7日)
@@ -118,6 +113,20 @@ document.addEventListener('DOMContentLoaded', function() {
         // 添加国庆节主题类
         body.classList.add('theme-nationalday');
         
+        // 设置国庆节文字（三行显示）
+        if (textLines.length > 0) {
+            textLines[0].textContent = '祖国母亲';
+            textLines[0].removeAttribute('data-original-text');
+        }
+        if (textLines.length > 1) {
+            textLines[1].textContent = '生日快乐';
+            textLines[1].removeAttribute('data-original-text');
+        }
+        if (textLines.length > 2) {
+            textLines[2].textContent = ''; // 第三行留空
+            textLines[2].removeAttribute('data-original-text');
+        }
+        
         // 创建国庆节特定元素
         createNationalDayElements();
         
@@ -150,6 +159,20 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 清除现有主题元素
         clearThemeElements();
+        
+        // 设置日常文字（三行显示，未来单独一行）
+        if (textLines.length > 0) {
+            textLines[0].textContent = '未来';
+            textLines[0].removeAttribute('data-original-text');
+        }
+        if (textLines.length > 1) {
+            textLines[1].textContent = '不是我们要去的某个地方';
+            textLines[1].removeAttribute('data-original-text');
+        }
+        if (textLines.length > 2) {
+            textLines[2].textContent = '而是我们正在创造的地方';
+            textLines[2].removeAttribute('data-original-text');
+        }
         
         // 根据星期几添加对应的主题类和效果
         switch(dayOfWeek) {
@@ -776,16 +799,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 设置事件监听器
     function setupEventListeners() {
-        // 添加点击切换主题的功能
-        let testDay = new Date().getDay(); // 从当前日期开始
-        document.addEventListener('click', function(event) {
-            // 切换到下一个主题
-            testDay = (testDay + 1) % 7;
-            setThemeByDay(testDay);
-            
-            // 添加点击波纹效果
-            handleClickRipple(event);
-        }, { passive: true });
+        // 添加点击波纹效果
+        document.addEventListener('click', handleClickRipple, { passive: true });
         
         // 添加窗口调整事件监听
         window.addEventListener('resize', throttledResize);
@@ -793,7 +808,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // 添加鼠标移动事件监听 - 实现文字效果
         document.addEventListener('mousemove', handleMouseMove, { passive: true });
         
-        // 页面可见性变化时暂停/恢复动画和音乐
+        // 页面可见性变化时暂停/恢复动画和音乐，并检查日期变化
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {
                 // 暂停粒子生成
@@ -804,8 +819,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 暂停音乐
                 pauseBackgroundMusic();
             } else {
-                // 恢复粒子生成（如果当前主题是周一）
+                // 检查日期变化，确保显示正确的主题
+                const today = new Date();
+                const isNational = isNationalDay(today);
                 const currentTheme = body.className;
+                
+                // 如果当前显示的是国庆主题但今天不是国庆节期间，或者相反，就更新主题
+                if ((currentTheme.includes('theme-nationalday') && !isNational) || 
+                    (!currentTheme.includes('theme-nationalday') && isNational)) {
+                    setDailyTheme();
+                }
+                
+                // 恢复粒子生成（如果当前主题是周一）
                 if (currentTheme.includes('theme-monday')) {
                     createParticles();
                 }

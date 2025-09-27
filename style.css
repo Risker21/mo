@@ -6,6 +6,13 @@
     box-sizing: border-box;
 }
 
+/* 确保html和body完全充满屏幕 */
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+}
+
 /* 主题颜色系统 - 重新设计以增强文字突出效果 */
 :root {
     /* 核心颜色 - 高对比度设计 */
@@ -23,19 +30,17 @@
     /* 背景渐变 */
     --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
     
+    /* 文字基础变量 - 增强响应式支持 */
+    --text-font-size: clamp(1.5rem, 6vw, 3.5rem);
+    --text-margin: clamp(0.5rem, 2vw, 1rem) 0;
+    --text-padding: clamp(0.3rem, 1vw, 0.5rem) clamp(0.5rem, 2vw, 1rem);
+    --text-letter-spacing: clamp(1px, 0.5vw, 2px);
+    --text-shadow-base: 0 0 15px rgba(255, 255, 255, 0.8);
+    
     /* 增强发光效果变量，提高可读性 */
     --theme-glow-1: 0 0 15px rgba(255, 255, 255, 0.8);
     --theme-glow-2: 0 0 25px currentColor, 0 0 40px rgba(255, 255, 255, 0.6);
     --theme-glow-hover: 0 0 35px currentColor, 0 0 50px rgba(255, 255, 255, 0.8);
-    
-    /* 文字间距和大小 */
-    --text-margin: 1.2rem 0;
-    --text-padding: 0.5rem 1rem;
-    --text-font-size: clamp(1.5rem, 8vw, 4rem);
-    --text-letter-spacing: 2px;
-    
-    /* 文字阴影强度变量 - 提高对比度 */
-    --text-shadow-base: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
 }
 
 /* 国庆节主题 */
@@ -43,8 +48,16 @@
     --primary-color: #ff0000;
     --secondary-color: #ffd700;
     --accent-color: #ffffff;
-    --bg-gradient: linear-gradient(135deg, #000033, #000066, #000033);
+    --bg-gradient: linear-gradient(135deg, #8e0e00, #1f1c18, #8e0e00);
     --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(255, 0, 0, 0.5), 0 0 45px rgba(255, 215, 0, 0.3);
+    
+    /* 背景装饰效果 - 增强喜庆氛围 */
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.3) 0%, transparent 20%),
+        radial-gradient(circle at 80% 30%, rgba(255, 215, 0, 0.3) 0%, transparent 25%),
+        radial-gradient(circle at 30% 70%, rgba(255, 215, 0, 0.3) 0%, transparent 30%),
+        radial-gradient(circle at 90% 90%, rgba(255, 215, 0, 0.3) 0%, transparent 20%);
+    background-attachment: fixed;
 }
 
 /* 国庆节主题特定样式 */
@@ -57,12 +70,13 @@
 .theme-nationalday .national-flag {
     display: block;
     position: absolute;
-    width: 30px;
-    height: 20px;
+    width: 40px;
+    height: 25px;
     background: var(--primary-color);
     border: 1px solid var(--secondary-color);
-    animation: float-flag 8s ease-in-out infinite;
+    animation: float-flag 6s ease-in-out infinite;
     transform-origin: center top;
+    box-shadow: 0 0 10px var(--primary-color);
 }
 
 .theme-nationalday .national-flag::before {
@@ -72,8 +86,26 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(45deg, transparent 48%, var(--secondary-color) 49%, var(--secondary-color) 51%, transparent 52%);
+    background: 
+        radial-gradient(circle at 12px 8px, var(--secondary-color) 0%, var(--secondary-color) 3px, transparent 3px),
+        linear-gradient(45deg, transparent 48%, var(--secondary-color) 49%, var(--secondary-color) 51%, transparent 52%);
     background-size: 10px 10px;
+}
+
+/* 国庆节特色：红旗波浪效果 */
+@keyframes float-flag {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-5px) rotate(2deg);
+    }
+    50% {
+        transform: translateY(2px) rotate(0deg);
+    }
+    75% {
+        transform: translateY(-5px) rotate(-2deg);
+    }
 }
 
 /* 为不同位置的国旗设置不同的动画延迟和位置 */
@@ -123,6 +155,40 @@
 .theme-nationalday .text-line {
     text-shadow: 0 0 15px var(--primary-color), 0 0 30px var(--secondary-color), 0 0 45px rgba(255, 255, 255, 0.5);
     animation: national-glow 3s ease-in-out infinite alternate;
+    font-family: 'SimHei', 'Microsoft YaHei', sans-serif;
+    letter-spacing: 4px;
+    font-weight: bold;
+}
+
+/* 国庆节特色文字 - 祖国母亲 */
+.theme-nationalday .text-line[data-line="1"] {
+    color: var(--primary-color);
+    text-shadow: 0 0 20px var(--primary-color), 0 0 40px var(--secondary-color), 0 0 60px rgba(255, 255, 255, 0.8);
+    letter-spacing: 8px;
+    font-size: clamp(2rem, 10vw, 5rem);
+    animation: national-glow 2s ease-in-out infinite alternate, text-bounce 3s ease-in-out infinite;
+}
+
+/* 国庆节特色文字 - 生日快乐 */
+.theme-nationalday .text-line[data-line="2"] {
+    color: var(--secondary-color);
+    text-shadow: 0 0 15px var(--secondary-color), 0 0 30px var(--primary-color), 0 0 45px rgba(255, 255, 255, 0.7);
+    letter-spacing: 6px;
+    font-size: clamp(1.8rem, 8vw, 4rem);
+    animation: national-glow 3s ease-in-out infinite alternate, text-bounce 4s ease-in-out infinite;
+    animation-delay: 0.5s;
+}
+
+/* 国庆节文字发光动画 */
+@keyframes national-glow {
+    0% {
+        text-shadow: 0 0 15px var(--primary-color), 0 0 30px var(--secondary-color), 0 0 45px rgba(255, 255, 255, 0.5);
+        transform: scale(1);
+    }
+    100% {
+        text-shadow: 0 0 25px var(--primary-color), 0 0 50px var(--secondary-color), 0 0 70px rgba(255, 255, 255, 0.8), 0 0 90px rgba(255, 0, 0, 0.3);
+        transform: scale(1.02);
+    }
 }
 
 /* 周一主题 - 太空科技风格 */
@@ -772,18 +838,22 @@
     animation: cosmic-glow 5s ease-in-out infinite alternate;
 }
 
-/* 基础页面样式 */
+/* 基础页面样式 - 增强响应式支持 */
 body {
     font-family: 'Arial', 'Microsoft YaHei', sans-serif;
     background: var(--bg-gradient);
+    background-attachment: fixed;
+    background-size: cover;
     color: var(--text-color);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: relative;
     transition: background 1.5s ease-in-out;
+    padding: 1rem;
 }
 
 /* 主容器样式 */
@@ -1161,18 +1231,19 @@ body {
     z-index: 2;
 }
 
-/* 文字容器 - 确保三行文字布局稳定 */
+/* 文字容器 - 增强响应式支持 */
 .text-container {
     text-align: center;
     z-index: 10;
-    padding: 2rem;
-    max-width: 1200px;
+    padding: clamp(1rem, 5vw, 2rem);
+    max-width: 90vw;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 40vh;
+    width: 100%;
 }
 
 /* TRAE Logo 风格文字效果 */
@@ -1191,19 +1262,19 @@ body {
     transition: all 0.3s ease;
 }
 
-/* 基础文字行样式 - 确保文字突出醒目 */
+/* 基础文字行样式 - 增强响应式支持 */
 .text-line {
     color: var(--text-color);
     font-size: var(--text-font-size);
     font-weight: 900;
     margin: var(--text-margin);
     padding: var(--text-padding);
-    opacity: 0;
-    transform: translateY(50px);
+    opacity: 1;
+    transform: translateY(0);
     letter-spacing: var(--text-letter-spacing);
     position: relative;
     display: block;
-    width: auto;
+    width: 100%;
     white-space: nowrap;
     line-height: 1.2;
     cursor: default;
@@ -1224,12 +1295,18 @@ body {
     text-overflow: clip;
 }
 
-/* 不同行的颜色和动画延迟设置 - 增强对比度和清晰度 */
+/* 确保文字不会换行 */
+.text-line {
+    overflow: visible;
+    text-overflow: clip;
+}
+
+/* 不同行的颜色和动画延迟设置 - 增强响应式支持 */
 .text-line[data-line="1"] {
     color: var(--primary-color);
     animation-delay: 0.3s;
     text-shadow: var(--text-shadow-base), 0 0 10px var(--primary-color), 0 0 20px rgba(0, 0, 0, 0.5);
-    font-size: clamp(2.5rem, 12vw, 6rem);
+    font-size: clamp(1.8rem, 10vw, 5rem);
     z-index: 12;
 }
 
@@ -1237,7 +1314,7 @@ body {
     color: var(--secondary-color);
     animation-delay: 0.8s;
     text-shadow: var(--text-shadow-base), 0 0 10px var(--secondary-color), 0 0 20px rgba(0, 0, 0, 0.5);
-    font-size: clamp(2rem, 10vw, 5rem);
+    font-size: clamp(1.5rem, 8vw, 4rem);
     z-index: 11;
 }
 
@@ -1245,7 +1322,7 @@ body {
     color: var(--accent-color);
     animation-delay: 1.3s;
     text-shadow: var(--text-shadow-base), 0 0 10px var(--accent-color), 0 0 20px rgba(0, 0, 0, 0.5);
-    font-size: clamp(2rem, 10vw, 5rem);
+    font-size: clamp(1.5rem, 8vw, 4rem);
     z-index: 10;
 }
 
@@ -1999,6 +2076,30 @@ body::before {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--secondary-color);
     opacity: 0.9;
+}
+
+/* 主内容容器样式 */
+.container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+/* 文本容器样式 */
+.text-container {
+    width: 100%;
+    max-width: 800px;
+    padding: 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 /* 打印样式优化 */
