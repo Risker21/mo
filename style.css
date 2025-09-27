@@ -1242,7 +1242,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 40vh;
+    min-height: 60vh;
     width: 100%;
 }
 
@@ -1337,7 +1337,8 @@ body {
     animation: mousePixelGlitch 0.2s ease-in-out forwards;
     transition: all 0.05s ease;
     position: relative;
-    display: inline-block;
+    display: block;
+    margin: 0 auto;
 }
 
 /* 鼠标跟随效果的伪元素 - 增强多重影像效果 */
