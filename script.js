@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let particles = [];
     
     // 标题轮换功能 - 增强用户体验
-    const titles = ['万事顺 长安宁', 'Momo祝你今天愉快', '钱包鼓鼓，胖了也酷'];
+    const titles = ['万事顺 长安宁', 'Momo祝你今天愉快', '钱包鼓鼓 胖了也酷'];
     let currentTitleIndex = 0;
     
     // 设置标题轮换定时器，每隔4秒更换一次
