@@ -27,8 +27,8 @@ img{max-width:100%;}
 /*end reset*/
 body {
     /*background: url(../images/图55.jpeg)no-repeat;*/
-	/*background: url(../images/国庆一.jpg)no-repeat;*/
-    background: url(../images/中秋一.png)no-repeat;
+	background: url(../images/国庆一.jpg)no-repeat;
+    /*background: url(../images/中秋一.png)no-repeat;*/
     background-size: cover;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -83,8 +83,8 @@ body::before {
     box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.8);
     padding: 40px;
     /*background: rgba(255,255,255,0.1) url(../images/图56.jpg) no-repeat center center;*/
-	/*background: rgba(255,255,255,0.1) url(../images/国庆二.jpg) no-repeat center center;*/
-    background: rgba(255,255,255,0.1) url(../images/中秋二.png)no-repeat center;
+	background: rgba(255,255,255,0.1) url(../images/国庆二.jpg) no-repeat center center;
+   /* background: rgba(255,255,255,0.1) url(../images/中秋二.png)no-repeat center;*/
     background-size: cover;
     border-radius: 15px;
     backdrop-filter: blur(10px);
