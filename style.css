@@ -43,56 +43,9 @@ html, body {
     --theme-glow-hover: 0 0 35px currentColor, 0 0 50px rgba(255, 255, 255, 0.8);
 }
 
-/* 国庆节主题 */
-.theme-nationalday {
-    --primary-color: #ff0000;
-    --secondary-color: #ffd700;
-    --accent-color: #ffffff;
-    --bg-gradient: linear-gradient(135deg, #8e0e00, #1f1c18, #8e0e00);
-    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(255, 0, 0, 0.5), 0 0 45px rgba(255, 215, 0, 0.3);
-    
-    /* 背景装饰效果 - 增强喜庆氛围 */
-    background-image: 
-        radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.3) 0%, transparent 20%),
-        radial-gradient(circle at 80% 30%, rgba(255, 215, 0, 0.3) 0%, transparent 25%),
-        radial-gradient(circle at 30% 70%, rgba(255, 215, 0, 0.3) 0%, transparent 30%),
-        radial-gradient(circle at 90% 90%, rgba(255, 215, 0, 0.3) 0%, transparent 20%);
-    background-attachment: fixed;
-}
+/* 移除国庆节主题样式 */
 
-/* 国庆节主题特定样式 */
-.theme-nationalday #stars-container,
-.theme-nationalday .particles-container {
-    display: none;
-}
-
-/* 国庆节特色：国旗元素 */
-.theme-nationalday .national-flag {
-    display: block;
-    position: absolute;
-    width: 40px;
-    height: 25px;
-    background: var(--primary-color);
-    border: 1px solid var(--secondary-color);
-    animation: float-flag 6s ease-in-out infinite;
-    transform-origin: center top;
-    box-shadow: 0 0 10px var(--primary-color);
-}
-
-.theme-nationalday .national-flag::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(circle at 12px 8px, var(--secondary-color) 0%, var(--secondary-color) 3px, transparent 3px),
-        linear-gradient(45deg, transparent 48%, var(--secondary-color) 49%, var(--secondary-color) 51%, transparent 52%);
-    background-size: 10px 10px;
-}
-
-/* 国庆节特色：红旗波浪效果 */
+/* 波浪效果动画 - 保留通用动画 */
 @keyframes float-flag {
     0%, 100% {
         transform: translateY(0) rotate(0deg);
@@ -191,251 +144,293 @@ html, body {
     }
 }
 
-/* 周一主题 - 太空科技风格 */
+/* 周一主题 - 数字雨科技风格 */
 .theme-monday {
-    --primary-color: #00ffcc;
-    --secondary-color: #6a00ff;
-    --accent-color: #ff00cc;
-    --bg-gradient: linear-gradient(135deg, #050020, #1a0b3c, #050020);
-    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(0, 255, 204, 0.5), 0 0 45px rgba(106, 0, 255, 0.3);
-}
-
-/* 中秋节主题 */
-.theme-midautumn {
-    --primary-color: #f1c40f;
-    --secondary-color: #e74c3c;
-    --accent-color: #3498db;
-    --bg-gradient: linear-gradient(135deg, #0a0a1f, #1a1a3f, #0a0a1f);
-    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(241, 196, 15, 0.5), 0 0 45px rgba(231, 76, 60, 0.3);
-}
-
-/* 中秋节主题特定样式 */
-.theme-midautumn #stars-container,
-.theme-midautumn .particles-container {
-    display: none;
-}
-
-/* 中秋节特色：月亮元素 */
-.theme-midautumn .moon {
-    position: absolute;
-    top: 10%;
-    left: 80%;
-    width: 150px;
-    height: 150px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    box-shadow: 0 0 60px var(--primary-color), 0 0 120px rgba(241, 196, 15, 0.3);
-    animation: moon-rotate 20s linear infinite;
-}
-
-/* 中秋节特色：月亮光晕 */
-.theme-midautumn .moon-glow {
-    position: absolute;
-    top: 10%;
-    left: 80%;
-    width: 150px;
-    height: 150px;
-    background: transparent;
-    border-radius: 50%;
-    box-shadow: 0 0 80px var(--primary-color), 0 0 160px rgba(241, 196, 15, 0.2);
-    animation: moon-glow-pulse 4s ease-in-out infinite;
-    z-index: -1;
-}
-
-/* 中秋节特色：月饼元素 */
-.theme-midautumn .mooncake {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    background: #d4a017;
-    border-radius: 50%;
-    border: 3px solid #8b4513;
-    animation: float-mooncake 8s ease-in-out infinite;
-}
-
-.theme-midautumn .mooncake::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60px;
-    height: 60px;
-    background: radial-gradient(circle, #e3c989 0%, #d4a017 70%);
-    border-radius: 50%;
-}
-
-.theme-midautumn .mooncake::after {
-    content: '福';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #8b4513;
-    font-size: 24px;
-    font-weight: bold;
-    text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
-}
-
-/* 不同位置的月饼 */
-.theme-midautumn .mooncake-1 { bottom: 10%; left: 10%; animation-delay: 0s; }
-.theme-midautumn .mooncake-2 { bottom: 5%; left: 25%; animation-delay: 2s; }
-.theme-midautumn .mooncake-3 { bottom: 15%; left: 40%; animation-delay: 4s; }
-
-/* 中秋节特色：灯笼元素 */
-.theme-midautumn .lantern {
-    position: absolute;
-    width: 60px;
-    height: 80px;
-    background: var(--secondary-color);
-    border-radius: 50% 50% 10% 10%;
-    border: 2px solid #333;
-    animation: lantern-swing 4s ease-in-out infinite;
-    transform-origin: top center;
-}
-
-.theme-midautumn .lantern::before {
-    content: '';
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 2px;
-    height: 20px;
-    background: #333;
-}
-
-.theme-midautumn .lantern::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    box-shadow: 0 0 20px var(--primary-color);
-}
-
-/* 不同位置的灯笼 */
-.theme-midautumn .lantern-1 { top: 20%; left: 15%; animation-delay: 0s; }
-.theme-midautumn .lantern-2 { top: 30%; left: 25%; animation-delay: 1s; }
-.theme-midautumn .lantern-3 { top: 25%; left: 35%; animation-delay: 2s; }
-.theme-midautumn .lantern-4 { top: 35%; left: 45%; animation-delay: 3s; }
-
-/* 中秋节特色：文字效果 */
-.theme-midautumn .text-line {
-    text-shadow: 0 0 15px var(--primary-color), 0 0 30px rgba(241, 196, 15, 0.7), 0 0 45px rgba(231, 76, 60, 0.5);
-    animation: midautumn-glow 3s ease-in-out infinite alternate;
-}
-
-/* 周二主题 - 自然清新风格 */
-.theme-tuesday {
     --primary-color: #00ff9d;
-    --secondary-color: #00a8ff;
-    --accent-color: #ffeb3b;
-    --bg-gradient: linear-gradient(135deg, #004d40, #006064, #0097a7);
-    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(0, 255, 157, 0.5), 0 0 45px rgba(0, 168, 255, 0.3);
+    --secondary-color: #00e5ff;
+    --accent-color: #76ff03;
+    --bg-gradient: linear-gradient(135deg, #000a12, #001a26, #000a12);
+    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(0, 255, 157, 0.5), 0 0 45px rgba(0, 229, 255, 0.3);
 }
 
-/* 周三主题 - 活力四射风格 */
-.theme-wednesday {
-    --primary-color: #ff4081;
-    --secondary-color: #303f9f;
-    --accent-color: #ffab00;
-    --bg-gradient: linear-gradient(135deg, #311b92, #5c6bc0, #311b92);
-    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(255, 64, 129, 0.5), 0 0 45px rgba(48, 63, 159, 0.3);
-}
-
-/* 周三主题 - 波浪动态风格特定样式 */
-.theme-wednesday #stars-container,
-.theme-wednesday .particles-container {
-    display: none;
-}
-
-/* 周三特色：波浪效果 */
-.theme-wednesday .wave {
-    display: block;
+/* 周一特色：数字雨效果 */
+.theme-monday .digital-rain-column {
     position: absolute;
-    width: 200%;
-    height: 100px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    opacity: 0.3;
-    transform-origin: center bottom;
-    animation: 
-        wave 10s ease-in-out infinite alternate,
-        color-shift 15s ease-in-out infinite alternate;
+    top: 0;
+    height: 100vh;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.2;
+    overflow: hidden;
+    animation: digital-fall 15s linear infinite;
 }
 
-.theme-wednesday .wave-1 {
-    top: 30%;
-    left: -50%;
-    animation-delay: 0s, 0s;
-}
-
-.theme-wednesday .wave-2 {
-    top: 50%;
-    left: -50%;
-    background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
-    animation: 
-        wave 15s ease-in-out infinite alternate-reverse,
-        color-shift 12s ease-in-out infinite alternate;
-    animation-delay: 0.5s, 0.5s;
-}
-
-.theme-wednesday .wave-3 {
-    top: 70%;
-    left: -50%;
-    background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
-    animation: 
-        wave 12s ease-in-out infinite alternate,
-        color-shift 18s ease-in-out infinite alternate;
-    animation-delay: 1s, 1s;
-}
-
-/* 周三特色：新增波浪 */
-.theme-wednesday .wave-4 {
+.theme-monday .digital-rain-column span {
     display: block;
+    color: var(--primary-color);
+    text-shadow: 0 0 5px var(--primary-color);
+    animation: digital-fade 1s ease-in-out infinite;
+}
+
+@keyframes digital-fall {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
+}
+
+@keyframes digital-fade {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+/* 周一特色：科技粒子效果 */
+.theme-monday .tech-particle {
     position: absolute;
-    width: 200%;
-    height: 50px;
-    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-    opacity: 0.2;
-    top: 10%;
-    left: -50%;
-    transform-origin: center bottom;
-    animation: 
-        wave 8s ease-in-out infinite alternate-reverse,
-        color-shift 10s ease-in-out infinite alternate;
-    animation-delay: 0.2s, 0.2s;
+    background: var(--primary-color);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--secondary-color);
+    animation: tech-particle-move 8s linear infinite;
 }
 
-/* 周三特色：文字弹跳效果 */
-.theme-wednesday .text-line {
-    text-shadow: 0 0 15px var(--primary-color), 0 0 25px rgba(255, 64, 129, 0.5);
-    animation: text-bounce 5s ease-in-out infinite;
+@keyframes tech-particle-move {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateY(-50vh) translateX(100px);
+        opacity: 0.4;
+    }
+    100% {
+        transform: translateY(-100vh) translateX(0);
+        opacity: 0;
+    }
 }
 
-.theme-wednesday .text-line[data-line="1"] {
-    animation-delay: 0s;
+/* 周二主题 - 3D网格科技风格 */
+.theme-tuesday {
+    --primary-color: #00b0ff;
+    --secondary-color: #7c4dff;
+    --accent-color: #2979ff;
+    --bg-gradient: linear-gradient(135deg, #000022, #000a40, #000022);
+    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(0, 176, 255, 0.5), 0 0 45px rgba(124, 77, 255, 0.3);
 }
 
-.theme-wednesday .text-line[data-line="2"] {
-    animation-delay: 0.5s;
+/* 周二特色：3D网格背景 */
+.theme-tuesday .tech-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(0, 176, 255, 0.1) 50px),
+                repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(0, 176, 255, 0.1) 50px);
+    transform: perspective(500px) rotateX(60deg) scale(2);
+    transform-origin: center top;
+    animation: grid-move 10s linear infinite;
 }
 
-.theme-wednesday .text-line[data-line="3"] {
+.theme-tuesday .grid-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(0, 176, 255, 0.2) 1px, transparent 1px),
+                linear-gradient(0deg, rgba(0, 176, 255, 0.2) 1px, transparent 1px);
+    background-size: 20px 20px;
+    animation: grid-fade 8s ease-in-out infinite;
+}
+
+@keyframes grid-move {
+    0% { transform: perspective(500px) rotateX(60deg) scale(2) translateY(0); }
+    100% { transform: perspective(500px) rotateX(60deg) scale(2) translateY(-100px); }
+}
+
+@keyframes grid-fade {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+
+/* 周二特色：科技圆环 */
+.theme-tuesday .tech-circle {
+    position: absolute;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    box-shadow: 0 0 20px var(--primary-color), 0 0 40px rgba(124, 77, 255, 0.3);
+    animation: circle-pulse 5s ease-in-out infinite;
+}
+
+.theme-tuesday .circle-1 {
+    width: 300px;
+    height: 300px;
+    top: 20%;
+    left: 10%;
+}
+
+.theme-tuesday .circle-2 {
+    width: 200px;
+    height: 200px;
+    bottom: 15%;
+    right: 15%;
+    border-color: var(--secondary-color);
     animation-delay: 1s;
 }
 
-/* 周四主题 - 复古温暖风格 */
+.theme-tuesday .circle-3 {
+    width: 150px;
+    height: 150px;
+    top: 40%;
+    right: 20%;
+    border-color: var(--accent-color);
+    animation-delay: 2s;
+}
+
+@keyframes circle-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.1); opacity: 0.4; }
+}
+
+/* 周三主题 - 声波频率科技风格 */
+.theme-wednesday {
+    --primary-color: #ff4081;
+    --secondary-color: #7c4dff;
+    --accent-color: #00e5ff;
+    --bg-gradient: linear-gradient(135deg, #1a001a, #00004d, #1a001a);
+    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(255, 64, 129, 0.5), 0 0 45px rgba(124, 77, 255, 0.3);
+}
+
+/* 周三特色：音频波形效果 */
+.theme-wednesday .audio-wave-container {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 100px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.theme-wednesday .audio-wave-bar {
+    width: 6px;
+    background: linear-gradient(to top, var(--primary-color), var(--secondary-color));
+    border-radius: 3px;
+    animation: audio-wave 1s ease-in-out infinite;
+}
+
+@keyframes audio-wave {
+    0%, 100% { height: 20%; }
+    50% { height: 100%; }
+}
+
+/* 周三特色：频率柱状图 */
+.theme-wednesday .frequency-container {
+    position: absolute;
+    top: 20%;
+    left: 5%;
+    width: 200px;
+    height: 40%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+}
+
+.theme-wednesday .frequency-bar {
+    width: 8px;
+    background: linear-gradient(to top, var(--accent-color), var(--primary-color));
+    border-radius: 4px;
+    animation: frequency-pulse 2s ease-in-out infinite;
+}
+
+@keyframes frequency-pulse {
+    0%, 100% { height: 30%; }
+    50% { height: 90%; }
+}
+
+/* 周三特色：频谱背景 */
+.theme-wednesday::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(124, 77, 255, 0.05) 50%, transparent 100%);
+    background-size: 100px 100px;
+    animation: spectrum-shift 5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes spectrum-shift {
+    0%, 100% { background-position: 0 0; }
+    50% { background-position: 100px 100px; }
+}
+
+/* 周四主题 - 全息投影科技风格 */
 .theme-thursday {
-    --primary-color: #ff9800;
-    --secondary-color: #795548;
-    --accent-color: #ffeb3b;
-    --bg-gradient: linear-gradient(135deg, #3e2723, #5d4037, #8d6e63);
-    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(255, 152, 0, 0.5), 0 0 45px rgba(121, 85, 72, 0.3);
+    --primary-color: #00ffff;
+    --secondary-color: #00e5ff;
+    --accent-color: #b388ff;
+    --bg-gradient: linear-gradient(135deg, #001a1a, #002a4a, #001a1a);
+    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(0, 255, 255, 0.5), 0 0 45px rgba(0, 229, 255, 0.3);
+}
+
+/* 周四特色：全息投影底座 */
+.theme-thursday .holographic-base {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 200px;
+    background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+    opacity: 0.3;
+    animation: hologram-pulse 3s ease-in-out infinite;
+}
+
+/* 周四特色：全息投影内容 */
+.theme-thursday .holographic-content {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 300px;
+    background: linear-gradient(to top, var(--primary-color) 0%, transparent 100%);
+    opacity: 0.2;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    animation: hologram-float 4s ease-in-out infinite;
+}
+
+/* 周四特色：全息投影线 */
+.theme-thursday .holographic-line {
+    position: absolute;
+    background: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-color);
+    opacity: 0.5;
+}
+
+.theme-thursday .line-0 { width: 1px; height: 300px; left: 30%; top: 20%; animation: hologram-line 5s ease-in-out infinite; }
+.theme-thursday .line-1 { width: 1px; height: 250px; left: 40%; top: 25%; animation: hologram-line 6s ease-in-out infinite; }
+.theme-thursday .line-2 { width: 1px; height: 350px; left: 50%; top: 15%; animation: hologram-line 7s ease-in-out infinite; }
+.theme-thursday .line-3 { width: 1px; height: 280px; left: 60%; top: 22%; animation: hologram-line 8s ease-in-out infinite; }
+.theme-thursday .line-4 { width: 1px; height: 320px; left: 70%; top: 18%; animation: hologram-line 9s ease-in-out infinite; }
+
+@keyframes hologram-pulse {
+    0%, 100% { opacity: 0.2; transform: translateX(-50%) scale(1); }
+    50% { opacity: 0.4; transform: translateX(-50%) scale(1.1); }
+}
+
+@keyframes hologram-float {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-20px); }
+}
+
+@keyframes hologram-line {
+    0%, 100% { height: 0; opacity: 0; }
+    50% { height: 300px; opacity: 0.7; }
 }
 
 /* 周四主题 - 温暖光斑风格特定样式 */
@@ -523,97 +518,41 @@ html, body {
     animation: warm-glow 4s ease-in-out infinite alternate;
 }
 
-/* 周五主题 - 霓虹派对风格 */
+/* 周五主题 - 量子波动科技风格 */
 .theme-friday {
-    --primary-color: #ff00cc;
+    --primary-color: #ff00ff;
     --secondary-color: #00ffff;
-    --accent-color: #ffff00;
-    --bg-gradient: linear-gradient(135deg, #1a001a, #00004d, #1a001a);
-    --text-shadow-base: 0 0 20px var(--primary-color), 0 0 40px rgba(255, 0, 204, 0.6), 0 0 60px rgba(0, 255, 255, 0.4);
+    --accent-color: #00ff00;
+    --bg-gradient: linear-gradient(135deg, #0a001a, #000a1a, #0a001a);
+    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(255, 0, 255, 0.5), 0 0 45px rgba(0, 255, 255, 0.3);
 }
 
-/* 周五主题 - 霓虹灯效果特定样式 */
+/* 周五主题 - 量子波动特定样式 */
 .theme-friday #stars-container,
 .theme-friday .particles-container {
     display: none;
 }
 
-/* 周五特色：霓虹灯线条 */
-.theme-friday .neon-line {
-    display: block;
+/* 周五特色：量子波动效果 */
+.theme-friday .quantum-wave {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.theme-friday .quantum-line {
     position: absolute;
     background: var(--primary-color);
     box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
-    animation: neon-pulse 2s ease-in-out infinite alternate;
+    opacity: 0.7;
+    animation: quantum-pulse 2s ease-in-out infinite;
 }
 
-.theme-friday .line-1 {
-    width: 2px;
-    height: 100%;
-    top: 0;
-    left: 20%;
-    animation-delay: 0s;
-}
-
-.theme-friday .line-2 {
-    width: 2px;
-    height: 100%;
-    top: 0;
-    right: 20%;
-    background: var(--secondary-color);
-    box-shadow: 0 0 10px var(--secondary-color), 0 0 20px var(--secondary-color);
-    animation-delay: 0.5s;
-}
-
-.theme-friday .line-3 {
-    width: 100%;
-    height: 2px;
-    top: 30%;
-    left: 0;
-    background: var(--accent-color);
-    box-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
-    animation-delay: 1s;
-}
-
-.theme-friday .line-4 {
-    width: 100%;
-    height: 2px;
-    bottom: 30%;
-    left: 0;
-    background: var(--primary-color);
-    box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
-    animation-delay: 1.5s;
-}
-
-/* 周五特色：新增霓虹灯效果 */
-.theme-friday .neon-circle {
-    display: block;
-    position: absolute;
-    border-radius: 50%;
-    border: 2px solid var(--secondary-color);
-    box-shadow: 0 0 15px var(--secondary-color), 0 0 30px rgba(0, 255, 255, 0.5);
-    animation: neon-pulse 3s ease-in-out infinite alternate, rotate 20s linear infinite;
-}
-
-.theme-friday .neon-circle-1 {
-    width: 150px;
-    height: 150px;
-    top: 20%;
-    left: 30%;
-    opacity: 0.6;
-}
-
-.theme-friday .neon-circle-2 {
-    width: 100px;
-    height: 100px;
-    bottom: 15%;
-    right: 25%;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 15px var(--accent-color), 0 0 30px rgba(255, 255, 0, 0.5);
-    opacity: 0.5;
-}
-
-/* 周五特色：网格背景 */
+/* 周五特色：量子网格 */
 .theme-friday body::before {
     content: '';
     position: absolute;
@@ -622,133 +561,192 @@ html, body {
     width: 100%;
     height: 100%;
     background-image: 
-        linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 50px 50px;
+        linear-gradient(var(--secondary-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--secondary-color) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.1;
+    animation: grid-shift 10s linear infinite;
     pointer-events: none;
     z-index: 1;
 }
 
-/* 周五特色：文字霓虹灯闪烁效果 */
+@keyframes quantum-pulse {
+    0%, 100% { width: 100%; opacity: 0.3; }
+    50% { width: 80%; opacity: 0.7; }
+}
+
+@keyframes grid-shift {
+    0%, 100% { background-position: 0 0; }
+    50% { background-position: 30px 30px; }
+}
+
+/* 周五特色：量子粒子 */
+.theme-friday .quantum-particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--accent-color);
+    box-shadow: 0 0 5px var(--accent-color);
+    border-radius: 50%;
+    animation: quantum-move 5s linear infinite;
+}
+
+@keyframes quantum-move {
+    0% { transform: translate(0, 0); opacity: 0; }
+    10%, 90% { opacity: 1; }
+    100% { transform: translate(100px, 100px); opacity: 0; }
+}
+
+/* 周五特色：文字量子效果 */
 .theme-friday .text-line {
-    text-shadow: 0 0 5px #fff, 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
-    animation: neon-flicker 1.5s infinite alternate;
+    text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--secondary-color);
+    animation: quantum-text 2s ease-in-out infinite;
 }
 
-/* 周六主题 - 梦幻多彩风格 */
+@keyframes quantum-text {
+    0%, 100% { text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--secondary-color); }
+    50% { text-shadow: 0 0 20px var(--accent-color), 0 0 40px var(--primary-color); }
+}
+
+/* 周六主题 - 机械科技风格 */
 .theme-saturday {
-    --primary-color: #ea80fc;
-    --secondary-color: #82b1ff;
-    --accent-color: #b9f6ca;
-    --bg-gradient: linear-gradient(135deg, #651fff, #536dfe, #8c9eff);
-    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(234, 128, 252, 0.5), 0 0 45px rgba(130, 177, 255, 0.3);
+    --primary-color: #ff9800;
+    --secondary-color: #555;
+    --accent-color: #00bcd4;
+    --bg-gradient: linear-gradient(135deg, #111, #222, #111);
+    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(255, 152, 0, 0.5), 0 0 45px rgba(0, 188, 212, 0.3);
 }
 
-/* 周六主题 - 自然风景风格特定样式 */
+/* 周六主题 - 机械科技特定样式 */
 .theme-saturday #stars-container,
 .theme-saturday .particles-container {
     display: none;
 }
 
-/* 周六特色：梦幻云朵效果 */
-.theme-saturday .cloud {
-    display: block;
+/* 周六特色：机械齿轮 */
+.theme-saturday .gear {
     position: absolute;
-    background: white;
-    border-radius: 50%;
-    opacity: 0.8;
-    filter: blur(10px);
-}
-
-.theme-saturday .cloud-1 {
-    width: 150px;
-    height: 100px;
-    top: 10%;
-    left: -100px;
-    animation: float-cloud 60s linear infinite, cloud-pulse 8s ease-in-out infinite alternate;
-}
-
-.theme-saturday .cloud-2 {
-    width: 200px;
-    height: 120px;
-    top: 15%;
-    right: -150px;
-    animation: float-cloud 80s linear infinite reverse, cloud-pulse 10s ease-in-out infinite alternate;
-    animation-delay: 0s, 2s;
-}
-
-.theme-saturday .cloud-3 {
     width: 100px;
-    height: 70px;
-    bottom: 10%;
-    left: 30%;
-    animation: float-cloud 40s linear infinite, cloud-pulse 6s ease-in-out infinite alternate;
-    animation-delay: 0s, 1s;
-}
-
-/* 周六特色：新增云朵 */
-.theme-saturday .cloud-4 {
-    display: block;
-    position: absolute;
-    width: 120px;
-    height: 80px;
-    background: white;
-    border-radius: 50%;
-    opacity: 0.7;
-    filter: blur(8px);
-    bottom: 20%;
-    right: 10%;
-    animation: float-cloud 70s linear infinite, cloud-pulse 7s ease-in-out infinite alternate;
-    animation-delay: 0s, 1.5s;
-}
-
-/* 周六特色：彩虹光晕 */
-.theme-saturday .rainbow-glow {
-    display: block;
-    position: absolute;
+    height: 100px;
+    border: 10px solid var(--secondary-color);
     border-radius: 50%;
     opacity: 0.5;
-    filter: blur(80px);
-    animation: rainbow-shift 20s ease-in-out infinite alternate;
+    animation: gear-rotate 10s linear infinite;
 }
 
-.theme-saturday .rainbow-glow-1 {
-    width: 400px;
-    height: 400px;
-    top: -200px;
-    right: -200px;
-    background: var(--primary-color);
-}
-
-.theme-saturday .rainbow-glow-2 {
-    width: 300px;
-    height: 300px;
-    bottom: -150px;
-    left: -150px;
+.theme-saturday .gear::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: calc(50% - 10px);
+    width: 20px;
+    height: 60px;
     background: var(--secondary-color);
-    animation-delay: 2s;
+    border-radius: 5px;
 }
 
-/* 周六特色：文字梦幻渐变效果 */
+.theme-saturday .gear::after {
+    content: '';
+    position: absolute;
+    top: calc(50% - 10px);
+    left: -30px;
+    width: 60px;
+    height: 20px;
+    background: var(--secondary-color);
+    border-radius: 5px;
+}
+
+.theme-saturday .gear-1 {
+    top: 20%;
+    left: 10%;
+}
+
+.theme-saturday .gear-2 {
+    top: 30%;
+    left: 25%;
+    width: 70px;
+    height: 70px;
+    animation-direction: reverse;
+    animation-duration: 7s;
+}
+
+/* 周六特色：机械臂 */
+.theme-saturday .robot-arm {
+    position: absolute;
+    background: var(--secondary-color);
+    border-radius: 5px;
+}
+
+.theme-saturday .arm-upper {
+    width: 10px;
+    height: 150px;
+    bottom: 10%;
+    right: 20%;
+    transform-origin: bottom center;
+    animation: arm-move 5s ease-in-out infinite;
+}
+
+.theme-saturday .arm-lower {
+    width: 10px;
+    height: 100px;
+    top: 0;
+    right: -5px;
+    transform-origin: bottom center;
+    animation: forearm-move 5s ease-in-out infinite;
+}
+
+/* 周六特色：电路板纹理 */
+.theme-saturday body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(90deg, transparent 33%, rgba(0, 188, 212, 0.1) 33%, rgba(0, 188, 212, 0.1) 66%, transparent 66%),
+        linear-gradient(rgba(0, 188, 212, 0.1) 33%, transparent 33%, transparent 66%, rgba(0, 188, 212, 0.1) 66%);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes gear-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes arm-move {
+    0%, 100% { transform: rotate(-10deg); }
+    50% { transform: rotate(30deg); }
+}
+
+@keyframes forearm-move {
+    0%, 100% { transform: rotate(20deg); }
+    50% { transform: rotate(-40deg); }
+}
+
+/* 周六特色：文字金属效果 */
 .theme-saturday .text-line {
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color), var(--primary-color));
+    background: linear-gradient(135deg, #ccc, #fff, #ccc);
     background-size: 400% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    animation: gradient-shift 10s ease-in-out infinite, dreamy-float 6s ease-in-out infinite;
+    text-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+    animation: metal-shine 3s ease-in-out infinite;
 }
 
-/* 周日主题 - 宇宙星空风格 */
+/* 周日主题 - 太空科技风格 */
 .theme-sunday {
-    --primary-color: #00d5ff;
-    --secondary-color: #7c4dff;
-    --accent-color: #ff4081;
-    --bg-gradient: linear-gradient(135deg, #000a12, #1a237e, #000a12);
-    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(0, 213, 255, 0.5), 0 0 45px rgba(124, 77, 255, 0.3);
+    --primary-color: #4a148c;
+    --secondary-color: #0d47a1;
+    --accent-color: #00bcd4;
+    --bg-gradient: linear-gradient(135deg, #000011, #001122, #000011);
+    --text-shadow-base: 0 0 15px var(--primary-color), 0 0 30px rgba(74, 20, 140, 0.5), 0 0 45px rgba(13, 71, 161, 0.3);
 }
 
-/* 周日主题 - 宇宙星云风格特定样式 */
+/* 周日主题 - 太空科技特定样式 */
 .theme-sunday #stars-container {
     display: block;
 }
@@ -757,50 +755,114 @@ html, body {
     display: none;
 }
 
-/* 周日特色：星云效果 */
-.theme-sunday .nebula {
-    display: block;
+/* 周日特色：航天设备效果 */
+.theme-sunday .space-station {
     position: absolute;
+    width: 200px;
+    height: 50px;
+    border: 2px solid var(--primary-color);
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    opacity: 0.7;
+    box-shadow: 0 0 20px var(--primary-color);
+    animation: space-station-move 30s linear infinite;
+}
+
+.theme-sunday .space-station-1 {
+    top: 20%;
+    left: -200px;
+}
+
+/* 周日特色：卫星轨道 */
+.theme-sunday .orbit {
+    position: absolute;
+    border: 1px dashed var(--accent-color);
     border-radius: 50%;
-    filter: blur(80px);
     opacity: 0.3;
-    animation: nebula-pulse 15s ease-in-out infinite alternate;
+    animation: orbit-rotate 20s linear infinite;
 }
 
-.theme-sunday .nebula-1 {
-    width: 400px;
-    height: 400px;
-    top: -200px;
-    left: 20%;
-    background: var(--primary-color);
-}
-
-.theme-sunday .nebula-2 {
+.theme-sunday .orbit-1 {
     width: 300px;
     height: 300px;
-    bottom: -150px;
-    right: 20%;
-    background: var(--secondary-color);
-    animation-delay: 2s;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-.theme-sunday .nebula-3 {
-    width: 250px;
-    height: 250px;
-    top: 40%;
-    right: 10%;
-    background: var(--accent-color);
-    animation: nebula-pulse 20s ease-in-out infinite alternate;
-    animation-delay: 4s;
+.theme-sunday .orbit-2 {
+    width: 500px;
+    height: 500px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-duration: 30s;
 }
 
-/* 周日特色：流星效果 */
-.theme-sunday .meteor {
-    display: block;
+/* 周日特色：卫星 */
+.theme-sunday .satellite {
     position: absolute;
-    background: linear-gradient(to right, transparent, white, rgba(255,255,255,0.5));
+    width: 10px;
+    height: 10px;
+    background: var(--accent-color);
     border-radius: 50%;
-    opacity: 0;
+    box-shadow: 0 0 10px var(--accent-color);
+    animation: satellite-move 20s linear infinite;
+}
+
+.theme-sunday .satellite-1 {
+    top: calc(50% - 150px);
+    left: calc(50% - 5px);
+}
+
+.theme-sunday .satellite-2 {
+    top: calc(50% - 250px);
+    left: calc(50% - 5px);
+    animation-duration: 30s;
+}
+
+/* 周日特色：太空舱 */
+.theme-sunday .space-pod {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border: 2px solid var(--accent-color);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+    opacity: 0.6;
+    box-shadow: 0 0 15px var(--accent-color);
+    animation: space-pod-float 15s ease-in-out infinite;
+}
+
+.theme-sunday .space-pod-1 {
+    bottom: 10%;
+    right: 15%;
+}
+
+@keyframes space-station-move {
+    0% { left: -200px; }
+    100% { left: 100%; }
+}
+
+@keyframes orbit-rotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes satellite-move {
+    from { transform: rotate(0deg) translateX(150px) rotate(0deg); }
+    to { transform: rotate(360deg) translateX(150px) rotate(-360deg); }
+}
+
+@keyframes space-pod-float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+/* 周日特色：文字科技发光效果 */
+.theme-sunday .text-line {
+    text-shadow: var(--text-shadow-base);
+    animation: tech-glow 3s ease-in-out infinite alternate;
 }
 
 .theme-sunday .meteor-1 {
@@ -2155,4 +2217,332 @@ body::before {
 /* Logo 风格入场动画 */
 .text-line.logo-style.animate {
     animation: logo-pop 0.6s ease-out forwards;
+}
+
+/* 电路脉冲效果 */
+.circuit-pulse {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 1), transparent);
+    width: 100%;
+    opacity: 0;
+    animation: pulseMove 1s linear;
+    pointer-events: none;
+}
+
+@keyframes pulseMove {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* 节点连接画布 */
+.node-connection-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* 赛博朋克噪点效果 */
+.cyberpunk-noise {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 15;
+    mix-blend-mode: overlay;
+}
+
+/* 赛博朋克雨效果 */
+.cyberpunk-rain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 20;
+    overflow: hidden;
+}
+
+.rain-drop {
+    position: absolute;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(0, 255, 255, 0.8));
+    animation: rainFall linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rainFall {
+    0% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(100vh);
+    }
+}
+
+/* 电子流效果 */
+.cyberpunk-electrons {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 25;
+}
+
+.cyber-electron {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent-color);
+    animation: electronMove linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes electronMove {
+    0% {
+        transform: translateY(-10px) translateX(0);
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.8;
+    }
+    80% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(100vh) translateX(100px);
+        opacity: 0;
+    }
+}
+
+/* 赛博朋克文字效果 */
+.cyberpunk-text {
+    position: absolute;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    opacity: 0.8;
+    animation: textGlow 3s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 30;
+}
+
+.cyberpunk-text.text-1 {
+    top: 10%;
+    left: 15%;
+    color: var(--accent-color);
+    text-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
+}
+
+.cyberpunk-text.text-2 {
+    top: 80%;
+    left: 65%;
+    color: var(--secondary-color);
+    text-shadow: 0 0 10px var(--secondary-color), 0 0 20px var(--secondary-color);
+    transform: rotate(-5deg);
+}
+
+.cyberpunk-text.text-3 {
+    top: 40%;
+    right: 10%;
+    color: var(--primary-color);
+    text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+    transform: rotate(3deg);
+}
+
+.cyberpunk-text.text-4 {
+    bottom: 15%;
+    left: 20%;
+    color: #ffeb3b;
+    text-shadow: 0 0 10px #ffeb3b, 0 0 20px #ffeb3b;
+    transform: rotate(-2deg);
+}
+
+@keyframes textGlow {
+    from {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0.9;
+        transform: scale(1.05);
+    }
+}
+
+/* 宇宙流星效果 */
+.space-meteor {
+    position: absolute;
+    width: 1px;
+    height: 30px;
+    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.8));
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    animation: meteorFly linear forwards;
+    pointer-events: none;
+    z-index: 25;
+}
+
+@keyframes meteorFly {
+    0% {
+        transform: translateX(-100px) translateY(0) rotate(45deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    90% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateX(200vw) translateY(200vh) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+/* 星云效果 */
+.space-nebula {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: 5;
+}
+
+.space-nebula.nebula-1 {
+    width: 60vw;
+    height: 60vw;
+    top: -20%;
+    left: -10%;
+}
+
+.space-nebula.nebula-2 {
+    width: 50vw;
+    height: 50vw;
+    bottom: -10%;
+    right: -10%;
+}
+
+.space-nebula.nebula-3 {
+    width: 40vw;
+    height: 40vw;
+    top: 40%;
+    left: 30%;
+}
+
+.space-nebula.nebula-4 {
+    width: 35vw;
+    height: 35vw;
+    bottom: 30%;
+    left: -5%;
+}
+
+/* 宇宙射线效果 */
+.cosmic-ray {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2px;
+    height: 100vh;
+    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.6), transparent);
+    transform-origin: center;
+    animation: rayPulse linear infinite;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 20;
+}
+
+@keyframes rayPulse {
+    0% {
+        opacity: 0.1;
+        transform: rotate(var(--rotation)) scaleY(0.5);
+    }
+    50% {
+        opacity: 0.4;
+        transform: rotate(var(--rotation)) scaleY(1);
+    }
+    100% {
+        opacity: 0.1;
+        transform: rotate(var(--rotation)) scaleY(0.5);
+    }
+}
+
+/* 太阳效果 */
+.space-sun {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    margin-left: -50px;
+    margin-top: -50px;
+    background: radial-gradient(circle, #ffeb3b, #ff9800, #e65100);
+    border-radius: 50%;
+    box-shadow: 0 0 60px rgba(255, 193, 7, 0.8), 0 0 120px rgba(255, 193, 7, 0.4);
+    z-index: 10;
+    animation: sunPulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes sunPulse {
+    from {
+        transform: scale(1);
+        box-shadow: 0 0 60px rgba(255, 193, 7, 0.8), 0 0 120px rgba(255, 193, 7, 0.4);
+    }
+    to {
+        transform: scale(1.1);
+        box-shadow: 0 0 80px rgba(255, 193, 7, 1), 0 0 160px rgba(255, 193, 7, 0.6);
+    }
+}
+
+/* 卫星效果 */
+.moon {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #d7ccc8;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(215, 204, 200, 0.6);
+    animation: moonOrbit 4s linear infinite;
+    z-index: 15;
+}
+
+.moon.moon-1 {
+    left: 20px;
+    animation-delay: 0s;
+}
+
+.moon.moon-2 {
+    left: 15px;
+    animation-delay: 1s;
+    animation-duration: 5s;
+}
+
+@keyframes moonOrbit {
+    0% {
+        transform: rotate(0deg) translateX(15px) rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg) translateX(15px) rotate(-360deg);
+    }
 }

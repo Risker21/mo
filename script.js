@@ -15,14 +15,14 @@ document.addEventListener('DOMContentLoaded', function() {
     let particles = [];
     
     // 标题轮换功能 - 增强用户体验
-    const titles = ['万事顺 长安宁', 'Momo祝你今天愉快', '钱包鼓鼓 胖了也酷'];
+    const titles = ['万事顺 长安宁', 'Momo祝你今天愉快', '钱包鼓鼓，胖了也酷'];
     let currentTitleIndex = 0;
     
     // 设置标题轮换定时器，每隔4秒更换一次
     const titleInterval = setInterval(() => {
         currentTitleIndex = (currentTitleIndex + 1) % titles.length;
         document.title = titles[currentTitleIndex];
-    }, 3000);
+    }, 4000);
     
     // 初始化主题元素容器 - 优化DOM结构
     function createThemeElementsContainer() {
@@ -66,90 +66,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // 设置每日主题 - 核心功能
     function setDailyTheme() {
         const today = new Date();
-        
-        // 检查是否是国庆节期间 (10月1日-7日)
-        if (isNationalDay(today)) {
-            // 国庆节期间显示国庆主题
-            setNationalDayTheme();
-        } else {
-            // 非国庆节期间根据星期几显示对应的主题
-            const dayOfWeek = today.getDay();
-            setThemeByDay(dayOfWeek);
-        }
-    }
-    
-    // 检查是否是国庆节期间 (10月1日-7日)
-    function isNationalDay(date) {
-        const month = date.getMonth() + 1; // 月份从0开始
-        const day = date.getDate();
-        return month === 10 && day >= 1 && day <= 7;
-    }
-    
-    // 检查是否是中秋节
-    function isMidAutumnDay(date) {
-        // 这里简化处理，实际应该使用农历计算
-        // 以下是未来几年中秋节的公历日期作为示例
-        const midAutumnDates = [
-            '2023-09-29', // 2023年中秋节
-            '2024-09-17', // 2024年中秋节
-            '2025-10-06', // 2025年中秋节（在国庆期间）
-            '2026-09-25', // 2026年中秋节
-            '2027-10-15', // 2027年中秋节
-            '2028-10-03', // 2028年中秋节（在国庆期间）
-        ];
-        
-        const dateStr = date.toISOString().split('T')[0];
-        return midAutumnDates.includes(dateStr);
-    }
-    
-    // 设置国庆节主题
-    function setNationalDayTheme() {
-        // 清除所有主题类
-        body.className = '';
-        
-        // 清除现有主题元素
-        clearThemeElements();
-        
-        // 添加国庆节主题类
-        body.classList.add('theme-nationalday');
-        
-        // 设置国庆节文字（三行显示）
-        if (textLines.length > 0) {
-            textLines[0].textContent = '祖国母亲';
-            textLines[0].removeAttribute('data-original-text');
-        }
-        if (textLines.length > 1) {
-            textLines[1].textContent = '生日快乐';
-            textLines[1].removeAttribute('data-original-text');
-        }
-        if (textLines.length > 2) {
-            textLines[2].textContent = ''; // 第三行留空
-            textLines[2].removeAttribute('data-original-text');
-        }
-        
-        // 创建国庆节特定元素
-        createNationalDayElements();
-        
-        // 重新启动文字动画
-        startTextAnimation();
-    }
-    
-    // 设置中秋节主题
-    function setMidAutumnTheme() {
-        // 清除所有主题类
-        body.className = '';
-        
-        // 清除现有主题元素
-        clearThemeElements();
-        
-        // 添加中秋节主题类
-        body.classList.add('theme-midautumn');
-        
-        // 创建中秋节特定元素
-        createMidAutumnElements();
-        
-        // 重新启动文字动画
-        startTextAnimation();
+        // 直接根据星期几显示对应的主题
+        const dayOfWeek = today.getDay();
+        setThemeByDay(dayOfWeek);
     }
     
     // 根据星期几设置主题 - 确保主题正确应用
@@ -176,35 +95,40 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 根据星期几添加对应的主题类和效果
         switch(dayOfWeek) {
-            case 1: // 周一 - 星空粒子风格
+            case 1: // 周一 - 数字雨科技风格
                 body.classList.add('theme-monday');
-                createStars();
-                createParticles();
+                createDigitalRain();
+                createTechParticles();
                 break;
-            case 2: // 周二 - 几何图形风格
+            case 2: // 周二 - 3D网格科技风格
                 body.classList.add('theme-tuesday');
-                createGeometricShapes();
+                createGridBackground();
+                createTechCircles();
                 break;
-            case 3: // 周三 - 波浪动态风格
+            case 3: // 周三 - 声波频率科技风格
                 body.classList.add('theme-wednesday');
-                createWaves();
+                createAudioWaves();
+                createFrequencyBars();
                 break;
-            case 4: // 周四 - 温暖光斑风格
+            case 4: // 周四 - 全息投影科技风格
                 body.classList.add('theme-thursday');
-                createLightSpots();
+                createHolographicEffect();
+                createScanLines();
                 break;
-            case 5: // 周五 - 霓虹灯效果
+            case 5: // 周五 - 霓虹电路科技风格
                 body.classList.add('theme-friday');
-                createNeonLines();
+                createCircuitLines();
+                createGlowingNodes();
                 break;
-            case 6: // 周六 - 自然风景风格
+            case 6: // 周六 - 赛博朋克科技风格
                 body.classList.add('theme-saturday');
-                createClouds();
+                createCyberpunkBackground();
+                createNeonSigns();
                 break;
-            case 0: // 周日 - 宇宙星云风格
+            case 0: // 周日 - 宇宙科技风格
                 body.classList.add('theme-sunday');
-                createStars();
-                createNebula();
+                createSpaceTech();
+                createPlanetOrbits();
                 break;
         }
         
@@ -212,322 +136,1165 @@ document.addEventListener('DOMContentLoaded', function() {
         startTextAnimation();
     }
     
-    // 创建星空效果（用于周一和周日主题）
-    function createStars() {
-        if (!starsContainer) return;
+    // 周一 - 数字雨科技风格（增强版）
+function createDigitalRain() {
+    if (!themeElementsContainer) return;
+    
+    // 创建多个数字雨列
+    const columnCount = Math.floor(window.innerWidth / 20); // 自适应列数
+    const containerWidth = window.innerWidth;
+    const columnSpacing = containerWidth / columnCount;
+    const fragment = document.createDocumentFragment();
+    
+    // 添加鼠标交互响应的数字雨效果
+    const handleRainMouseMove = (e) => {
+        const rainColumns = document.querySelectorAll('.digital-rain-column');
+        rainColumns.forEach(column => {
+            const rect = column.getBoundingClientRect();
+            const distance = Math.sqrt(
+                Math.pow(e.clientX - (rect.left + rect.width/2), 2) + 
+                Math.pow(e.clientY - (rect.top + rect.height/2), 2)
+            );
+            
+            // 鼠标附近的数字雨加速和颜色变化
+            if (distance < 150) {
+                const intensity = 1 - (distance / 150);
+                column.style.animationDuration = `${10 - intensity * 7}s`;
+                column.style.color = `rgba(0, 255, 157, ${0.7 + intensity * 0.3})`;
+            } else {
+                column.style.animationDuration = '10s';
+                column.style.color = 'var(--primary-color)';
+            }
+        });
+    };
+    
+    // 添加事件监听器（但避免重复添加）
+    if (!document.hasRainMouseListener) {
+        document.addEventListener('mousemove', handleRainMouseMove);
+        document.hasRainMouseListener = true;
+    }
+    
+    for (let i = 0; i < columnCount; i++) {
+        const column = document.createElement('div');
+        column.className = 'digital-rain-column';
+        column.style.left = `${i * columnSpacing}px`;
+        column.style.animationDelay = `${Math.random() * 5}s`;
+        column.style.animationDuration = `${10 + Math.random() * 20}s`;
+        column.style.fontSize = `${12 + Math.random() * 6}px`; // 随机字体大小增加变化
         
-        const starCount = 300; // 星星数量
-        
-        // 获取当前主题颜色
-        const primaryColor = getComputedStyle(root).getPropertyValue('--primary-color').trim();
-        const secondaryColor = getComputedStyle(root).getPropertyValue('--secondary-color').trim();
-        const accentColor = getComputedStyle(root).getPropertyValue('--accent-color').trim();
-        
-        // 使用主题颜色数组
-        const colors = [primaryColor, secondaryColor, accentColor];
-        
-        // 优化：使用文档片段减少重绘重排
-        const fragment = document.createDocumentFragment();
-        
-        for (let i = 0; i < starCount; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
+        // 填充随机字符
+        const rainLength = 30 + Math.floor(Math.random() * 30);
+        for (let j = 0; j < rainLength; j++) {
+            // 混合使用中日韩字符、数字和符号
+            const charSet = Math.random();
+            let charCode;
+            if (charSet < 0.3) {
+                charCode = Math.floor(Math.random() * 94) + 33; // ASCII 可打印字符
+            } else if (charSet < 0.7) {
+                charCode = Math.floor(Math.random() * 20902) + 19968; // 中文字符
+            } else {
+                charCode = Math.floor(Math.random() * 1000) + 0x3040; // 日文字符
+            }
             
-            // 随机位置
-            const x = Math.random() * 100;
-            const y = Math.random() * 100;
+            const charSpan = document.createElement('span');
+            charSpan.textContent = String.fromCharCode(charCode);
             
-            // 随机大小和亮度
-            const size = Math.random() * 3 + 1;
-            const opacity = Math.random() * 0.8 + 0.2;
+            // 随机透明度和颜色变化
+            const opacity = 0.3 + Math.random() * 0.7;
+            const randomColor = Math.random() > 0.7 ? 
+                'var(--secondary-color)' : 'var(--primary-color)';
             
-            // 从主题颜色中随机选择
-            const color = colors[Math.floor(Math.random() * colors.length)];
+            charSpan.style.opacity = opacity;
+            charSpan.style.color = randomColor;
+            charSpan.style.animationDelay = `${Math.random() * 2}s`;
             
-            // 设置星星样式
-            star.style.position = 'absolute';
-            star.style.left = `${x}vw`;
-            star.style.top = `${y}vh`;
-            star.style.width = `${size}px`;
-            star.style.height = `${size}px`;
-            star.style.backgroundColor = color;
-            star.style.borderRadius = '50%';
-            star.style.opacity = opacity;
-            
-            // 使用主题发光效果
-            const glowSize = size * 2;
-            star.style.boxShadow = `0 0 ${glowSize}px ${color}`;
-            
-            // 添加闪烁动画
-            const blinkDuration = Math.random() * 5 + 3;
-            star.style.animation = `twinkle ${blinkDuration}s infinite ease-in-out`;
-            star.style.animationDelay = `${Math.random() * 2}s`;
-            
-            // 添加到文档片段
-            fragment.appendChild(star);
-            stars.push(star);
+            column.appendChild(charSpan);
         }
         
-        // 一次性添加到DOM
-        starsContainer.appendChild(fragment);
+        fragment.appendChild(column);
     }
     
-    // 创建粒子效果（用于周一主题）
-    function createParticles() {
-        if (!particlesContainer) return;
-        
-        // 根据屏幕大小调整粒子生成速度
-        const screenSize = window.innerWidth * window.innerHeight;
-        const spawnRate = Math.min(Math.max(screenSize / 100000, 1), 5); // 每秒1-5个粒子
-        
-        particleInterval = setInterval(() => {
-            createSingleParticle();
-        }, 1000 / spawnRate);
-    }
+    themeElementsContainer.appendChild(fragment);
     
-    // 创建单个粒子
-    function createSingleParticle() {
-        if (!particlesContainer) return;
-        
+    // 添加额外的数字矩阵背景
+    createDigitalMatrix();
+}
+    
+    function createTechParticles() {
+    if (!particlesContainer) return;
+    
+    // 创建粒子容器
+    const particleCount = 50; // 增加粒子数量
+    const fragment = document.createDocumentFragment();
+    
+    for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
-        particle.classList.add('particle');
+        particle.classList.add('tech-particle');
         
-        // 随机大小和位置
-        const size = Math.random() * 10 + 2;
+        // 随机位置和大小
+        const size = Math.random() * 3 + 1;
         const x = Math.random() * 100;
-        const duration = Math.random() * 15 + 10;
-        const translateX = (Math.random() - 0.5) * 400;
-        const rotate = Math.random() * 360;
+        const y = Math.random() * 100;
+        const duration = Math.random() * 10 + 5;
         
-        // 获取当前主题颜色
-        const primaryColor = getComputedStyle(root).getPropertyValue('--primary-color').trim();
-        const secondaryColor = getComputedStyle(root).getPropertyValue('--secondary-color').trim();
-        const accentColor = getComputedStyle(root).getPropertyValue('--accent-color').trim();
-        
-        // 使用主题颜色数组
-        const themeColors = [primaryColor, secondaryColor, accentColor];
+        // 设置随机颜色
+        const colors = ['var(--primary-color)', 'var(--secondary-color)', 'var(--accent-color)'];
         
         // 设置粒子样式
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
         particle.style.left = `${x}vw`;
-        particle.style.setProperty('--translate-x', `${translateX}px`);
-        particle.style.setProperty('--rotate', `${rotate}deg`);
+        particle.style.top = `${y}vh`;
+        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         particle.style.animationDuration = `${duration}s`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
         
-        // 从主题颜色中随机选择
-        const randomColor = themeColors[Math.floor(Math.random() * themeColors.length)];
-        particle.style.backgroundColor = randomColor;
-        
-        // 使用主题发光效果
-        particle.style.boxShadow = `0 0 15px ${randomColor}`;
-        
-        // 添加到容器
-        particlesContainer.appendChild(particle);
+        fragment.appendChild(particle);
         particles.push(particle);
+    }
+    
+    particlesContainer.appendChild(fragment);
+    
+    // 添加粒子连线效果
+    createParticleConnections(particles);
+}
+
+// 创建粒子之间的连线效果
+function createParticleConnections(particles) {
+    if (!themeElementsContainer) return;
+    
+    const connectionCanvas = document.createElement('canvas');
+    connectionCanvas.className = 'particle-connection-canvas';
+    connectionCanvas.width = window.innerWidth;
+    connectionCanvas.height = window.innerHeight;
+    themeElementsContainer.appendChild(connectionCanvas);
+    
+    const ctx = connectionCanvas.getContext('2d');
+    
+    // 绘制连接线的函数
+    function drawConnections() {
+        ctx.clearRect(0, 0, connectionCanvas.width, connectionCanvas.height);
         
-        // 动画结束后移除粒子
-        setTimeout(() => {
-            if (particle.parentNode) {
-                particle.parentNode.removeChild(particle);
-                particles = particles.filter(p => p !== particle);
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const p1 = particles[i].getBoundingClientRect();
+                const p2 = particles[j].getBoundingClientRect();
+                
+                const x1 = p1.left + p1.width / 2;
+                const y1 = p1.top + p1.height / 2;
+                const x2 = p2.left + p2.width / 2;
+                const y2 = p2.top + p2.height / 2;
+                
+                // 计算两点之间的距离
+                const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                
+                // 只连接距离较近的粒子
+                if (distance < 150) {
+                    // 根据距离调整透明度
+                    const opacity = 0.5 - (distance / 300);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.strokeStyle = `rgba(0, 255, 157, ${opacity})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
             }
-        }, duration * 1000);
+        }
+        
+        requestAnimationFrame(drawConnections);
     }
     
-    // 创建几何图形（用于周二主题）
-    function createGeometricShapes() {
-        if (!themeElementsContainer) return;
+    // 开始绘制连接线
+    drawConnections();
+    
+    // 监听窗口大小变化
+    window.addEventListener('resize', () => {
+        connectionCanvas.width = window.innerWidth;
+        connectionCanvas.height = window.innerHeight;
+    });
+}
+
+// 创建数字矩阵背景
+function createDigitalMatrix() {
+    if (!themeElementsContainer) return;
+    
+    const matrixOverlay = document.createElement('div');
+    matrixOverlay.className = 'digital-matrix-overlay';
+    themeElementsContainer.appendChild(matrixOverlay);
+    
+    // 添加网格线
+    const gridSize = 30;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    
+    for (let x = 0; x < width; x += gridSize) {
+        for (let y = 0; y < height; y += gridSize) {
+            const dot = document.createElement('div');
+            dot.className = 'matrix-dot';
+            dot.style.left = `${x}px`;
+            dot.style.top = `${y}px`;
+            dot.style.animationDelay = `${Math.random() * 3}s`;
+            matrixOverlay.appendChild(dot);
+        }
+    }
+}
+    
+    // 周二 - 3D网格科技风格（增强版）
+function createGridBackground() {
+    if (!themeElementsContainer) return;
+    
+    const grid = document.createElement('div');
+    grid.className = 'tech-grid';
+    themeElementsContainer.appendChild(grid);
+    
+    // 创建网格线
+    const gridLines = document.createElement('div');
+    gridLines.className = 'grid-lines';
+    themeElementsContainer.appendChild(gridLines);
+    
+    // 添加3D立体效果元素
+    create3DLights();
+    
+    // 添加鼠标交互的网格变形效果
+    addGridMouseInteraction(grid);
+}
+
+// 创建3D灯光效果
+function create3DLights() {
+    if (!themeElementsContainer) return;
+    
+    const lightCount = 5;
+    for (let i = 0; i < lightCount; i++) {
+        const light = document.createElement('div');
+        light.className = 'grid-light';
+        light.style.left = `${Math.random() * 100}%`;
+        light.style.top = `${Math.random() * 100}%`;
+        light.style.animationDelay = `${Math.random() * 3}s`;
+        light.style.animationDuration = `${5 + Math.random() * 5}s`;
+        themeElementsContainer.appendChild(light);
+    }
+}
+
+// 添加网格鼠标交互效果
+function addGridMouseInteraction(grid) {
+    if (!grid) return;
+    
+    // 添加鼠标移动事件监听
+    const handleGridMouseMove = (e) => {
+        const rect = document.body.getBoundingClientRect();
+        const x = (e.clientX / rect.width) - 0.5;
+        const y = (e.clientY / rect.height) - 0.5;
         
-        // 创建圆形
+        // 根据鼠标位置旋转网格
+        grid.style.transform = `perspective(800px) rotateX(${60 + y * 15}deg) rotateY(${x * 15}deg) scale(2)`;
+        
+        // 调整网格线的不透明度
+        const gridLines = document.querySelector('.grid-lines');
+        if (gridLines) {
+            const distance = Math.sqrt(x * x + y * y);
+            gridLines.style.opacity = 0.3 + (0.5 - distance * 0.5);
+        }
+    };
+    
+    // 添加事件监听器（避免重复添加）
+    if (!document.hasGridMouseListener) {
+        document.addEventListener('mousemove', handleGridMouseMove);
+        document.hasGridMouseListener = true;
+    }
+}
+    
+    function createTechCircles() {
+    if (!themeElementsContainer) return;
+    
+    // 创建多个科技圆环，增加数量和变化
+    const circleCount = 6;
+    const radiusRange = [80, 200]; // 半径范围
+    
+    for (let i = 0; i < circleCount; i++) {
         const circle = document.createElement('div');
-        circle.className = 'geometric-shape shape-1';
+        circle.className = `tech-circle circle-${i % 3 + 1}`;
+        
+        // 随机半径和位置
+        const radius = radiusRange[0] + Math.random() * (radiusRange[1] - radiusRange[0]);
+        circle.style.width = `${radius * 2}px`;
+        circle.style.height = `${radius * 2}px`;
+        circle.style.left = `${Math.random() * 80}%`;
+        circle.style.top = `${Math.random() * 80}%`;
+        
+        // 随机颜色和动画
+        const colors = ['var(--primary-color)', 'var(--secondary-color)', 'var(--accent-color)'];
+        circle.style.borderColor = colors[i % colors.length];
+        circle.style.animationDelay = `${Math.random() * 2}s`;
+        circle.style.animationDuration = `${5 + Math.random() * 5}s`;
+        
+        // 添加发光效果
+        const glow = document.createElement('div');
+        glow.className = 'circle-glow';
+        circle.appendChild(glow);
+        
         themeElementsContainer.appendChild(circle);
-        
-        // 创建正方形
-        const square = document.createElement('div');
-        square.className = 'geometric-shape shape-2';
-        themeElementsContainer.appendChild(square);
-        
-        // 创建三角形
-        const triangle = document.createElement('div');
-        triangle.className = 'geometric-shape shape-3';
-        themeElementsContainer.appendChild(triangle);
     }
     
-    // 创建波浪效果（用于周三主题）
-    function createWaves() {
+    // 添加圆环之间的连接线
+    createCircleConnections();
+}
+
+// 创建圆环之间的连接线
+function createCircleConnections() {
+    if (!themeElementsContainer) return;
+    
+    const connectionCanvas = document.createElement('canvas');
+    connectionCanvas.className = 'circle-connection-canvas';
+    connectionCanvas.width = window.innerWidth;
+    connectionCanvas.height = window.innerHeight;
+    themeElementsContainer.appendChild(connectionCanvas);
+    
+    const ctx = connectionCanvas.getContext('2d');
+    
+    function drawConnections() {
+        ctx.clearRect(0, 0, connectionCanvas.width, connectionCanvas.height);
+        
+        const circles = document.querySelectorAll('.tech-circle');
+        
+        for (let i = 0; i < circles.length; i++) {
+            for (let j = i + 1; j < circles.length; j++) {
+                const rect1 = circles[i].getBoundingClientRect();
+                const rect2 = circles[j].getBoundingClientRect();
+                
+                const x1 = rect1.left + rect1.width / 2;
+                const y1 = rect1.top + rect1.height / 2;
+                const x2 = rect2.left + rect2.width / 2;
+                const y2 = rect2.top + rect2.height / 2;
+                
+                const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                
+                // 只连接距离适中的圆环
+                if (distance > 200 && distance < 500) {
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.strokeStyle = 'rgba(0, 176, 255, 0.3)';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+            }
+        }
+        
+        requestAnimationFrame(drawConnections);
+    }
+    
+    drawConnections();
+    
+    // 监听窗口大小变化
+    window.addEventListener('resize', () => {
+        connectionCanvas.width = window.innerWidth;
+        connectionCanvas.height = window.innerHeight;
+    });
+}
+    
+    // 周三 - 声波频率科技风格（增强版）
+function createAudioWaves() {
+    if (!themeElementsContainer) return;
+    
+    const waveContainer = document.createElement('div');
+    waveContainer.className = 'audio-wave-container';
+    
+    // 创建多个波形条，增加数量和变化
+    const barCount = 80;
+    const fragment = document.createDocumentFragment();
+    
+    for (let i = 0; i < barCount; i++) {
+        const waveBar = document.createElement('div');
+        waveBar.className = 'audio-wave-bar';
+        waveBar.style.animationDelay = `${i * 0.02}s`;
+        waveBar.style.animationDuration = `${0.5 + Math.random() * 1.5}s`;
+        waveBar.style.width = `${4 + Math.random() * 4}px`;
+        
+        // 随机颜色渐变
+        const colors = [
+            'linear-gradient(to top, var(--primary-color), var(--secondary-color))',
+            'linear-gradient(to top, var(--secondary-color), var(--accent-color))',
+            'linear-gradient(to top, var(--accent-color), var(--primary-color))'
+        ];
+        waveBar.style.background = colors[Math.floor(Math.random() * colors.length)];
+        
+        fragment.appendChild(waveBar);
+    }
+    
+    waveContainer.appendChild(fragment);
+    themeElementsContainer.appendChild(waveContainer);
+    
+    // 添加音频可视化效果（模拟）
+    simulateAudioVisualization(waveContainer);
+}
+
+// 模拟音频可视化效果
+function simulateAudioVisualization(container) {
+    const bars = container.querySelectorAll('.audio-wave-bar');
+    
+    function updateVisualization() {
+        bars.forEach(bar => {
+            // 随机高度变化模拟音频响应
+            const height = Math.random() * 80 + 20; // 20-100%
+            bar.style.height = `${height}%`;
+            
+            // 亮度随高度变化
+            const brightness = 0.5 + (height / 200);
+            bar.style.opacity = brightness;
+        });
+        
+        // 每100ms更新一次
+        setTimeout(updateVisualization, 100);
+    }
+    
+    updateVisualization();
+}
+    
+    function createFrequencyBars() {
+    if (!themeElementsContainer) return;
+    
+    // 创建多个频率条区域，增加视觉丰富度
+    const containerCount = 3;
+    const positions = [
+        { top: '20%', left: '5%', orientation: 'vertical' },
+        { top: '60%', left: '75%', orientation: 'horizontal' },
+        { top: '40%', left: '40%', orientation: 'vertical' }
+    ];
+    
+    positions.forEach((pos, containerIndex) => {
+        const freqContainer = document.createElement('div');
+        freqContainer.className = `frequency-container freq-container-${containerIndex + 1}`;
+        freqContainer.style.top = pos.top;
+        freqContainer.style.left = pos.left;
+        
+        if (pos.orientation === 'horizontal') {
+            freqContainer.classList.add('horizontal');
+        }
+        
+        // 创建频率条
+        const barCount = containerIndex === 2 ? 15 : 20;
+        for (let i = 0; i < barCount; i++) {
+            const freqBar = document.createElement('div');
+            freqBar.className = 'frequency-bar';
+            freqBar.style.animationDelay = `${i * 0.1}s`;
+            freqBar.style.animationDuration = `${1.5 + Math.random() * 2}s`;
+            
+            // 根据位置设置不同的颜色
+            const colors = [
+                'linear-gradient(to top, var(--accent-color), var(--primary-color))',
+                'linear-gradient(to top, var(--primary-color), var(--secondary-color))',
+                'linear-gradient(to top, var(--secondary-color), var(--accent-color))'
+            ];
+            freqBar.style.background = colors[containerIndex];
+            
+            freqContainer.appendChild(freqBar);
+        }
+        
+        themeElementsContainer.appendChild(freqContainer);
+    });
+    
+    // 添加频谱分析效果
+    createSpectrumAnalyzer();
+}
+
+// 创建频谱分析效果
+function createSpectrumAnalyzer() {
+    if (!themeElementsContainer) return;
+    
+    const analyzerContainer = document.createElement('div');
+    analyzerContainer.className = 'spectrum-analyzer';
+    themeElementsContainer.appendChild(analyzerContainer);
+    
+    // 创建频谱线
+    const lineCount = 30;
+    for (let i = 0; i < lineCount; i++) {
+        const line = document.createElement('div');
+        line.className = 'spectrum-line';
+        line.style.left = `${i * (100 / lineCount)}%`;
+        line.style.animationDelay = `${i * 0.05}s`;
+        analyzerContainer.appendChild(line);
+    }
+}
+    
+    // 周四 - 全息投影科技风格（增强版）
+function createHolographicEffect() {
+    if (!themeElementsContainer) return;
+    
+    // 创建全息投影底座
+    const holoBase = document.createElement('div');
+    holoBase.className = 'holographic-base';
+    themeElementsContainer.appendChild(holoBase);
+    
+    // 创建全息投影内容
+    const holoContent = document.createElement('div');
+    holoContent.className = 'holographic-content';
+    themeElementsContainer.appendChild(holoContent);
+    
+    // 创建更多投影线，增加密度
+    const lineCount = 12;
+    for (let i = 0; i < lineCount; i++) {
+        const holoLine = document.createElement('div');
+        holoLine.className = `holographic-line line-${i}`;
+        holoLine.style.left = `${25 + (i * 5)}%`;
+        holoLine.style.top = `${15 + Math.random() * 10}%`;
+        holoLine.style.height = `${250 + Math.random() * 100}px`;
+        holoLine.style.animationDelay = `${i * 0.3}s`;
+        holoLine.style.animationDuration = `${7 + Math.random() * 3}s`;
+        themeElementsContainer.appendChild(holoLine);
+    }
+    
+    // 添加全息网格效果
+    createHolographicGrid();
+    
+    // 添加全息粒子效果
+    createHolographicParticles();
+    
+    // 添加鼠标交互
+    addHolographicInteraction(holoContent);
+}
+
+// 创建全息网格效果
+function createHolographicGrid() {
+    if (!themeElementsContainer) return;
+    
+    const gridContainer = document.createElement('div');
+    gridContainer.className = 'holographic-grid';
+    themeElementsContainer.appendChild(gridContainer);
+    
+    // 创建垂直和水平线
+    const lineCount = 15;
+    
+    // 垂直线
+    for (let i = 0; i < lineCount; i++) {
+        const vLine = document.createElement('div');
+        vLine.className = 'holographic-grid-line vertical';
+        vLine.style.left = `${(i / (lineCount - 1)) * 100}%`;
+        gridContainer.appendChild(vLine);
+    }
+    
+    // 水平线
+    for (let i = 0; i < lineCount; i++) {
+        const hLine = document.createElement('div');
+        hLine.className = 'holographic-grid-line horizontal';
+        hLine.style.top = `${(i / (lineCount - 1)) * 100}%`;
+        gridContainer.appendChild(hLine);
+    }
+}
+
+// 创建全息粒子效果
+function createHolographicParticles() {
+    if (!themeElementsContainer) return;
+    
+    const particleCount = 50;
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'holographic-particle';
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        particle.style.animationDuration = `${3 + Math.random() * 7}s`;
+        themeElementsContainer.appendChild(particle);
+    }
+}
+
+// 添加全息投影交互效果
+function addHolographicInteraction(content) {
+    if (!content) return;
+    
+    const handleHoloMouseMove = (e) => {
+        const rect = document.body.getBoundingClientRect();
+        const x = (e.clientX / rect.width) - 0.5;
+        const y = (e.clientY / rect.height) - 0.5;
+        
+        // 根据鼠标位置移动全息投影
+        content.style.transform = `translateX(-50%) translateY(${y * 20}px) rotateX(${y * 10}deg) rotateY(${x * 10}deg)`;
+        
+        // 调整透明度
+        const distance = Math.sqrt(x * x + y * y);
+        content.style.opacity = 0.2 + (0.3 - distance * 0.2);
+    };
+    
+    // 添加事件监听器
+    if (!document.hasHoloMouseListener) {
+        document.addEventListener('mousemove', handleHoloMouseMove);
+        document.hasHoloMouseListener = true;
+    }
+}
+    
+    function createScanLines() {
+    if (!themeElementsContainer) return;
+    
+    const scanLines = document.createElement('div');
+    scanLines.className = 'scan-lines';
+    themeElementsContainer.appendChild(scanLines);
+    
+    // 添加动态扫描线效果
+    createDynamicScanLines();
+}
+
+// 创建动态扫描线效果
+function createDynamicScanLines() {
+    if (!themeElementsContainer) return;
+    
+    const dynamicLines = document.createElement('div');
+    dynamicLines.className = 'dynamic-scan-lines';
+    themeElementsContainer.appendChild(dynamicLines);
+    
+    // 创建多条动态扫描线
+    const lineCount = 5;
+    for (let i = 0; i < lineCount; i++) {
+        const line = document.createElement('div');
+        line.className = 'dynamic-scan-line';
+        line.style.animationDelay = `${i * 2}s`;
+        dynamicLines.appendChild(line);
+    }
+}
+    
+    // 周五 - 量子波动科技风格（增强版）
+function createCircuitLines() {
+    if (!themeElementsContainer) return;
+    
+    // 创建主电路线
+    const mainCircuit = document.createElement('div');
+    mainCircuit.className = 'circuit-main';
+    themeElementsContainer.appendChild(mainCircuit);
+    
+    // 创建更复杂的分支电路
+    const branchCount = 12;
+    const directions = ['top', 'right', 'bottom', 'left'];
+    
+    for (let i = 1; i <= branchCount; i++) {
+        const branch = document.createElement('div');
+        branch.className = `circuit-branch branch-${i}`;
+        branch.dataset.direction = directions[i % directions.length];
+        themeElementsContainer.appendChild(branch);
+    }
+    
+    // 添加电路动画效果
+    animateCircuits();
+    
+    // 添加鼠标交互
+    addCircuitInteraction();
+}
+
+// 为电路添加动画效果
+function animateCircuits() {
+    // 创建脉冲效果
+    setInterval(() => {
+        const mainCircuit = document.querySelector('.circuit-main');
+        if (mainCircuit) {
+            const pulse = document.createElement('div');
+            pulse.className = 'circuit-pulse';
+            mainCircuit.appendChild(pulse);
+            
+            // 动画结束后移除
+            setTimeout(() => {
+                if (pulse.parentNode) {
+                    pulse.parentNode.removeChild(pulse);
+                }
+            }, 1000);
+        }
+    }, 2000);
+}
+
+// 添加电路交互效果
+function addCircuitInteraction() {
+    const handleCircuitMouseMove = (e) => {
+        const branches = document.querySelectorAll('.circuit-branch');
+        branches.forEach(branch => {
+            const rect = branch.getBoundingClientRect();
+            const distance = Math.sqrt(
+                Math.pow(e.clientX - (rect.left + rect.width/2), 2) + 
+                Math.pow(e.clientY - (rect.top + rect.height/2), 2)
+            );
+            
+            // 鼠标附近的电路变亮
+            if (distance < 100) {
+                const intensity = 1 - (distance / 100);
+                branch.style.opacity = 0.5 + intensity * 0.5;
+                branch.style.transform = `scale(${1 + intensity * 0.1})`;
+            } else {
+                branch.style.opacity = 0.5;
+                branch.style.transform = 'scale(1)';
+            }
+        });
+    };
+    
+    if (!document.hasCircuitMouseListener) {
+        document.addEventListener('mousemove', handleCircuitMouseMove);
+        document.hasCircuitMouseListener = true;
+    }
+}
+    
+    function createGlowingNodes() {
+    if (!themeElementsContainer) return;
+    
+    // 增加节点数量并创建连接
+    const nodeCount = 30;
+    const nodes = [];
+    
+    for (let i = 0; i < nodeCount; i++) {
+        const node = document.createElement('div');
+        node.className = 'circuit-node';
+        node.style.left = `${Math.random() * 100}vw`;
+        node.style.top = `${Math.random() * 100}vh`;
+        node.style.animationDelay = `${Math.random() * 2}s`;
+        node.style.animationDuration = `${2 + Math.random() * 3}s`;
+        
+        // 随机颜色
+        const colors = ['var(--primary-color)', 'var(--secondary-color)', 'var(--accent-color)'];
+        node.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        themeElementsContainer.appendChild(node);
+        nodes.push(node);
+    }
+    
+    // 连接相近的节点
+    connectNodes(nodes);
+}
+
+// 连接相近的节点
+function connectNodes(nodes) {
+    if (!themeElementsContainer) return;
+    
+    const connectionCanvas = document.createElement('canvas');
+    connectionCanvas.className = 'node-connection-canvas';
+    connectionCanvas.width = window.innerWidth;
+    connectionCanvas.height = window.innerHeight;
+    themeElementsContainer.appendChild(connectionCanvas);
+    
+    const ctx = connectionCanvas.getContext('2d');
+    
+    function drawConnections() {
+        ctx.clearRect(0, 0, connectionCanvas.width, connectionCanvas.height);
+        
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+                if (nodes[i] && nodes[j]) {
+                    const rect1 = nodes[i].getBoundingClientRect();
+                    const rect2 = nodes[j].getBoundingClientRect();
+                    
+                    const x1 = rect1.left + rect1.width / 2;
+                    const y1 = rect1.top + rect1.height / 2;
+                    const x2 = rect2.left + rect2.width / 2;
+                    const y2 = rect2.top + rect2.height / 2;
+                    
+                    const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                    
+                    // 只连接距离适中的节点
+                    if (distance < 200) {
+                        // 脉冲效果
+                        const time = Date.now() / 1000;
+                        const pulsePosition = (time % 1) * distance;
+                        const pulseX = x1 + (x2 - x1) * (pulsePosition / distance);
+                        const pulseY = y1 + (y2 - y1) * (pulsePosition / distance);
+                        
+                        // 绘制连接线
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
+                        ctx.strokeStyle = 'rgba(0, 255, 255, 0.2)';
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                        
+                        // 绘制脉冲点
+                        ctx.beginPath();
+                        ctx.arc(pulseX, pulseY, 3, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(0, 255, 255, 0.8)';
+                        ctx.fill();
+                    }
+                }
+            }
+        }
+        
+        requestAnimationFrame(drawConnections);
+    }
+    
+    drawConnections();
+    
+    window.addEventListener('resize', () => {
+        connectionCanvas.width = window.innerWidth;
+        connectionCanvas.height = window.innerHeight;
+    });
+}
+    
+    // 周六 - 赛博朋克科技风格（增强版）
+    function createCyberpunkBackground() {
         if (!themeElementsContainer) return;
         
-        // 创建三个波浪
-        for (let i = 1; i <= 3; i++) {
-            const wave = document.createElement('div');
-            wave.className = `wave wave-${i}`;
-            themeElementsContainer.appendChild(wave);
+        // 创建城市剪影
+        const citySkyline = document.createElement('div');
+        citySkyline.className = 'cyberpunk-skyline';
+        themeElementsContainer.appendChild(citySkyline);
+        
+        // 创建故障艺术效果
+        const glitchEffect = document.createElement('div');
+        glitchEffect.className = 'glitch-effect';
+        themeElementsContainer.appendChild(glitchEffect);
+        
+        // 添加动态噪点效果
+        createCyberpunkNoise();
+        
+        // 添加动态雨效果
+        createCyberpunkRain();
+        
+        // 添加电子流效果
+        createCyberpunkElectrons();
+    }
+    
+    // 创建赛博朋克噪点效果
+    function createCyberpunkNoise() {
+        if (!themeElementsContainer) return;
+        
+        const noiseCanvas = document.createElement('canvas');
+        noiseCanvas.className = 'cyberpunk-noise';
+        noiseCanvas.width = window.innerWidth;
+        noiseCanvas.height = window.innerHeight;
+        themeElementsContainer.appendChild(noiseCanvas);
+        
+        const ctx = noiseCanvas.getContext('2d');
+        
+        function renderNoise() {
+            const imageData = ctx.createImageData(noiseCanvas.width, noiseCanvas.height);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                const value = Math.random() * 10;
+                data[i] = value;     // R
+                data[i + 1] = value; // G
+                data[i + 2] = value; // B
+                data[i + 3] = 20;    // A
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+            requestAnimationFrame(renderNoise);
+        }
+        
+        renderNoise();
+        
+        window.addEventListener('resize', () => {
+            noiseCanvas.width = window.innerWidth;
+            noiseCanvas.height = window.innerHeight;
+        });
+    }
+    
+    // 创建赛博朋克雨效果
+    function createCyberpunkRain() {
+        if (!themeElementsContainer) return;
+        
+        const rainContainer = document.createElement('div');
+        rainContainer.className = 'cyberpunk-rain';
+        themeElementsContainer.appendChild(rainContainer);
+        
+        const rainCount = 100;
+        for (let i = 0; i < rainCount; i++) {
+            const drop = document.createElement('div');
+            drop.className = 'rain-drop';
+            drop.style.left = `${Math.random() * 100}vw`;
+            drop.style.animationDuration = `${0.5 + Math.random() * 1.5}s`;
+            drop.style.animationDelay = `${Math.random() * 5}s`;
+            drop.style.opacity = 0.2 + Math.random() * 0.3;
+            drop.style.height = `${5 + Math.random() * 20}px`;
+            
+            rainContainer.appendChild(drop);
         }
     }
     
-    // 创建光斑效果（用于周四主题）
-    function createLightSpots() {
+    // 创建电子流效果
+    function createCyberpunkElectrons() {
         if (!themeElementsContainer) return;
         
-        // 创建三个光斑
-        for (let i = 1; i <= 3; i++) {
-            const spot = document.createElement('div');
-            spot.className = `light-spot spot-${i}`;
-            themeElementsContainer.appendChild(spot);
+        const electronContainer = document.createElement('div');
+        electronContainer.className = 'cyberpunk-electrons';
+        themeElementsContainer.appendChild(electronContainer);
+        
+        const electronCount = 30;
+        for (let i = 0; i < electronCount; i++) {
+            const electron = document.createElement('div');
+            electron.className = 'cyber-electron';
+            electron.style.left = `${Math.random() * 100}vw`;
+            electron.style.top = `${Math.random() * 100}vh`;
+            electron.style.animationDuration = `${3 + Math.random() * 5}s`;
+            electron.style.animationDelay = `${Math.random() * 5}s`;
+            
+            electronContainer.appendChild(electron);
         }
     }
     
-    // 创建霓虹灯线条（用于周五主题）
-    function createNeonLines() {
+    function createNeonSigns() {
         if (!themeElementsContainer) return;
         
-        // 创建四条霓虹线
-        for (let i = 1; i <= 4; i++) {
-            const line = document.createElement('div');
-            line.className = `neon-line line-${i}`;
-            themeElementsContainer.appendChild(line);
+        const signs = [
+            { text: 'FUTURE', className: 'neon-sign sign-1' },
+            { text: 'TECH', className: 'neon-sign sign-2' },
+            { text: 'CYBER', className: 'neon-sign sign-3' },
+            { text: '2077', className: 'neon-sign sign-4' },
+            { text: 'NEON', className: 'neon-sign sign-5' }
+        ];
+        
+        signs.forEach(sign => {
+            const signEl = document.createElement('div');
+            signEl.className = sign.className;
+            signEl.textContent = sign.text;
+            
+            // 添加随机闪烁效果
+            signEl.style.animationDuration = `${2 + Math.random() * 3}s`;
+            signEl.style.animationDelay = `${Math.random() * 2}s`;
+            
+            themeElementsContainer.appendChild(signEl);
+        });
+        
+        // 添加动态文字霓虹灯效果
+        createNeonText();
+        
+        // 添加交互式霓虹效果
+        addNeonInteraction();
+    }
+    
+    // 创建霓虹灯文字效果
+    function createNeonText() {
+        if (!themeElementsContainer) return;
+        
+        const neonTexts = ['DIGITAL', 'WORLD', 'HIGH', 'TECH'];
+        
+        for (let i = 0; i < neonTexts.length; i++) {
+            const textEl = document.createElement('div');
+            textEl.className = `cyberpunk-text text-${i + 1}`;
+            textEl.textContent = neonTexts[i];
+            textEl.style.animationDelay = `${Math.random() * 3}s`;
+            
+            themeElementsContainer.appendChild(textEl);
         }
     }
     
-    // 创建云朵效果（用于周六主题）
-    function createClouds() {
-        if (!themeElementsContainer) return;
+    // 添加霓虹交互效果
+    function addNeonInteraction() {
+        const handleNeonMouseMove = (e) => {
+            const neonSigns = document.querySelectorAll('.neon-sign');
+            neonSigns.forEach(sign => {
+                const rect = sign.getBoundingClientRect();
+                const distance = Math.sqrt(
+                    Math.pow(e.clientX - (rect.left + rect.width/2), 2) + 
+                    Math.pow(e.clientY - (rect.top + rect.height/2), 2)
+                );
+                
+                // 鼠标靠近时增强霓虹灯效果
+                if (distance < 150) {
+                    const intensity = 1 - (distance / 150);
+                    sign.style.transform = `scale(${1 + intensity * 0.1})`;
+                    sign.style.filter = `brightness(${1 + intensity})`;
+                } else {
+                    sign.style.transform = 'scale(1)';
+                    sign.style.filter = 'brightness(1)';
+                }
+            });
+        };
         
-        // 创建三个云朵
-        for (let i = 1; i <= 3; i++) {
-            const cloud = document.createElement('div');
-            cloud.className = `cloud cloud-${i}`;
-            themeElementsContainer.appendChild(cloud);
+        if (!document.hasNeonMouseListener) {
+            document.addEventListener('mousemove', handleNeonMouseMove);
+            document.hasNeonMouseListener = true;
         }
     }
     
-    // 创建星云效果（用于周日主题）
-    function createNebula() {
+    // 周日 - 宇宙科技风格（增强版）
+    function createSpaceTech() {
         if (!themeElementsContainer) return;
         
-        // 创建两个星云
-        for (let i = 1; i <= 2; i++) {
+        // 创建更丰富的科技星星
+        createEnhancedStars(300);
+        
+        // 创建银河效果
+        const galaxy = document.createElement('div');
+        galaxy.className = 'space-tech-galaxy';
+        themeElementsContainer.appendChild(galaxy);
+        
+        // 添加星云效果
+        createNebulas();
+        
+        // 添加宇宙射线效果
+        createCosmicRays();
+    }
+    
+    // 创建增强的星星效果
+    function createEnhancedStars(count) {
+        if (!themeElementsContainer) return;
+        
+        for (let i = 0; i < count; i++) {
+            const star = document.createElement('div');
+            star.className = 'space-tech-star';
+            star.style.left = `${Math.random() * 100}vw`;
+            star.style.top = `${Math.random() * 100}vh`;
+            star.style.animationDelay = `${Math.random() * 5}s`;
+            star.style.animationDuration = `${1 + Math.random() * 4}s`;
+            
+            // 随机大小和亮度
+            const size = 1 + Math.random() * 3;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.opacity = 0.3 + Math.random() * 0.7;
+            
+            // 随机颜色
+            const colors = ['#ffffff', '#a8d8ff', '#ffd8d8', '#d8ffd8'];
+            star.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            themeElementsContainer.appendChild(star);
+        }
+        
+        // 创建流星效果
+        createMeteors(8);
+    }
+    
+    // 创建流星效果
+    function createMeteors(count) {
+        if (!themeElementsContainer) return;
+        
+        function createMeteor() {
+            const meteor = document.createElement('div');
+            meteor.className = 'space-meteor';
+            meteor.style.left = `${-100}px`;
+            meteor.style.top = `${Math.random() * 50}vh`;
+            meteor.style.transform = `rotate(${30 + Math.random() * 20}deg)`;
+            meteor.style.animationDuration = `${2 + Math.random() * 3}s`;
+            
+            themeElementsContainer.appendChild(meteor);
+            
+            // 流星动画结束后移除
+            setTimeout(() => {
+                if (meteor.parentNode) {
+                    meteor.parentNode.removeChild(meteor);
+                }
+            }, 5000);
+            
+            // 定时创建新流星
+            setTimeout(createMeteor, 2000 + Math.random() * 4000);
+        }
+        
+        // 初始创建多个流星
+        for (let i = 0; i < count; i++) {
+            setTimeout(createMeteor, i * 1500);
+        }
+    }
+    
+    // 创建星云效果
+    function createNebulas() {
+        if (!themeElementsContainer) return;
+        
+        const nebulaColors = ['#3a0ca3', '#4361ee', '#7209b7', '#f72585'];
+        
+        for (let i = 0; i < 4; i++) {
             const nebula = document.createElement('div');
-            nebula.className = `nebula nebula-${i}`;
+            nebula.className = `space-nebula nebula-${i + 1}`;
+            nebula.style.backgroundColor = nebulaColors[i];
+            nebula.style.opacity = 0.05 + Math.random() * 0.05;
             themeElementsContainer.appendChild(nebula);
         }
     }
     
-    // 创建国庆节特定元素
-    function createNationalDayElements() {
+    // 创建宇宙射线效果
+    function createCosmicRays() {
         if (!themeElementsContainer) return;
         
-        // 创建国旗元素
-        createFlags();
+        const rayCount = 10;
         
-        // 创建烟花效果
-        createFireworks();
-        
-        // 创建祥云效果
-        createClouds();
-    }
-    
-    // 创建中秋节特定元素
-    function createMidAutumnElements() {
-        if (!themeElementsContainer) return;
-        
-        // 创建月亮
-        createMoon();
-        
-        // 创建月饼元素
-        createMooncakes();
-        
-        // 创建灯笼元素
-        createLanterns();
-    }
-    
-    // 创建国旗元素
-    function createFlags() {
-        if (!themeElementsContainer) return;
-        
-        // 创建多个小国旗
-        const flagCount = 20;
-        for (let i = 1; i <= flagCount; i++) {
-            const flag = document.createElement('div');
-            flag.className = `national-flag flag-${i}`;
-            themeElementsContainer.appendChild(flag);
+        for (let i = 0; i < rayCount; i++) {
+            const ray = document.createElement('div');
+            ray.className = 'cosmic-ray';
+            ray.style.transform = `rotate(${Math.random() * 360}deg)`;
+            ray.style.animationDuration = `${5 + Math.random() * 10}s`;
+            ray.style.animationDelay = `${Math.random() * 5}s`;
+            themeElementsContainer.appendChild(ray);
         }
     }
     
-    // 创建烟花效果
-    function createFireworks() {
+    function createPlanetOrbits() {
         if (!themeElementsContainer) return;
         
-        // 创建烟花容器
-        const fireworksContainer = document.createElement('div');
-        fireworksContainer.className = 'fireworks-container';
-        themeElementsContainer.appendChild(fireworksContainer);
+        // 创建太阳
+        const sun = document.createElement('div');
+        sun.className = 'space-sun';
+        themeElementsContainer.appendChild(sun);
         
-        // 定时创建烟花
-        setInterval(() => {
-            const firework = document.createElement('div');
-            firework.className = 'firework';
+        // 创建更复杂的轨道系统
+        const orbitCount = 5;
+        const orbitColors = [
+            'rgba(0, 150, 255, 0.3)',
+            'rgba(255, 150, 0, 0.3)',
+            'rgba(150, 255, 0, 0.3)',
+            'rgba(255, 0, 150, 0.3)',
+            'rgba(150, 0, 255, 0.3)'
+        ];
+        
+        for (let i = 1; i <= orbitCount; i++) {
+            const orbit = document.createElement('div');
+            orbit.className = `planet-orbit orbit-${i}`;
+            orbit.style.borderColor = orbitColors[i % orbitColors.length];
+            orbit.style.animationDuration = `${60 + i * 20}s`;
+            orbit.style.transform = `rotate(${i * 15}deg)`;
+            themeElementsContainer.appendChild(orbit);
             
-            // 随机位置
-            const x = Math.random() * 100;
-            const delay = Math.random() * 3;
-            const size = 5 + Math.random() * 15;
+            // 创建行星
+            const planet = document.createElement('div');
+            planet.className = `planet planet-${i}`;
             
-            firework.style.left = `${x}vw`;
-            firework.style.animationDelay = `${delay}s`;
-            firework.style.width = `${size}px`;
-            firework.style.height = `${size}px`;
+            // 为不同轨道的行星设置不同大小
+            planet.style.width = `${10 + i * 5}px`;
+            planet.style.height = `${10 + i * 5}px`;
             
-            fireworksContainer.appendChild(firework);
+            // 添加行星动画
+            planet.style.animationDuration = `${10 + i * 5}s`;
+            planet.style.animationDelay = `${Math.random() * 2}s`;
             
-            // 动画结束后移除
-            setTimeout(() => {
-                if (firework.parentNode) {
-                    firework.parentNode.removeChild(firework);
+            orbit.appendChild(planet);
+            
+            // 为某些行星添加卫星
+            if (i === 2 || i === 4) {
+                const moonCount = i === 2 ? 1 : 2;
+                for (let j = 0; j < moonCount; j++) {
+                    const moon = document.createElement('div');
+                    moon.className = `moon moon-${j + 1}`;
+                    moon.style.animationDelay = `${Math.random() * 2}s`;
+                    planet.appendChild(moon);
                 }
-            }, 5000);
-        }, 2000);
+            }
+        }
+        
+        // 添加交互式星空效果
+        addInteractiveStars();
     }
     
-    // 创建月亮
-    function createMoon() {
-        if (!themeElementsContainer) return;
+    // 添加交互式星空效果
+    function addInteractiveStars() {
+        const handleStarMouseMove = (e) => {
+            const stars = document.querySelectorAll('.space-tech-star');
+            stars.forEach(star => {
+                const rect = star.getBoundingClientRect();
+                const distance = Math.sqrt(
+                    Math.pow(e.clientX - (rect.left + rect.width/2), 2) + 
+                    Math.pow(e.clientY - (rect.top + rect.height/2), 2)
+                );
+                
+                // 鼠标附近的星星闪烁
+                if (distance < 80) {
+                    star.style.animationDuration = '0.5s';
+                    star.style.opacity = 1;
+                    star.style.transform = 'scale(1.5)';
+                } else {
+                    star.style.animationDuration = `${1 + Math.random() * 4}s`;
+                    star.style.opacity = 0.3 + Math.random() * 0.7;
+                    star.style.transform = 'scale(1)';
+                }
+            });
+        };
         
-        const moon = document.createElement('div');
-        moon.className = 'moon';
-        themeElementsContainer.appendChild(moon);
-        
-        // 创建月亮光晕
-        const moonGlow = document.createElement('div');
-        moonGlow.className = 'moon-glow';
-        themeElementsContainer.appendChild(moonGlow);
-    }
-    
-    // 创建月饼元素
-    function createMooncakes() {
-        if (!themeElementsContainer) return;
-        
-        // 创建3个月饼
-        for (let i = 1; i <= 3; i++) {
-            const mooncake = document.createElement('div');
-            mooncake.className = `mooncake mooncake-${i}`;
-            themeElementsContainer.appendChild(mooncake);
+        if (!document.hasStarMouseListener) {
+            document.addEventListener('mousemove', handleStarMouseMove);
+            document.hasStarMouseListener = true;
         }
     }
     
-    // 创建灯笼元素
-    function createLanterns() {
-        if (!themeElementsContainer) return;
-        
-        // 创建4个灯笼
-        for (let i = 1; i <= 4; i++) {
-            const lantern = document.createElement('div');
-            lantern.className = `lantern lantern-${i}`;
-            themeElementsContainer.appendChild(lantern);
-        }
-    }
+
     
     // 尝试播放背景音乐 - 根据星期几加载对应的主题音乐
     function initBackgroundMusic() {
@@ -536,31 +1303,23 @@ document.addEventListener('DOMContentLoaded', function() {
         // 获取当前日期
         const today = new Date();
         
-        let musicPath = '';
-        let musicName = '';
+        // 正常工作日音乐
+        const dayOfWeek = today.getDay();
+        // 注意：周二的音乐文件名是Tuseday.mp3（拼写错误）
+        const dayNames = ['Sunday', 'Monday', 'Tuseday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const dayName = dayNames[dayOfWeek];
+        const musicPath = `music/${dayName}.mp3`;
+        // 显示给用户时使用正确的星期几名称
+        const displayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const musicName = displayNames[dayOfWeek];
         
-        // 检查是否是国庆节期间或中秋节
-        if (isNationalDay(today)) {
-            if (isMidAutumnDay(today)) {
-                // 中秋节音乐
-                musicPath = 'music/MidAutumn.mp3';
-                musicName = '中秋节';
-            } else {
-                // 国庆节音乐
-                musicPath = 'music/NationalDay.mp3';
-                musicName = '国庆节';
-            }
-        } else {
-            // 正常工作日音乐
-            const dayOfWeek = today.getDay();
-            // 注意：周二的音乐文件名是Tuseday.mp3（拼写错误）
-            const dayNames = ['Sunday', 'Monday', 'Tuseday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            const dayName = dayNames[dayOfWeek];
-            musicPath = `music/${dayName}.mp3`;
-            // 但是显示给用户时使用正确的星期几名称
-            const displayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            musicName = displayNames[dayOfWeek];
-        }
+        // 添加错误处理事件监听器
+        backgroundMusic.onerror = function(error) {
+            console.log(`音乐文件加载失败: ${musicPath}`, error);
+            // 可以在这里添加回退逻辑或完全跳过音频
+            backgroundMusic.pause();
+            backgroundMusic.src = ''; // 清除错误的源
+        };
         
         // 尝试设置音频源
         try {
@@ -583,10 +1342,22 @@ document.addEventListener('DOMContentLoaded', function() {
         // 为了自动播放，需要用户交互
         document.addEventListener('click', function startMusic() {
             try {
-                backgroundMusic.volume = 0.8; // 设置音量为80%
-                backgroundMusic.play().catch(error => {
-                    console.log('音乐播放需要用户交互或文件不存在:', error);
-                });
+                backgroundMusic.volume = 0.3; // 降低音量为30%以避免过大声音
+                
+                // 监听loadedmetadata事件确保音频可以播放
+                backgroundMusic.onloadedmetadata = function() {
+                    backgroundMusic.play().catch(error => {
+                        console.log('音乐播放需要用户交互或文件不存在:', error);
+                    });
+                };
+                
+                // 如果音频已经加载完成，直接尝试播放
+                if (backgroundMusic.readyState >= 1) {
+                    backgroundMusic.play().catch(error => {
+                        console.log('音乐播放需要用户交互或文件不存在:', error);
+                    });
+                }
+                
                 document.removeEventListener('click', startMusic);
             } catch (error) {
                 console.log('音乐播放失败:', error);
@@ -808,7 +1579,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // 添加鼠标移动事件监听 - 实现文字效果
         document.addEventListener('mousemove', handleMouseMove, { passive: true });
         
-        // 页面可见性变化时暂停/恢复动画和音乐，并检查日期变化
+        // 页面可见性变化时暂停/恢复动画和音乐
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {
                 // 暂停粒子生成
@@ -819,18 +1590,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 暂停音乐
                 pauseBackgroundMusic();
             } else {
-                // 检查日期变化，确保显示正确的主题
-                const today = new Date();
-                const isNational = isNationalDay(today);
-                const currentTheme = body.className;
-                
-                // 如果当前显示的是国庆主题但今天不是国庆节期间，或者相反，就更新主题
-                if ((currentTheme.includes('theme-nationalday') && !isNational) || 
-                    (!currentTheme.includes('theme-nationalday') && isNational)) {
-                    setDailyTheme();
-                }
-                
                 // 恢复粒子生成（如果当前主题是周一）
+                const currentTheme = body.className;
                 if (currentTheme.includes('theme-monday')) {
                     createParticles();
                 }
