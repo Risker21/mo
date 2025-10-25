@@ -1057,7 +1057,7 @@ function connectNodes(nodes) {
     function createNeonText() {
         if (!themeElementsContainer) return;
         
-        const neonTexts = ['DIGITAL', 'WORLD', 'HIGH', 'TECH','HEllo','Momo同学','2025','RISKER21'];
+        const neonTexts = ['WORLD','TECH','HEllo','Momo同学','2025','RISKER21'];
         
         for (let i = 0; i < neonTexts.length; i++) {
             const textEl = document.createElement('div');
