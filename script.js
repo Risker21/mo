@@ -1030,7 +1030,7 @@ function connectNodes(nodes) {
             { text: 'FUTURE', className: 'neon-sign sign-1' },
             { text: 'TECH', className: 'neon-sign sign-2' },
             { text: 'CYBER', className: 'neon-sign sign-3' },
-            { text: '2077', className: 'neon-sign sign-4' },
+            { text: '2025', className: 'neon-sign sign-4' },
             { text: 'NEON', className: 'neon-sign sign-5' }
         ];
         
@@ -1057,7 +1057,7 @@ function connectNodes(nodes) {
     function createNeonText() {
         if (!themeElementsContainer) return;
         
-        const neonTexts = ['WORLD','TECH','HEllo','Momo同学','2025','RISKER21'];
+        const neonTexts = ['WORLD','HEllo','Momo同学','2025','RISKER21'];
         
         for (let i = 0; i < neonTexts.length; i++) {
             const textEl = document.createElement('div');
