@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="format-detection" content="telephone=no" />
   <meta http-equiv="Content-Language" content="zh-CN" />
 
@@ -93,40 +93,93 @@
   <noscript>
     <link rel="stylesheet" id="noscript-style-css"
       href="wp-content/themes/creatorspc/build/css/no-script.css?ver=966232685" media="all" />
-  </noscript>
 
+  </noscript>
+  <link rel="icon" type="image/png" href="wp-content/themes/creatorspc/static/favicon/tapedotpink_logo_96x96.jpg"
+    sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="wp-content/themes/creatorspc/static/favicon/favicon.svg" />
+  <link rel="shortcut icon" href="wp-content/themes/creatorspc/static/favicon/tapedotpink_logo_16x16.jpg" />
+
+  <style>
+    /* Footer 样式优化 - 确保footer紧贴页面底部 */
+    .site-foot {
+      margin-top: 60px;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    .site-foot .u-container {
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+    
+    .site-foot .b-foot {
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+    
+    .site-foot .b__creds {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    /* 确保body和html没有底部间距 */
+    body {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    html {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    /* 确保site-container没有底部间距 */
+    .site-container {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    /* 响应式优化 */
+    @media (max-width: 768px) {
+      .site-foot {
+        margin-top: 40px;
+      }
+    }
+  </style>
 
 </head>
 
 <body class="home wp-singular page-template-default page page-id-8 wp-theme-creatorspc">
-  <!-- <audio id="bgMusic" src="
-  https://aqqmusic.tc.qq.com/M500001SKCJ51pu5X5.mp3?guid=1085538120&vkey=38E0ED8B7EB9EE84051D8F0B400AC6C5AF83BBCCE84A25C8F44061DBC62A12D80A30C019240009502D5B7C9F9CBE0CE392648DD9E1E59EAF__v215192d86&uin=&fromtag=120042" loop preload="auto"></audio> -->
-
-  <!-- <audio id="bgMusic" src="
-  https://m701.music.126.net/20251201183010/229b648ce35696deafc61281b692e0c7/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/18617250777/202e/30b2/8714/d3762e0595339f7fda011201a4234773.mp3?vuutv=P69ltyjAg6d8b31dnDNi9qhVSaCMu/+G6KPn3cyKcb+dGMKNVjAdIk7GgI+uiwPNrP+H9iXJesq+w4MW+5B2CoI5/96Vt7Y0E/P1182mML9jdyFfo/lxm+6MVD3nInjqXECwmO12GmSi1XU+pU1xXw5eFCZRcu98AuBHqmeZjCaGib5+2hBodU24/hIng3yY/Yvqd9xCpD6U3WBf/oU62rEF2SV7m21p/6KSLS/5J9wu/1lEfsNE3niAOPL/JxXZZ3gpFnV7dOo2uRimkJWnkFGg1ScXCR4Asd6jAzs/2XvqbFY3pw01RcCary7/kxKSEw3j82yRhSgU21Uwq0WTfBJzVu1Vf0d10UpPJaoM7iaupg7vKr5Myg6L9QXbnmSC7Kj8Kz/U6DkTMfqVjlQLKA==&cdntag=bWFyaz1vc193ZWIscXVhbGl0eV9zdGFuZGFyZA" loop preload="auto"></audio> -->
-
-  
-   <!-- <audio id="bgMusic" src="music/一生有你.mp3" loop preload="auto"></audio> -->
-  <audio id="bgMusic" src="music/予你.mp3" loop preload="auto"></audio>
+  <audio id="bgMusic" src="music/西楼别序.mp3" loop preload="auto"></audio>
 
   <script>
-    const audio = document.getElementById('bgMusic');
-  
-    // 兼容：用户任意点击一次即可播放
-    const startMusic = () => {
-      audio.play().catch(() => {
-        console.log("需要用户交互才能播放背景音乐");
-      });
-      document.removeEventListener('click', startMusic);
-    };
-  
-    // 等待用户点击触发播放
-    document.addEventListener('click', startMusic);
-  
-    // 也可以监听其他交互事件，如触摸屏幕
-    document.addEventListener('touchstart', startMusic);
+    (function() {
+      const audio = document.getElementById('bgMusic');
+      if (!audio) return;
+
+      let hasStarted = false;
+      
+      const startMusic = () => {
+        if (hasStarted) return;
+        hasStarted = true;
+        
+        audio.play().catch((err) => {
+          console.log("需要用户交互才能播放背景音乐", err);
+          hasStarted = false;
+        });
+        
+        // 移除事件监听器，避免重复触发
+        document.removeEventListener('click', startMusic);
+        document.removeEventListener('touchstart', startMusic);
+      };
+
+      // 监听用户交互事件
+      document.addEventListener('click', startMusic, { once: true });
+      document.addEventListener('touchstart', startMusic, { once: true });
+    })();
   </script>
-  
+
   <div class="site-container">
     <header class="site-head-home" data-plr-component="site-head-home">
       <!-- .s__bar -->
@@ -190,7 +243,7 @@
       <div class="s-about-home" data-plr-component="s-about-home" id="about">
         <div class="u-container">
           <div class="s__header js-header">
-            <h2 class="s__suptitle t-suptitle">所以呢？</h2>
+            <h2 class="s__suptitle t-suptitle">向前看</h2>
 
             <p class="s__title t-title js-title">
               昨天是历史
@@ -231,9 +284,11 @@
             <br>
             但这不代表它
             <span class="t-label t-label--network">不值得</span>
+          </p>
+          <!-- .s__text -->
+          
           <p class="s__text" style="text-indent: 2em; margin: 0;">
             "永远会有人爱你，有人恨你，有人支持你，有人看不惯你，想要你好，想要你死，想要你自由，想要你按照他们的想法生活，理解你，误解你，曲解你，但每个人都是如此生活，没有例外。"
-          </p>
           </p>
           <!-- .s__text -->
         </div>
@@ -1474,7 +1529,7 @@
   </div>
   <!-- #icr-cookie-consent -->
   <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const cookieBanner = document.getElementById('icr-cookie-consent');
       if (!cookieBanner) return;
 
@@ -1483,9 +1538,9 @@
       const customizeBtn = cookieBanner.querySelector('.js-icr-cc-customize-btn');
       const saveBtn = cookieBanner.querySelector('.js-icr-cc-save-btn');
       const customizeSection = cookieBanner.querySelector('.icr-cc__customize');
-      
+
       // 默认隐藏自定义区域
-      if(customizeSection) customizeSection.style.display = 'none';
+      if (customizeSection) customizeSection.style.display = 'none';
 
       // 检查是否已经同意过
       if (localStorage.getItem('cookieConsentGiven')) {
@@ -1500,28 +1555,28 @@
       }
 
       if (acceptBtn) {
-        acceptBtn.addEventListener('click', function(e) {
+        acceptBtn.addEventListener('click', function (e) {
           e.preventDefault();
           closeBanner();
         });
       }
 
       if (declineBtn) {
-        declineBtn.addEventListener('click', function(e) {
+        declineBtn.addEventListener('click', function (e) {
           e.preventDefault();
           closeBanner();
         });
       }
 
       if (saveBtn) {
-        saveBtn.addEventListener('click', function(e) {
+        saveBtn.addEventListener('click', function (e) {
           e.preventDefault();
           closeBanner();
         });
       }
 
       if (customizeBtn && customizeSection) {
-        customizeBtn.addEventListener('click', function(e) {
+        customizeBtn.addEventListener('click', function (e) {
           e.preventDefault();
           if (customizeSection.style.display === 'none' || customizeSection.style.display === '') {
             customizeSection.style.display = 'block';
@@ -1530,32 +1585,32 @@
           }
         });
       }
-      
+
       // 处理自定义选项中的展开/收起
       const toggleIcons = cookieBanner.querySelectorAll('.js-icr-cc-toggle-icon');
       toggleIcons.forEach(icon => {
-        icon.addEventListener('click', function() {
-           const item = this.closest('.js-icr-cc-cookie-item');
-           const info = item.querySelector('.icr-cc__cookie-item__info');
-           if(info) {
-             if(info.style.display === 'none' || info.style.display === '') {
-                info.style.display = 'block';
-                this.classList.add('active'); // 假设 active 类控制图标旋转
-             } else {
-                info.style.display = 'none';
-                this.classList.remove('active');
-             }
-           }
+        icon.addEventListener('click', function () {
+          const item = this.closest('.js-icr-cc-cookie-item');
+          const info = item.querySelector('.icr-cc__cookie-item__info');
+          if (info) {
+            if (info.style.display === 'none' || info.style.display === '') {
+              info.style.display = 'block';
+              this.classList.add('active'); // 假设 active 类控制图标旋转
+            } else {
+              info.style.display = 'none';
+              this.classList.remove('active');
+            }
+          }
         });
       });
-      
+
       // 默认隐藏详细信息
       const infos = cookieBanner.querySelectorAll('.icr-cc__cookie-item__info');
       infos.forEach(info => info.style.display = 'none');
     });
   </script>
-    var icrAjaxUrl = "https://247artists.vercel.app//wp-admin/admin-ajax.php";
-    var icrNonce = "e12a8ade3c";
+  var icrAjaxUrl = "https://247artists.vercel.app//wp-admin/admin-ajax.php";
+  var icrNonce = "e12a8ade3c";
   </script>
   <!-- Google Tag Manager -->
   <script>
