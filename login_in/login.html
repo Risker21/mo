@@ -1,0 +1,249 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head>
+	<title>登录</title>
+	<!-- Meta tag Keywords -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="Simple Signin Form Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements"
+	/>
+	<script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script>
+	<!-- Meta tag Keywords -->
+	<!-- css files -->
+	<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+	<!-- Style-CSS -->
+	<link rel="stylesheet" href="css/font-awesome.css">
+	<!-- Font-Awesome-Icons-CSS -->
+	<!-- //css files -->
+	<!-- web-fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Play:400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+	<!-- //web-fonts -->
+	<link rel="icon" href="./images/favicon.jpg" type="image/x-icon">
+</head>
+
+<body>
+	<!--header-->
+	<div class="header-w3l">
+		<h1 id="runtime-display">
+			网站已成功运行: <span id="runtime-days">0</span>天 <span id="runtime-hours">0</span>小时 <span id="runtime-minutes">0</span>分钟 <span id="runtime-seconds">0</span>秒
+		</h1>
+	</div>
+	<script>
+		function updateRuntime() {
+			const startDate = new Date('2025-06-30T12:00:00');
+			const now = new Date();
+			const diff = now - startDate;
+			
+			const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+			const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+			const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+			const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+			
+			document.getElementById('runtime-days').textContent = days;
+			document.getElementById('runtime-hours').textContent = hours;
+			document.getElementById('runtime-minutes').textContent = minutes;
+			document.getElementById('runtime-seconds').textContent = seconds;
+		}
+		
+		updateRuntime();
+		setInterval(updateRuntime, 1000); // 每秒更新一次
+	</script>
+	<!--//header-->
+	<div class="main-content-agile">
+		<div class="sub-main-w3">
+<h2 id="loginTitle">你好呀</h2>
+			<form action="#" method="post">
+				<label>用户名</label>
+				<div class="pom-agile">
+					<span class="fa fa-user-o" aria-hidden="true"></span>
+					<input placeholder="请输入用户名" name="Name" class="user" type="text" required="">
+				</div>
+				<label>密码</label>
+				<div class="pom-agile">
+					<span class="fa fa-key" aria-hidden="true"></span>
+					<input placeholder="请输入密码" name="Password" class="pass" type="password" required="" id="passwordInput">
+					<span class="fa fa-eye-slash" aria-hidden="true" id="togglePassword" style="cursor: pointer; margin-left: -25px;"></span>
+				</div>
+				<div class="sub-w3l">
+					<div class="sub-agile">
+						<input type="checkbox" id="brand1" value="">
+						<label for="brand1">
+							<span></span>保持登录状态</label>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="right-w3l">
+<input type="submit" value="登录" id="loginBtn">
+					<div class="loader" style="display:none;">
+						<div class="loader-circle"></div>
+						<div class="loader-circle"></div>
+						<div class="loader-circle"></div>
+					</div>
+				</div>
+				<div class="guest-access" style="font-size: 15px; text-align: center; margin-top: 20px;">
+					<button type="button" id="guestBtn" class="guest-btn">游客访问</button>
+				</div>
+<script>
+					const titleGreetings = [
+						"你好呀", 
+"Hello",
+						"Здравствуйте", 
+						"こんにちは", 
+						"안녕하세요", 
+						"Bonjour", 
+						"Guten Tag", 
+						"السلام عليكم", 
+						"Habari"
+					];
+					
+					const loginTitle = document.getElementById('loginTitle');
+					let titleIndex = 0;
+					
+					function changeTitle() {
+						titleIndex = (titleIndex + 1) % titleGreetings.length;
+						loginTitle.textContent = titleGreetings[titleIndex];
+					}
+					
+					// 每2秒切换一次标题
+					setInterval(changeTitle, 2000);
+					
+const loginBtn = document.getElementById('loginBtn');
+loginBtn.value = "登录";
+					
+					document.querySelector('form').addEventListener('submit', function(e) {
+						e.preventDefault();
+						const submitBtn = this.querySelector('input[type="submit"]');
+						const loader = this.querySelector('.loader');
+						
+						submitBtn.style.display = 'none';
+						loader.style.display = 'flex';
+						
+					// 模拟登录过程
+					const usernameInput = document.querySelector('input[name="Name"]');
+					const passwordInput = document.getElementById('passwordInput');
+					
+					console.log('Username input:', usernameInput);
+					console.log('Password input:', passwordInput);
+					
+					const username = usernameInput ? usernameInput.value : '';
+					const password = passwordInput ? passwordInput.value : '';
+					
+					console.log('Actual username:', username, 'Actual password:', password);
+					
+					if(username.trim() === "Momo" && password.trim() === "5201314") {
+						console.log('Login successful, checking index.html');
+						fetch('./index.html')
+							.then(response => {
+								if(response.ok) {
+									console.log('index.html exists, redirecting');
+									sessionStorage.setItem('isAuthenticated', 'true');
+									// 检查是否有重定向目标页面
+									const redirectTarget = sessionStorage.getItem('redirectAfterLogin');
+									if (redirectTarget) {
+										// 清除重定向目标，避免下次登录时再跳转到这里
+										sessionStorage.removeItem('redirectAfterLogin');
+										window.location.href = redirectTarget;
+									} else {
+										// 如果没有指定的重定向目标，则默认跳转到首页
+										window.location.href = window.location.pathname.replace('login.html', 'index.html');
+									}
+								} else {
+									console.error('index.html not found');
+									alert('错误：找不到index.html页面');
+								}
+							})
+							.catch(error => {
+								console.error('Error checking index.html:', error);
+								alert('错误：无法检查index.html是否存在');
+							});
+					} else {
+						console.log('Login failed - username:', username, 'password:', password);
+						submitBtn.style.display = 'block';
+						loader.style.display = 'none';
+						alert('用户名或密码错误！');
+					}
+				});
+
+				// 密码显示/隐藏切换
+				const togglePassword = document.getElementById('togglePassword');
+				const passwordInput = document.getElementById('passwordInput');
+				
+				togglePassword.addEventListener('click', function() {
+					const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+					passwordInput.setAttribute('type', type);
+					
+					// 修复图标显示逻辑 - 图标应该表示当前状态
+					if (type === 'text') {
+						this.classList.remove('fa-eye-slash');
+						this.classList.add('fa-eye');
+					} else {
+						this.classList.remove('fa-eye');
+						this.classList.add('fa-eye-slash');
+					}
+				});
+
+				// 游客访问功能
+				const guestBtn = document.getElementById('guestBtn');
+				guestBtn.addEventListener('click', function() {
+					const loader = document.querySelector('.loader');
+					const loginBtn = document.getElementById('loginBtn');
+					
+					loginBtn.style.display = 'none';
+					loader.style.display = 'flex';
+					
+					// 检查index.html是否存在
+					fetch('./index.html')
+						.then(response => {
+							if(response.ok) {
+								console.log('index.html exists, redirecting as guest');
+								sessionStorage.setItem('isAuthenticated', 'guest');
+								// 检查是否有重定向目标页面
+								const redirectTarget = sessionStorage.getItem('redirectAfterLogin');
+								if (redirectTarget) {
+									// 清除重定向目标，避免下次登录时再跳转到这里
+									sessionStorage.removeItem('redirectAfterLogin');
+									window.location.href = redirectTarget;
+								} else {
+									// 如果没有指定的重定向目标，则默认跳转到首页
+									window.location.href = window.location.pathname.replace('login.html', 'index.html');
+								}
+							} else {
+								console.error('index.html not found');
+								alert('错误：找不到index.html页面');
+								loginBtn.style.display = 'block';
+								loader.style.display = 'none';
+							}
+						})
+						.catch(error => {
+							console.error('Error checking index.html:', error);
+							alert('错误：无法检查index.html是否存在');
+							loginBtn.style.display = 'block';
+							loader.style.display = 'none';
+						});
+				});
+				</script>
+			</form>
+		</div>
+	</div>
+	<!--//main-->
+	<!--footer-->
+	<div class="footer">
+		<p>&copy; 2025 Momo的小破站 版权所有 | <a target="_blank" href="https://github.com/Risker21" title="Momo同学">Momo同学</a>
+		</p>
+	</div>
+	<!--//footer-->
+</body>
+
+</html>
+
+
