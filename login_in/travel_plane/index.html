@@ -7,22 +7,6 @@
     content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
   <link rel="icon" href="../images/favicon.jpg" type="image/x-icon">
   <title>穿越时空的浪漫之旅</title>
-  <script>
-    // 检查登录状态（使用sessionStorage）
-    const authStatus = sessionStorage.getItem('isAuthenticated');
-    if (authStatus !== 'true' && authStatus !== 'guest') {
-        // 显示提示框询问用户是否要登录
-        const userChoice = confirm('请先登录才能查看此内容。是否前往登录页面？');
-        if (userChoice) {
-            // 存储想要访问的页面路径，以便登录后返回
-            sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
-            window.location.href = '../login.html';
-        } else {
-            // 如果用户选择取消登录，尝试关闭当前窗口
-            window.close();
-        }
-    }
-  </script>
   <link rel="stylesheet" type="text/css" href="./css/lovexhj.css" />
   <link rel="stylesheet" href="./css/swiper.css" />
   <link rel="stylesheet" type="text/css" href="./css/FiraCode.css" />
@@ -384,7 +368,7 @@
   <!-- 页脚 -->
   <footer class="main-footer">
     <div class="footer-content">
-      <p>&copy; 2025 时空旅行 · 爱在每一刻</p>
+      <p>&copy; 2026 时空旅行 · 爱在每一刻</p>
       <p>愿我们的旅程永远充满爱与惊喜</p>
     </div>
   </footer>
