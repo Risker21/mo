@@ -6,7 +6,7 @@ function handlePageLoad() {
   gsap.to("#header", 0, { display: "block", delay: 1 });
   gsap.to("#navigation-content", 0, { display: "none" });
   gsap.to("#navigation-content", 0, { display: "flex", delay: 1 });
-  
+
   // 清除超时定时器，防止重复执行
   if (window.loadTimeout) {
     clearTimeout(window.loadTimeout);
@@ -15,10 +15,10 @@ function handlePageLoad() {
 }
 
 // 设置3秒超时机制 - 防止网络问题导致加载动画卡住
-window.loadTimeout = setTimeout(function() {
+window.loadTimeout = setTimeout(function () {
   // 如果3秒后页面还没有加载完成，强制隐藏加载动画
-  if (document.readyState !== 'complete') {
-    console.log('页面加载超时，强制隐藏加载动画');
+  if (document.readyState !== "complete") {
+    console.log("页面加载超时，强制隐藏加载动画");
     handlePageLoad();
   }
 }, 3000);
@@ -27,7 +27,7 @@ window.loadTimeout = setTimeout(function() {
 $(window).on("load", handlePageLoad);
 
 // 如果页面已经加载完成，立即执行
-if (document.readyState === 'complete') {
+if (document.readyState === "complete") {
   handlePageLoad();
 }
 $(function () {
@@ -236,97 +236,93 @@ $(function () {
 
   // 音乐列表
   const musicFiles = [
-    "link/music/搁浅.mp3",
-    "link/music/戒不掉.mp3",
-    "link/music/柳叶笺.mp3",
-    "link/music/明天，你好.mp3",
-    "link/music/我记得.mp3",
-    "link/music/这世界那么多人.mp3",
-    "link/music/安和桥.mp3",
-    "link/music/程艾影.mp3",
-    "link/music/此类生物.mp3",
-    "link/music/房间.mp3",
-    "link/music/飞鸟和蝉.mp3",
-    "link/music/归途有风.mp3",
-    "link/music/红色高跟鞋.mp3",
-    "link/music/家后.mp3",
-    "link/music/离开我的依赖.mp3",
-    "link/music/路过人间.mp3",
-    "link/music/哪里都是你.mp3",
-    "link/music/秋风.mp3",
-    "link/music/是什么让我遇见这样的你.mp3",
-    "link/music/水星记.mp3",
-    "link/music/所念皆星河.mp3",
-    "link/music/推开世界的门.mp3",
-    "link/music/晚安.mp3",
-    "link/music/无额.mp3",
-    "link/music/想自由.mp3",
-    "link/music/演员.mp3",
+    "link/music/爱你.mp3",
+    "link/music/出现又离开.mp3",
+    "link/music/少年.mp3",
+    "link/music/最初的记忆.mp3",
+    "link/music/盲选.mp3",
+    "link/music/最好的我.mp3",
+    "link/music/去年夏天.mp3",
     "link/music/鱼仔.mp3",
-    "link/music/真爱的力量.mp3",
+    "link/music/飞鸟和蝉.mp3",
+    "link/music/错位时空.mp3",
+    "link/music/这世界那么多人.mp3",
+    "link/music/身骑白马.mp3",
+    "link/music/路过人间.mp3",
+    "link/music/起风了.mp3",
+    "link/music/西楼别序.mp3",
+    "link/music/若月亮还没来.mp3",
+    "link/music/船帆.mp3",
     "link/music/终生老友.mp3",
-    "link/music/Anyone.mp3",
-    "link/music/blue dragon.mp3",
-    "link/music/Born To Live.mp3",
-    "link/music/everglow.mp3",
-    "link/music/every time we touch.mp3",
-    "link/music/I Really Want To Stay At Your House.mp3",
-    "link/music/III.mp3",
-    "link/music/Kamin.mp3",
-    "link/music/let her go.mp3",
-    "link/music/Lonely Day.mp3",
-    "link/music/looking forward.mp3",
-    "link/music/Lonereach.mp3",
-    "link/music/sacred play secret place.mp3",
-    "link/music/Trouble I’m in.mp3",
-    "link/music/WE PRAY.mp3",
+    "link/music/红色高跟鞋.mp3",
+    "link/music/空白格.mp3",
+    "link/music/程艾影.mp3",
+    "link/music/秋风.mp3",
+    "link/music/离开我的依赖.mp3",
+    "link/music/碎碎念.mp3",
+    "link/music/真爱的力量.mp3",
+    "link/music/生活的主义.mp3",
+    "link/music/演员.mp3",
+    "link/music/水星记.mp3",
+    "link/music/此类生物.mp3",
+    "link/music/梦返.mp3",
+    "link/music/梦中的天空.mp3",
+    "link/music/栀子花开.mp3",
+    "link/music/柳叶笺.mp3",
+    "link/music/晚安.mp3",
+    "link/music/是什么让我遇见这样的你.mp3",
+    "link/music/明天，你好.mp3",
+    "link/music/无额.mp3",
+    "link/music/无名的人.mp3",
+    "link/music/文爱.mp3",
+    "link/music/散场.mp3",
+    "link/music/搁浅.mp3",
+    "link/music/推开世界的门.mp3",
+    "link/music/所念皆星河.mp3",
+    "link/music/房间.mp3",
+    "link/music/戒不掉.mp3",
+    "link/music/我记得.mp3",
+    "link/music/我的美丽.mp3",
+    "link/music/想自由.mp3",
+    "link/music/总有一天你会出现我身边.mp3",
+    "link/music/归途有风.mp3",
+    "link/music/小半.mp3",
+    "link/music/寂寞烟火.mp3",
+    "link/music/家后.mp3",
+    "link/music/安和桥.mp3",
+    "link/music/四季予你.mp3",
+    "link/music/唯一.mp3",
+    "link/music/哪里都是你.mp3",
+    "link/music/去有风的地方.mp3",
+    "link/music/去北极忘记你.mp3",
+    "link/music/冬眠.mp3",
+    "link/music/再一次爱你.mp3",
+    "link/music/光亮.mp3",
+    "link/music/予你.mp3",
+    "link/music/不是因为寂寞才想你.mp3",
+    "link/music/不哭.mp3",
+    "link/music/一路生花.mp3",
+    "link/music/一生有你.mp3",
+    "link/music/white ferrari.mp3",
     "link/music/what was that.mp3",
-    "link/music/white ferrari.mp3"
-   
-    
-
-    
+    "link/music/summer day.mp3",
+    "link/music/sacred play secret place.mp3",
+    "link/music/reach.mp3",
+    "link/music/looking forward.mp3",
+    "link/music/let her go.mp3",
+    "link/music/every time we touch.mp3",
+    "link/music/everglow.mp3",
+    "link/music/blue dragon.mp3",
+    "link/music/WE PRAY.mp3",
+    "link/music/Trouble I’m in.mp3",
+    "link/music/The Best Is Yet to Come.mp3",
+    "link/music/Lonely Day.mp3",
+    "link/music/Kamin.mp3",
+    "link/music/III.mp3",
+    "link/music/I Really Want To Stay At Your House.mp3",
+    "link/music/Born To Live.mp3",
+    "link/music/Anyone.mp3",
   ];
-    // "link/music/秋风.mp3",
-    // "link/music/水星记.mp3",
-    // "link/music/Anyone.mp3",
-    // "link/music/搁浅.mp3",
-    // "link/music/戒不掉.mp3",
-    // "link/music/柳叶笺.mp3",
-    // "link/music/明天，你好.mp3",
-    // "link/music/我记得.mp3",
-    // "link/music/这世界那么多人.mp3",
-    // "link/music/I Really Want To Stay At Your House.mp3",
-    // "link/music/WE PRAY.mp3",
-    // "link/music/终生老友.mp3",
-    // "link/music/是什么让我遇见这样的你.mp3",
-    // "link/music/everglow.mp3",
-    // "link/music/Trouble I’m in.mp3",
-    // "link/music/鱼仔.mp3",
-    // "link/music/无额.mp3",
-    // "link/music/哪里都是你.mp3",
-    // "link/music/every time we touch.mp3",
-    // "link/music/所念皆星河.mp3",
-    // "link/music/let her go.mp3",
-    // "link/music/程艾影.mp3",
-    // "link/music/sacred play secret place.mp3",
-    // "link/music/what was that.mp3",
-    // "link/music/blue dragon.mp3",
-    // "link/music/white ferrari.mp3",
-    // "link/music/looking forward.mp3",
-    // "link/music/reach.mp3",
-    // "link/music/III.mp3",
-    // "link/music/家后.mp3",
-    // "link/music/离开我的依赖.mp3",
-    // "link/music/路过人间.mp3",
-    // "link/music/飞鸟和蝉.mp3",
-    // "link/music/真爱的力量.mp3",
-    // "link/music/Kamin.mp3",
-    // "link/music/推开世界的门.mp3",
-    // "link/music/房间.mp3",
-    // "link/music/Lonely Day.mp3",
-    // "link/music/演员.mp3",
-    // "link/music/安和桥.mp3"
 
   // 随机选择音乐
   function getRandomMusic() {
