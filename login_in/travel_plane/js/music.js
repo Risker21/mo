@@ -1,7 +1,7 @@
 // 背景音乐控制
 document.addEventListener('DOMContentLoaded', function() {
     // 创建音乐元素
-    const bgMusic = new Audio('./images/现在是陌生人.mp3');
+    const bgMusic = new Audio('../link/music/爱你.mp3');
     bgMusic.loop = true;
     bgMusic.volume = 0.5; // 设置音量
     
