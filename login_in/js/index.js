@@ -236,6 +236,16 @@ $(function () {
 
   // 音乐列表
   const musicFiles = [
+    "link/music/夜空中最亮的星.mp3",
+    "link/music/送你一朵小红花.mp3",
+    "link/music/在你的身边.mp3",
+    "link/music/谁.mp3",
+    "link/music/那女孩对我说.mp3",
+    "link/music/体面.mp3",
+    "link/music/蒲公英的约定.mp3",
+    "link/music/最好的安排.mp3",
+    "link/music/可不可以.mp3",
+    "link/music/我们俩.mp3",
     "link/music/爱你.mp3",
     "link/music/出现又离开.mp3",
     "link/music/少年.mp3",
