@@ -236,7 +236,9 @@ $(function () {
 
   // 音乐列表
   const musicFiles = [
-    "link/music/花.mp3",
+    "link/music/茫.mp3",
+    "link/music/西楼别序正篇.mp3",
+    "link/music/如果当时.mp3",
     "link/music/夜空中最亮的星.mp3",
     "link/music/送你一朵小红花.mp3",
     "link/music/在你的身边.mp3",
