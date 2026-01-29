@@ -94,6 +94,11 @@ body {
     z-index: 999;
 }
 
+.flight-info-bar.is-takeoff {
+    background: linear-gradient(90deg, rgba(255,105,180,0.95) 0%, rgba(0,180,216,0.95) 50%, rgba(255,215,0,0.95) 100%);
+    animation: takeoffGlow 2s ease-in-out infinite;
+}
+
 .flight-status {
     max-width: 1200px;
     margin: 0 auto;
@@ -113,6 +118,33 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.2);
     min-width: 120px;
     animation: float 3s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-item.status-takeoff {
+    min-width: 150px;
+}
+
+.status-item.status-takeoff.is-urgent {
+    border-color: rgba(255, 215, 0, 0.9);
+    box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.18), var(--shadow-medium);
+}
+
+.takeoff-progress {
+    height: 6px;
+    border-radius: 999px;
+    margin-top: 8px;
+    background: rgba(255, 255, 255, 0.18);
+    overflow: hidden;
+}
+
+.takeoff-progress-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(255, 215, 0, 0.95), rgba(255, 105, 180, 0.95));
+    transition: width 0.35s ease;
 }
 
 .status-label {
@@ -135,6 +167,11 @@ body {
     50% { transform: translateY(-5px); }
 }
 
+@keyframes takeoffGlow {
+    0%, 100% { filter: saturate(1) brightness(1); }
+    50% { filter: saturate(1.15) brightness(1.05); }
+}
+
 /* 主内容区域 */
 .main-content {
     position: relative;
@@ -145,6 +182,7 @@ body {
     min-height: 100vh;
     padding: 2rem 0;
     position: relative;
+    scroll-margin-top: 120px;
 }
 
 /* 首页英雄区域 */
@@ -208,6 +246,13 @@ body {
     animation: fadeInUp 1s ease 0.4s both;
 }
 
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
 .stat-item {
     text-align: center;
 }
@@ -242,9 +287,19 @@ body {
     animation: fadeInUp 1s ease 0.6s both;
 }
 
+.cta-button.secondary {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(10px);
+}
+
 .cta-button:hover {
     transform: translateY(-3px);
     box-shadow: var(--shadow-heavy);
+}
+
+.cta-button.secondary:hover {
+    background: rgba(255, 255, 255, 0.18);
 }
 
 .button-arrow {
@@ -586,9 +641,9 @@ body {
 
 .pig-right {
     left: -30px;
-    bottom: 0;
+    top: 75%;
     transform: scaleX(-1) rotate(-90deg);
-    animation: pigFloatRight 5s ease-in-out infinite;
+    animation: pigFloatRight 7s ease-in-out infinite;
 }
 
 @keyframes pigFloatLeft {
@@ -597,8 +652,8 @@ body {
 }
 
 @keyframes pigFloatRight {
-    0%, 100% { transform: scaleX(-1) rotate(-90deg) translateY(0px); }
-    50% { transform: scaleX(-1) rotate(-90deg) translateY(-30px); }
+    0%, 100% { transform: translateY(0) scaleX(-1) rotate(-90deg); }
+    50% { transform: translateY(-55vh) scaleX(-1) rotate(-90deg); }
 }
 
 /* 漂浮心形 */
@@ -645,6 +700,10 @@ body {
     overflow: hidden;
 }
 
+body.flight-takeoff.romantic-rain .romantic-elements {
+    animation: romanticHue 6s linear infinite;
+}
+
 /* 爱心、星星等浪漫元素 */
 .romantic-element {
     position: absolute;
@@ -652,6 +711,19 @@ body {
     opacity: 0;
     animation-timing-function: linear;
     pointer-events: none;
+}
+
+body.flight-takeoff.romantic-rain .romantic-element {
+    text-shadow:
+        0 0 10px rgba(255, 255, 255, 0.55),
+        0 0 18px rgba(255, 105, 180, 0.35),
+        0 0 26px rgba(0, 180, 216, 0.25);
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.35));
+}
+
+@keyframes romanticHue {
+    0% { filter: hue-rotate(0deg) saturate(1.1); }
+    100% { filter: hue-rotate(360deg) saturate(1.1); }
 }
 
 /* 爱心 */
@@ -908,6 +980,10 @@ body {
         min-width: 100px;
         padding: 8px 15px;
     }
+
+    .status-item.status-takeoff {
+        min-width: 120px;
+    }
     
     .status-label {
         font-size: 0.7rem;
@@ -936,6 +1012,10 @@ body {
     .nav-link {
         padding: 0.3rem 0.6rem;
         font-size: 0.8rem;
+    }
+
+    .status-item.status-takeoff {
+        min-width: 110px;
     }
     
     .hero-title {
@@ -1018,6 +1098,7 @@ body {
     font-size: 1.1rem;
     line-height: 1.8;
     color: var(--text-color);
+    font-family: "STXingkai", "STKaiti", "KaiTi", "Kaiti SC", "Segoe Script", "Brush Script MT", cursive;
 }
 
 .letter-paragraph {
@@ -1036,6 +1117,11 @@ body {
     margin-bottom: 1rem;
     font-size: 1.1rem;
     line-height: 1.8;
+    letter-spacing: 0.02em;
+}
+
+.letter-paragraph:not(:first-child) p {
+    text-indent: 2em;
 }
 
 .letter-paragraph:first-child p {
@@ -1053,6 +1139,12 @@ body {
     transition: all 0.8s ease 0.5s;
 }
 
+.letter-signature p {
+    width: 100%;
+    text-align: right;
+    text-indent: 0;
+}
+
 .letter-signature.fade-in {
     opacity: 1;
     transform: translateY(0);
@@ -1068,6 +1160,7 @@ body {
     font-size: 0.9rem;
     color: #666;
     margin-top: 0.5rem;
+    text-align: right;
 }
 
 /* 滚动动画延迟 */
