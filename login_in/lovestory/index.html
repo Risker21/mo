@@ -7,13 +7,27 @@
   <meta charset="UTF-8" />
   <title>独白故事</title>
   <meta name="language" content="zh-CN" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
   <link rel="icon" href="../images/favicon.jpg" type="image/x-icon">
   <link rel="stylesheet" href="all.min.css" />
+  <link rel="stylesheet" href="mobile-fixes.css" />
+
+  <script>
+    (function () {
+      function setVh() {
+        var vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty("--vh", vh + "px");
+      }
+      setVh();
+      window.addEventListener("resize", setVh);
+      window.addEventListener("orientationchange", setVh);
+    })();
+  </script>
 </head>
 
 <body>
-  <video id="bg-video" autoplay loop muted>
+  <video id="bg-video" autoplay loop muted playsinline webkit-playsinline poster="img/iali0.jpg">
     <source src="./浪漫.mp4" type="video/mp4" />
   </video>
 
@@ -27,7 +41,7 @@
             style="font-size: 30px; color: #000"><br />——原来人生最大的错觉，是以为初见只是开场，殊不知那已是巅峰！</span>
         </p>
         <p class="text2">
-          按键盘 "↓"
+          向下滑动⬇️
           <span id="text-78" contenteditable="true">开启一段故事吧</span>
         </p>
       </div>
@@ -383,27 +397,8 @@
 
   <audio id="bgmMusic" src="./一起吹过晚风的街.mp3" autoplay loop preload="auto" type="audio/mp3" playsinline></audio>
   <!-- 开始按钮覆盖层 -->
-  <div id="startOverlay" style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        z-index: 9999;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      ">
-    <button id="startButton" style="
-          padding: 15px 30px;
-          font-size: 24px;
-          background: #ff4d4d;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-        ">
+  <div id="startOverlay">
+    <button id="startButton">
       开启旅程
     </button>
   </div>
@@ -414,7 +409,16 @@
       const startBtn = document.getElementById("startButton");
       const overlay = document.getElementById("startOverlay");
       const audio = document.getElementById("bgmMusic");
+      const video = document.getElementById("bg-video");
       audio.volume = 0.5;
+
+      const isSmallScreen = window.matchMedia && window.matchMedia("(max-width: 768px)").matches;
+      const isTouch = ("ontouchstart" in window) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
+      if (isSmallScreen || isTouch) {
+        document.querySelectorAll('[contenteditable="true"]').forEach((el) => {
+          el.setAttribute("contenteditable", "false");
+        });
+      }
 
       // 初始隐藏所有内容
       document.querySelector(".flowtime").style.display = "none";
@@ -427,6 +431,9 @@
         overlay.style.display = "none";
         // 显示内容并播放音乐
         document.querySelector(".flowtime").style.display = "block";
+        if (video && video.paused) {
+          video.play().catch(() => {});
+        }
         audio
           .play()
           .then(() => {
