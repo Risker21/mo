@@ -1,8 +1,8 @@
 // 生成随机渐变函数
 function getRandomGradient() {
   const colors = [
-    '#6c5ce7', '#a29bfe', '#fd79a8', '#00b894', '#00cec9', 
-    '#0984e3', '#6c5ce7', '#e84393', '#fdcb6e', '#e17055'
+    '#2dd4bf', '#22c55e', '#60a5fa', '#38bdf8', '#fbbf24',
+    '#a3e635', '#34d399', '#93c5fd', '#fde68a', '#5eead4'
   ];
   
   // 随机选择两种颜色
@@ -33,11 +33,16 @@ window.addEventListener('load', function() {
   setupEducationCardGradients();
   setTimeout(function() {
     const loader = document.querySelector('.loader');
-    loader.style.opacity = '0';
-    loader.style.visibility = 'hidden';
+    if (loader) {
+      loader.style.opacity = '0';
+      loader.style.visibility = 'hidden';
+    }
     
     // 显示页面内容
-    document.querySelector('.container').style.opacity = '1';
+    const container = document.querySelector('.container');
+    if (container) {
+      container.style.opacity = '1';
+    }
   }, 1500); // 1.5秒后隐藏加载动画
 });
 
@@ -47,9 +52,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const colorToggle = document.querySelector('.color-toggle');
   const colorControls = document.querySelector('.color-controls');
   
-  colorToggle.addEventListener('click', function() {
-    colorControls.classList.toggle('active');
-  });
+  if (colorToggle && colorControls) {
+    colorToggle.addEventListener('click', function() {
+      colorControls.classList.toggle('active');
+    });
+  }
 
   // 颜色选择器
   const titleColorPicker = document.getElementById('title-color');
@@ -58,36 +65,43 @@ document.addEventListener('DOMContentLoaded', function() {
   const accentColorPicker = document.getElementById('accent-color');
 
   // 监听颜色选择器变化
-  titleColorPicker.addEventListener('input', function() {
-    document.documentElement.style.setProperty('--title-color', this.value);
-    // 更新所有图标颜色
-    document.querySelectorAll('section h2 i, .color-toggle i').forEach(icon => {
-      icon.style.color = this.value;
+  if (titleColorPicker) {
+    titleColorPicker.addEventListener('input', function() {
+      document.documentElement.style.setProperty('--title-color', this.value);
+      document.querySelectorAll('section h2 i, .color-toggle i').forEach(icon => {
+        icon.style.color = this.value;
+      });
     });
-  });
+  }
 
-  textColorPicker.addEventListener('input', function() {
-    document.documentElement.style.setProperty('--text-color', this.value);
-  });
+  if (textColorPicker) {
+    textColorPicker.addEventListener('input', function() {
+      document.documentElement.style.setProperty('--text-color', this.value);
+    });
+  }
 
-  bgColorPicker.addEventListener('input', function() {
-    document.documentElement.style.setProperty('--primary-color', this.value);
-  });
+  if (bgColorPicker) {
+    bgColorPicker.addEventListener('input', function() {
+      document.documentElement.style.setProperty('--primary-color', this.value);
+    });
+  }
 
-  accentColorPicker.addEventListener('input', function() {
-    document.documentElement.style.setProperty('--accent-color', this.value);
-  });
+  if (accentColorPicker) {
+    accentColorPicker.addEventListener('input', function() {
+      document.documentElement.style.setProperty('--accent-color', this.value);
+    });
+  }
 
   // 粒子效果初始化
-  if (document.getElementById('particles-js')) {
+  if (document.getElementById('particles-js') && typeof window.particlesJS === 'function') {
     particlesJS('particles-js', {
       particles: {
         number: { value: 80, density: { enable: true, value_area: 800 } },
-        color: { value: "#00b376" },
+        color: { value: "#2dd4bf" },
         shape: { type: "circle" },
         opacity: { value: 0.5, random: true },
         size: { value: 3, random: true },
-        line_linked: { enable: true, distance: 150, color: "#00b376", opacity: 0.4, width: 1 },
+        line_linked: { enable: true, distance: 150, color: "#2dd4bf", opacity: 0.35, width: 1 },
         move: { enable: true, speed: 2, direction: "none", random: true, straight: false, out_mode: "out" }
       },
       interactivity: {
@@ -101,8 +115,11 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // 初始化页面内容为透明
-  document.querySelector('.container').style.opacity = '0';
-  document.querySelector('.container').style.transition = 'opacity 0.5s ease';
+  const container = document.querySelector('.container');
+  if (container) {
+    container.style.opacity = '0';
+    container.style.transition = 'opacity 0.5s ease';
+  }
 
   // 鼠标移动背景色变化效果
   const sections = document.querySelectorAll('section');
