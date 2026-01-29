@@ -581,7 +581,7 @@
                       typeWriter(pElement, originalText, 85, () => {
                         paragraph.classList.add("fade-in");
                         currentIndex++;
-                        setTimeout(typeNextParagraph, 500); // 段落间延迟
+                    setTimeout(typeNextParagraph, 300); // 段落间延迟
                       });
                     } else if (signature) {
                       const pElement = signature.querySelector("p");
