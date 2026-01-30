@@ -142,6 +142,11 @@ h2 {
     box-shadow: 
         0 8px 25px rgba(0, 0, 0, 0.6),
         inset 0 0 10px rgba(139, 69, 19, 0.3);
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1/1;
+    max-width: 600px;
+    display: block;
 }
 
 /* 游戏控制按钮 */
@@ -286,11 +291,6 @@ h2 {
         gap: 10px;
     }
     
-    #board {
-        width: 300px;
-        height: 300px;
-    }
-    
     .board-container {
         padding: 10px;
     }
@@ -304,11 +304,6 @@ h2 {
     
     h1 {
         font-size: 1.8em;
-    }
-    
-    #board {
-        width: 250px;
-        height: 250px;
     }
     
     .mode-btn, .difficulty-btn, .control-btn {
