@@ -1,6 +1,6 @@
 // 默认的温暖文字内容
 const defaultMessages = [
-    "你已经做得很好了", "未来可期", "你是独一无二的", "今天也要加油呀",
+    "你已经做得很好了", "未来可期", "你是独一无二的", "今天也要加油呀","Momo同学要低调",
     "坚持就是胜利", "别忘了为自己骄傲", "小小的进步也是进步", "相信自己，你可以的",
     "保持积极的心态", "你今天真好看！", "一切都会好起来的", "慢慢来，一切都来得及",
     "生活也在偷偷犒劳温柔的人", "你值得所有的美好", "阳光总在风雨后",
@@ -19,6 +19,7 @@ const MAX_CUSTOM_MESSAGES = 20;
 const MAX_POPUPS = 300;
 const popupElements = [];
 let isPopupRainActive = false;
+let hasShownSurprise = false;
 
 // DOM元素
 const startButton = document.getElementById('startButton');
@@ -32,12 +33,6 @@ let isMusicPlaying = false;
 
 // 初始化
 function init() {
-    // 设置初始背景图片
-    document.body.style.backgroundImage = 'url("image/background.jpg")';
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center';
-    document.body.style.backgroundRepeat = 'no-repeat';
-    
     // 事件监听
     startButton.addEventListener('click', startPopupRain);
     addButton.addEventListener('click', addCustomMessage);
@@ -105,33 +100,9 @@ function updateAddButtonState() {
 function createCloseButton() {
     const closeButton = document.createElement('button');
     closeButton.id = 'closeButton';
+    closeButton.type = 'button';
+    closeButton.className = 'fixed-btn close-btn';
     closeButton.innerHTML = '⛔ 关闭弹窗雨';
-    closeButton.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 1001;
-        background-color: #ff4d4d;
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        font-size: 16px;
-        font-weight: bold;
-        border-radius: 25px;
-        cursor: pointer;
-        box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
-        transition: all 0.3s ease;
-    `;
-    
-    closeButton.addEventListener('mouseenter', () => {
-        closeButton.style.backgroundColor = '#ff3333';
-        closeButton.style.transform = 'translateY(-2px)';
-    });
-    
-    closeButton.addEventListener('mouseleave', () => {
-        closeButton.style.backgroundColor = '#ff4d4d';
-        closeButton.style.transform = 'translateY(0)';
-    });
     
     closeButton.addEventListener('click', stopPopupRain);
     document.body.appendChild(closeButton);
@@ -141,33 +112,10 @@ function createCloseButton() {
 function createMusicControlButton() {
     const musicButton = document.createElement('button');
     musicButton.id = 'musicButton';
+    musicButton.type = 'button';
+    musicButton.className = 'fixed-btn music-btn';
     musicButton.innerHTML = '🎶 播放音乐';
-    musicButton.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 10px 15px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 25px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
-        z-index: 1000;
-    `;
-    
-    musicButton.addEventListener('mouseenter', () => {
-        musicButton.style.transform = 'translateY(-2px)';
-        musicButton.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.3)';
-    });
-    
-    musicButton.addEventListener('mouseleave', () => {
-        musicButton.style.transform = 'translateY(0)';
-        musicButton.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
-    });
+    musicButton.setAttribute('aria-pressed', 'false');
     
     musicButton.addEventListener('click', toggleMusic);
     
@@ -183,18 +131,20 @@ function toggleMusic() {
         backgroundMusic.play().then(() => {
             isMusicPlaying = true;
             musicButton.innerHTML = '⏸️ 暂停音乐';
-            musicButton.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)';
+            musicButton.classList.add('is-playing');
+            musicButton.setAttribute('aria-pressed', 'true');
         }).catch(error => {
             console.error('播放音乐失败:', error);
             musicButton.innerHTML = '❌ 播放失败';
-            musicButton.style.background = 'linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%)';
+            musicButton.setAttribute('aria-pressed', 'false');
         });
     } else {
         // 暂停音乐
         backgroundMusic.pause();
         isMusicPlaying = false;
         musicButton.innerHTML = '🎶 播放音乐';
-        musicButton.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        musicButton.classList.remove('is-playing');
+        musicButton.setAttribute('aria-pressed', 'false');
     }
 }
 
@@ -207,6 +157,15 @@ function stopPopupRain() {
     // 清除弹窗生成间隔
     if (window.popupInterval) {
         clearInterval(window.popupInterval);
+    }
+
+    if (window.surpriseTimeout) {
+        clearTimeout(window.surpriseTimeout);
+    }
+
+    const surpriseOverlay = document.getElementById('surpriseOverlay');
+    if (surpriseOverlay) {
+        document.body.removeChild(surpriseOverlay);
     }
     
     // 移除所有弹窗
@@ -223,12 +182,6 @@ function stopPopupRain() {
         document.body.removeChild(closeButton);
     }
     
-    // 恢复初始背景图片（保持背景图片显示）
-    document.body.style.backgroundImage = 'url("image/background.jpg")';
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center';
-    document.body.style.backgroundRepeat = 'no-repeat';
-    
     // 显示主界面
     document.querySelector('.container').style.display = 'block';
 }
@@ -238,18 +191,13 @@ function startPopupRain() {
     if (isPopupRainActive) return;
     
     isPopupRainActive = true;
+    hasShownSurprise = false;
     
     // 隐藏主界面
     document.querySelector('.container').style.display = 'none';
     
     // 创建关闭按钮
     createCloseButton();
-    
-    // 设置弹窗雨背景图片（保持与初始页面一致）
-    document.body.style.backgroundImage = 'url("image/background.jpg")';
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center';
-    document.body.style.backgroundRepeat = 'no-repeat';
     
     // 如果用户使用了自定义内容，则只显示自定义内容；否则显示默认内容
     const allMessages = customMessages.length > 0 ? customMessages : defaultMessages;
@@ -263,35 +211,47 @@ function startPopupRain() {
     
     // 存储间隔ID以便关闭时清除
     window.popupInterval = popupInterval;
+
+    window.surpriseTimeout = setTimeout(() => {
+        showSurprise();
+    }, 10000);
 }
 
 // 创建单个弹窗
 function createPopup(messages) {
     const popup = document.createElement('div');
     popup.className = 'popup';
-    
-    // 设置随机位置
-    const popupWidth = 380;
-    const popupHeight = 100;
-    const x = Math.random() * (window.innerWidth - popupWidth);
-    const y = Math.random() * (window.innerHeight - popupHeight);
-    
-    popup.style.left = `${x}px`;
-    popup.style.top = `${y}px`;
-    popup.style.width = `${popupWidth}px`;
-    popup.style.height = `${popupHeight}px`;
+
+    const message = messages[Math.floor(Math.random() * messages.length)];
+    popup.textContent = message;
+
+    const minWidth = 140;
+    const maxWidth = Math.min(360, Math.max(220, Math.floor(window.innerWidth * 0.72)));
+    popup.style.minWidth = `${minWidth}px`;
+    popup.style.maxWidth = `${maxWidth}px`;
+    popup.style.width = 'fit-content';
+    popup.style.left = '0px';
+    popup.style.top = '0px';
+    popup.style.visibility = 'hidden';
     
     // 设置随机背景色
     const startColor = randomColor();
     popup.style.backgroundColor = startColor;
-    
-    // 设置随机消息
-    const message = messages[Math.floor(Math.random() * messages.length)];
-    popup.textContent = message;
-    
-    // 添加到页面
+
     document.body.appendChild(popup);
     popupElements.push(popup);
+
+    const measuredWidth = popup.offsetWidth;
+    const measuredHeight = popup.offsetHeight;
+
+    const maxX = Math.max(0, window.innerWidth - measuredWidth);
+    const maxY = Math.max(0, window.innerHeight - measuredHeight);
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    popup.style.left = `${x}px`;
+    popup.style.top = `${y}px`;
+    popup.style.visibility = 'visible';
     
     // 开始颜色渐变动画
     startColorAnimation(popup);
@@ -306,6 +266,79 @@ function createPopup(messages) {
             }
         }
     }, 30000); // 30秒后移除
+}
+
+function showSurprise() {
+    if (!isPopupRainActive || hasShownSurprise) return;
+    hasShownSurprise = true;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'surpriseOverlay';
+    overlay.className = 'surprise-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+
+    const card = document.createElement('div');
+    card.className = 'surprise-card';
+
+    const img = document.createElement('img');
+    img.className = 'surprise-img';
+    img.src = 'image/点击.png';
+    img.alt = '惊喜';
+
+    const title = document.createElement('div');
+    title.className = 'surprise-title';
+    title.textContent = '惊喜一下';
+
+    const text = document.createElement('div');
+    text.className = 'surprise-text';
+    text.textContent = '你已经坚持 10 秒啦，给你一个小奖励：愿你今天也被温柔对待。';
+
+    const actions = document.createElement('div');
+    actions.className = 'surprise-actions';
+
+    const okBtn = document.createElement('button');
+    okBtn.type = 'button';
+    okBtn.className = 'surprise-btn primary';
+    okBtn.textContent = '收下啦';
+
+    const moreBtn = document.createElement('button');
+    moreBtn.type = 'button';
+    moreBtn.className = 'surprise-btn ghost';
+    moreBtn.textContent = '再来一点';
+
+    const close = () => {
+        if (overlay.parentNode) {
+            document.body.removeChild(overlay);
+        }
+    };
+
+    okBtn.addEventListener('click', close);
+    moreBtn.addEventListener('click', () => {
+        for (let i = 0; i < 18; i++) {
+            if (popupElements.length < MAX_POPUPS) {
+                createPopup(customMessages.length > 0 ? customMessages : defaultMessages);
+            }
+        }
+        close();
+    });
+
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) close();
+    });
+
+    actions.appendChild(okBtn);
+    actions.appendChild(moreBtn);
+    card.appendChild(img);
+    card.appendChild(title);
+    card.appendChild(text);
+    card.appendChild(actions);
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
+
+    setTimeout(() => {
+        close();
+    }, 6000);
 }
 
 // 颜色渐变动画
