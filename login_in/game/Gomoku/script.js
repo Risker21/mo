@@ -18,6 +18,13 @@ class GomokuGame {
         this.canvas = document.getElementById('board');
         this.ctx = this.canvas.getContext('2d');
         
+        // 初始化音频上下文
+        try {
+            this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+            console.error('Web Audio API not supported');
+        }
+
         // 音效
         this.sounds = {
             place: this.createSound(800, 0.3, 0.1),
@@ -26,19 +33,27 @@ class GomokuGame {
             draw: this.createSound(440, 0.3, 0.3)
         };
         
+        // 背景音乐
+        this.bgm = new Audio('audio/bgm.mp3');
+        this.bgm.loop = true;
+        this.isMusicPlaying = false;
+        
         this.initializeEventListeners();
         this.resetGame();
     }
 
     createSound(frequency, volume, duration) {
         return () => {
+            if (!this.audioCtx) return;
             try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
+                if (this.audioCtx.state === 'suspended') {
+                    this.audioCtx.resume();
+                }
+                const oscillator = this.audioCtx.createOscillator();
+                const gainNode = this.audioCtx.createGain();
                 
                 oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
+                gainNode.connect(this.audioCtx.destination);
                 
                 oscillator.frequency.value = frequency;
                 oscillator.type = 'sine';
@@ -46,8 +61,8 @@ class GomokuGame {
                 gainNode.gain.value = volume;
                 
                 oscillator.start();
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
-                oscillator.stop(audioContext.currentTime + duration);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + duration);
+                oscillator.stop(this.audioCtx.currentTime + duration);
             } catch (e) {
                 console.log('音效播放失败:', e);
             }
@@ -87,6 +102,10 @@ class GomokuGame {
             this.resetGame();
         });
 
+        document.getElementById('bgmBtn').addEventListener('click', () => {
+            this.toggleMusic();
+        });
+
         document.getElementById('backToMenu').addEventListener('click', () => {
             this.showMainMenu();
         });
@@ -106,8 +125,11 @@ class GomokuGame {
             if (this.gameOver) return;
             
             const rect = this.canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            const scaleX = this.canvas.width / rect.width;
+            const scaleY = this.canvas.height / rect.height;
+            
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
             
             const col = Math.floor(x / this.cellSize);
             const row = Math.floor(y / this.cellSize);
@@ -123,6 +145,22 @@ class GomokuGame {
                 }
             }
         });
+    }
+
+    toggleMusic() {
+        const btn = document.getElementById('bgmBtn');
+        if (this.isMusicPlaying) {
+            this.bgm.pause();
+            this.isMusicPlaying = false;
+            btn.textContent = '音乐: 关';
+        } else {
+            this.bgm.play().catch(e => {
+                console.log('播放失败，请确保audio/bgm.mp3文件存在', e);
+                alert('请在 game/Gomoku/audio/ 目录下放置 bgm.mp3 文件');
+            });
+            this.isMusicPlaying = true;
+            btn.textContent = '音乐: 开';
+        }
     }
 
     showDifficultySelection() {
