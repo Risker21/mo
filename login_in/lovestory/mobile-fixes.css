@@ -89,13 +89,13 @@ html, body{
 
   #startButton{ font-size: clamp(18px, 5.2vw, 22px); }
 
-  .flowtime h1{ font-size: clamp(1.6rem, 7vw, 2.6rem); line-height: 1.15; }
-  .flowtime h2{ font-size: clamp(1.4rem, 6vw, 2.2rem); line-height: 1.2; }
-  .flowtime h3{ font-size: clamp(1.3rem, 5.4vw, 2rem); line-height: 1.25; }
-  .flowtime p{ font-size: clamp(1.05rem, 4.4vw, 1.35rem); line-height: 1.6; }
+  .flowtime h1{ font-size: clamp(1.8rem, 7.6vw, 2.8rem); line-height: 1.12; }
+  .flowtime h2{ font-size: clamp(1.55rem, 6.6vw, 2.35rem); line-height: 1.18; }
+  .flowtime h3{ font-size: clamp(1.35rem, 5.8vw, 2.1rem); line-height: 1.22; }
+  .flowtime p{ font-size: clamp(1.08rem, 4.6vw, 1.4rem); line-height: 1.65; }
 
   .ft-page{
-    padding: 0.9rem;
+    padding: clamp(10px, 3.5vw, 16px);
     background-color: rgba(254, 209, 234, 0.92);
     overflow: hidden;
   }
@@ -104,7 +104,7 @@ html, body{
   .ft-page:not(.full-img):not(.left-img):not(.right-img) h2,
   .ft-page:not(.full-img):not(.left-img):not(.right-img) h3,
   .ft-page:not(.full-img):not(.left-img):not(.right-img) p{
-    position: static;
+    position: relative;
     left: auto;
     right: auto;
     top: auto;
@@ -116,6 +116,23 @@ html, body{
     overflow: visible;
     white-space: normal;
     word-break: break-word;
+    z-index: 3;
+  }
+
+  .ft-page:not(.full-img):not(.left-img):not(.right-img) img{
+    z-index: 1;
+  }
+
+  .ft-page:not(.full-img):not(.left-img):not(.right-img) h2,
+  .ft-page:not(.full-img):not(.left-img):not(.right-img) h3,
+  .ft-page:not(.full-img):not(.left-img):not(.right-img) p{
+    display: inline-block;
+    max-width: 100%;
+    padding: 0.45rem 0.7rem;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.26);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.65);
   }
 
   .ft-page:not(.full-img):not(.left-img):not(.right-img):not(.top-text):not(.bottom-text):not(.page-1):not(.center-img){
@@ -132,12 +149,15 @@ html, body{
     padding-top: 0;
   }
 
-  .ft-page:not(.full-img):not(.left-img):not(.right-img):not(.top-text):not(.bottom-text):not(.page-1):not(.center-img) img:only-of-type{
+  .ft-page:not(.full-img):not(.left-img):not(.right-img):not(.top-text):not(.bottom-text):not(.page-1):not(.center-img) img{
     width: 100%;
-    height: auto;
-    max-height: 62vh;
-    object-fit: contain;
-    background: rgba(255, 255, 255, 0.65);
+    height: clamp(280px, 56vh, 520px);
+    object-fit: cover;
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  .ft-page:not(.full-img):not(.left-img):not(.right-img):not(.top-text):not(.bottom-text):not(.page-1):not(.center-img) img:nth-of-type(n+2){
+    height: clamp(160px, 26vh, 260px);
   }
 
   .flowtime img{
@@ -195,9 +215,19 @@ html, body{
   .top-text img,
   .bottom-text img{
     width: 100%;
-    height: auto;
-    max-height: 64vh;
+    height: clamp(280px, 56vh, 520px);
     object-fit: cover;
+  }
+
+  @media screen and (max-height: 680px){
+    .ft-page:not(.full-img):not(.left-img):not(.right-img):not(.top-text):not(.bottom-text):not(.page-1):not(.center-img) img{
+      height: clamp(240px, 52vh, 460px);
+    }
+
+    .top-text img,
+    .bottom-text img{
+      height: clamp(240px, 52vh, 460px);
+    }
   }
 
   .full-img h3,
