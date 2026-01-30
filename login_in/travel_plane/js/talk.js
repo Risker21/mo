@@ -2,7 +2,7 @@ new TypeIt("#tqyxhj", {
         cursorSpeed: 1000,
         speed: 100
     })
-    .type("✈️ 航班即将起飞")
+    .type("✈️13.14秒后起飞")
     .pause(2000)
     .delete(null, {
         delay: 500
