@@ -8,8 +8,6 @@ const NEXT_BLOCK_SIZE = 25;
 let board = [];
 let currentPiece = null;
 let nextPiece = null;
-let holdPieceData = null; // 存储HOLD的方块
-let hasHeld = false; // 标记当前回合是否已经使用过HOLD
 let score = 0;
 let level = 1;
 let lines = 0;
@@ -23,7 +21,6 @@ let soundEnabled = true;
 // DOM元素引用
 let canvas = null;
 let nextCanvas = null;
-let holdCanvas = null; // HOLD区域画布
 let ctx = null;
 let scoreElement = null;
 let levelElement = null;
@@ -36,7 +33,6 @@ let finalScoreElement = null;
 let playAgainButton = null;
 let toggleSoundButton = null;
 let mobileControls = null;
-let holdButton = null; // HOLD按钮
 
 // 移动控制按钮
 let leftButton = null;
@@ -44,6 +40,7 @@ let rightButton = null;
 let downButton = null;
 let rotateButton = null;
 let dropButton = null;
+let pauseTouchButton = null;
 
 // 方块形状定义
 const TETROMINOS = {
@@ -94,30 +91,48 @@ const COLORS = {
 
 // 初始化游戏尺寸
 function adjustCanvasSize() {
-    // 获取游戏容器尺寸
     const gameContainer = document.querySelector('.tetris-game');
-    const containerWidth = gameContainer.offsetWidth;
-    const containerHeight = gameContainer.offsetHeight;
-    
-    // 检测是否为移动设备
-    const isMobile = window.innerWidth <= 768;
-    const isTablet = window.innerWidth <= 1024 && window.innerWidth > 768;
-    
-    // 根据屏幕尺寸计算合适的方块大小
-    let blockSize = BLOCK_SIZE;
-    
+    const centerPanel = document.querySelector('.game-center-panel');
+    const header = document.querySelector('.game-header');
+    const leftPanel = document.querySelector('.game-left-panel');
+    const rightPanel = document.querySelector('.game-right-panel');
+    const mobilePanel = document.querySelector('.mobile-controls');
+
+    if (!gameContainer) return;
+
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const isTablet = !isMobile && window.matchMedia('(max-width: 1024px)').matches;
+
+    const gameStyles = getComputedStyle(gameContainer);
+    const paddingY = (parseFloat(gameStyles.paddingTop) || 0) + (parseFloat(gameStyles.paddingBottom) || 0);
+    const paddingX = (parseFloat(gameStyles.paddingLeft) || 0) + (parseFloat(gameStyles.paddingRight) || 0);
+
+    const viewportW = window.innerWidth;
+    const viewportH = window.innerHeight;
+
+    const headerH = header ? header.offsetHeight : 0;
+    const leftH = leftPanel ? leftPanel.offsetHeight : 0;
+    const rightH = rightPanel ? rightPanel.offsetHeight : 0;
+    const mobileH = mobilePanel ? mobilePanel.offsetHeight : 0;
+
+    let availableWidth;
+    let availableHeight;
+
     if (isMobile) {
-        // 在移动设备上，我们使用更紧凑的布局
-        blockSize = Math.min(
-            Math.floor((containerWidth - 40) / COLS), // 考虑左右边距
-            Math.floor((containerHeight * 0.4) / ROWS) // 使用容器高度的40%来放置游戏区域
-        );
-    } else if (isTablet) {
-        // 平板设备上的中等布局
-        blockSize = Math.min(
-            Math.floor((containerWidth * 0.5) / COLS), // 使用容器宽度的50%
-            Math.floor((containerHeight * 0.6) / ROWS) // 使用容器高度的60%
-        );
+        const safeMargin = 16;
+        availableWidth = Math.max(0, viewportW - safeMargin * 2);
+        availableHeight = Math.max(0, viewportH - headerH - leftH - rightH - mobileH - paddingY - safeMargin);
+    } else {
+        const centerW = centerPanel ? centerPanel.clientWidth : (gameContainer.clientWidth - paddingX);
+        availableWidth = Math.max(0, centerW - 16);
+        availableHeight = Math.max(0, (gameContainer.clientHeight || viewportH) - headerH - paddingY - 24);
+    }
+
+    let blockSize = BLOCK_SIZE;
+    if (isMobile || isTablet) {
+        const candidate = Math.floor(Math.min(availableWidth / COLS, availableHeight / ROWS));
+        const minSize = isMobile ? 12 : 18;
+        blockSize = Math.max(minSize, Math.min(candidate, 34));
     }
     
     // 存储调整后的方块大小
@@ -127,26 +142,24 @@ function adjustCanvasSize() {
     if (canvas) {
         canvas.width = blockSize * COLS;
         canvas.height = blockSize * ROWS;
+        canvas.style.width = `${canvas.width}px`;
+        canvas.style.height = `${canvas.height}px`;
         ctx = canvas.getContext('2d');
     }
     
     // 设置下一个方块预览画布尺寸
     if (nextCanvas) {
-        nextCanvas.width = 100;
-        nextCanvas.height = 100;
-    }
-    
-    // 设置HOLD区域画布尺寸
-    if (holdCanvas) {
-        holdCanvas.width = 100;
-        holdCanvas.height = 100;
+        const size = Math.max(76, Math.round(blockSize * 4));
+        nextCanvas.width = size;
+        nextCanvas.height = size;
+        nextCanvas.style.width = `${size}px`;
+        nextCanvas.style.height = `${size}px`;
     }
     
     // 重新绘制游戏
     if (ctx) {
         drawBoard();
         drawNextPiece();
-        drawHoldPiece();
     }
 }
 
@@ -156,7 +169,6 @@ function initAudio() {
         try {
             audioContext = new AudioContext();
         } catch (e) {
-            console.log('Web Audio API 初始化失败:', e);
         }
     }
 }
@@ -181,7 +193,6 @@ function createTone(type, frequency, duration) {
         oscillator.start();
         oscillator.stop(audioContext.currentTime + duration);
     } catch (e) {
-        console.log('创建音效失败:', e);
     }
 }
 
@@ -191,7 +202,7 @@ function playSound(type) {
     
     // 确保audioContext处于running状态
     if (audioContext.state === 'suspended') {
-        audioContext.resume().catch(e => console.log('恢复音频上下文失败:', e));
+        audioContext.resume().catch(() => {});
     }
     
     switch (type) {
@@ -540,49 +551,6 @@ function drawNextPiece() {
 }
 
 // 绘制HOLD区域的方块
-function drawHoldPiece() {
-    const ctx = holdCanvas.getContext('2d');
-    ctx.clearRect(0, 0, holdCanvas.width, holdCanvas.height);
-    
-    // 绘制HOLD区域背景
-    ctx.fillStyle = '#2c3e50';
-    ctx.fillRect(0, 0, holdCanvas.width, holdCanvas.height);
-    
-    // 绘制HOLD的方块
-    if (holdPieceData) {
-        const shape = holdPieceData.shape;
-        const color = `rgba(${holdPieceData.color}, 0.8)`;
-        const holdBlockSize = window.adjustedBlockSize || NEXT_BLOCK_SIZE;
-        
-        // 计算居中位置
-        const offsetX = (holdCanvas.width - shape[0].length * holdBlockSize) / 2;
-        const offsetY = (holdCanvas.height - shape.length * holdBlockSize) / 2;
-        
-        for (let y = 0; y < shape.length; y++) {
-            for (let x = 0; x < shape[y].length; x++) {
-                if (shape[y][x]) {
-                    // 绘制HOLD方块
-                    const padding = 1;
-                    
-                    ctx.fillStyle = color;
-                    ctx.fillRect(offsetX + x * holdBlockSize + padding, 
-                                 offsetY + y * holdBlockSize + padding, 
-                                 holdBlockSize - padding * 2, 
-                                 holdBlockSize - padding * 2);
-                    
-                    // 绘制边框
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(offsetX + x * holdBlockSize + padding, 
-                                   offsetY + y * holdBlockSize + padding, 
-                                   holdBlockSize - padding * 2, 
-                                   holdBlockSize - padding * 2);
-                }
-            }
-        }
-    }
-}
-
 // 绘制影子方块
 function drawGhostPiece(blockSize) {
     if (!currentPiece) return;
@@ -690,51 +658,10 @@ function gameLoop() {
     }
 }
 
-// HOLD方块功能
-function holdPiece() {
-    if (!isGameRunning || isPaused || hasHeld) {
-        return;
-    }
-    
-    if (holdPieceData) {
-        // 如果已经有HOLD的方块，则交换
-        const tempPiece = currentPiece;
-        currentPiece = {
-            ...holdPieceData,
-            x: Math.floor((COLS - holdPieceData.shape[0].length) / 2),
-            y: 0
-        };
-        holdPieceData = tempPiece;
-    } else {
-        // 如果没有HOLD的方块，则将当前方块存入HOLD，并生成新方块
-        holdPieceData = currentPiece;
-        currentPiece = nextPiece || createPiece();
-        nextPiece = createPiece();
-    }
-    
-    // 标记本回合已使用HOLD
-    hasHeld = true;
-    
-    // 重绘游戏状态
-    drawBoard();
-    drawNextPiece();
-    drawHoldPiece();
-    
-    // 播放音效
-    playSound('rotate');
-    
-    // 检查游戏是否结束
-    if (!isValidMove(currentPiece)) {
-        endGame();
-    }
-}
-
 // 生成新方块
 function spawnNewPiece() {
     currentPiece = nextPiece || createPiece();
     nextPiece = createPiece();
-    // 重置HOLD标记
-    hasHeld = false;
     drawNextPiece();
     
     // 绘制幽灵方块（显示方块将落到的位置）
@@ -749,8 +676,6 @@ function startGame() {
     lines = 0;
     isGameRunning = true;
     isPaused = false;
-    holdPieceData = null;
-    hasHeld = false;
     
     // 更新显示
     scoreElement.textContent = score;
@@ -808,8 +733,6 @@ function resetGame() {
     // 重置游戏状态
     isGameRunning = false;
     isPaused = false;
-    holdPieceData = null;
-    hasHeld = false;
     
     // 更新按钮状态
     startButton.disabled = false;
@@ -829,7 +752,6 @@ function resetGame() {
     // 重绘游戏
     drawBoard();
     drawNextPiece();
-    drawHoldPiece();
     
     // 隐藏游戏结束弹窗
     gameOverModal.classList.add('hidden');
@@ -890,38 +812,7 @@ function handleKeyPress(event) {
             playSound('rotate');
             break;
         case ' ':
-            // 直接落地（硬下落）
-            let dropped = false;
-            while (isValidMove(currentPiece, 0, 1)) {
-                currentPiece.y++;
-                score += 2; // 落地得分
-                dropped = true;
-            }
-            if (dropped) {
-                scoreElement.textContent = score;
-                drawBoard();
-                playSound('drop'); // 使用专门的硬下落音效
-            }
-            // 立即处理方块固定
-            setTimeout(() => {
-                if (isGameRunning && !isPaused) {
-                    lockPiece();
-                    clearLines();
-                    spawnNewPiece();
-                    if (!isValidMove(currentPiece)) {
-                        endGame();
-                    } else {
-                        drawBoard();
-                    }
-                }
-            }, 50);
-            break;
-        case 'Shift':
-        case 'Control':
-        case 'c':
-        case 'C':
-            // 使用Shift、Ctrl或C键来触发HOLD功能
-            holdPiece();
+            hardDropAndLock();
             break;
         case 'p':
         case 'P':
@@ -931,17 +822,195 @@ function handleKeyPress(event) {
 }
 
 // 确保移动控制器在页面加载时可见
-function checkAndShowMobileControls() {
-    console.log('检查并显示移动控制器');
-    
-    // 确保移动控制器始终可见
-    if (mobileControls) {
-        mobileControls.style.display = 'block';
-        mobileControls.style.width = '100%';
-        mobileControls.style.position = 'relative';
-        mobileControls.style.zIndex = '10';
-        mobileControls.style.marginTop = 'auto';
+function checkAndShowMobileControls() {}
+
+function hardDropAndLock() {
+    if (!isGameRunning || isPaused || !currentPiece) return;
+
+    let dropped = false;
+    while (isValidMove(currentPiece, 0, 1)) {
+        currentPiece.y++;
+        score += 2;
+        dropped = true;
     }
+
+    if (dropped) {
+        scoreElement.textContent = score;
+        drawBoard();
+        playSound('drop');
+    }
+
+    setTimeout(() => {
+        if (isGameRunning && !isPaused && currentPiece) {
+            lockPiece();
+            clearLines();
+            spawnNewPiece();
+            if (currentPiece && !isValidMove(currentPiece)) {
+                endGame();
+            } else {
+                drawBoard();
+            }
+        }
+    }, 50);
+}
+
+function tryMove(dx, dy, addScore = 0) {
+    if (!isGameRunning || isPaused || !currentPiece) return false;
+    if (!isValidMove(currentPiece, dx, dy)) return false;
+    currentPiece.x += dx;
+    currentPiece.y += dy;
+    if (addScore) {
+        score += addScore;
+        scoreElement.textContent = score;
+    }
+    drawBoard();
+    playSound('move');
+    return true;
+}
+
+function bindGestureControls() {
+    if (!canvas) return;
+
+    const state = {
+        active: false,
+        pointerId: null,
+        startX: 0,
+        startY: 0,
+        lastX: 0,
+        lastY: 0,
+        startTime: 0,
+        moved: false,
+        longPressFired: false,
+        longPressTimer: null,
+        softDropTimer: null
+    };
+
+    const moveThreshold = 22;
+    const tapMoveThreshold = 10;
+    const longPressMs = 420;
+
+    const clearTimers = () => {
+        if (state.longPressTimer) {
+            clearTimeout(state.longPressTimer);
+            state.longPressTimer = null;
+        }
+        if (state.softDropTimer) {
+            clearInterval(state.softDropTimer);
+            state.softDropTimer = null;
+        }
+    };
+
+    const startSoftDrop = () => {
+        if (state.softDropTimer) return;
+        state.softDropTimer = setInterval(() => {
+            if (!tryMove(0, 1, 1)) {
+                clearTimers();
+            }
+        }, 60);
+    };
+
+    canvas.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        e.preventDefault();
+        canvas.setPointerCapture(e.pointerId);
+
+        state.active = true;
+        state.pointerId = e.pointerId;
+        state.startX = e.clientX;
+        state.startY = e.clientY;
+        state.lastX = e.clientX;
+        state.lastY = e.clientY;
+        state.startTime = Date.now();
+        state.moved = false;
+        state.longPressFired = false;
+
+        clearTimers();
+        state.longPressTimer = setTimeout(() => {
+            if (!state.active || state.moved) return;
+            state.longPressFired = true;
+            if (isGameRunning) {
+                if (!isPaused && currentPiece) {
+                    hardDropAndLock();
+                } else {
+                    pauseGame();
+                }
+            }
+        }, longPressMs);
+    }, { passive: false });
+
+    canvas.addEventListener('pointermove', (e) => {
+        if (!state.active || e.pointerId !== state.pointerId) return;
+        e.preventDefault();
+
+        const dx = e.clientX - state.lastX;
+        const dy = e.clientY - state.lastY;
+        const totalDx = e.clientX - state.startX;
+        const totalDy = e.clientY - state.startY;
+
+        const absTotalDx = Math.abs(totalDx);
+        const absTotalDy = Math.abs(totalDy);
+
+        if (absTotalDx < moveThreshold && absTotalDy < moveThreshold) return;
+
+        state.moved = true;
+        if (state.longPressTimer) {
+            clearTimeout(state.longPressTimer);
+            state.longPressTimer = null;
+        }
+
+        if (absTotalDx > absTotalDy * 1.15) {
+            if (dx > moveThreshold) {
+                tryMove(1, 0);
+                state.lastX = e.clientX;
+                state.lastY = e.clientY;
+            } else if (dx < -moveThreshold) {
+                tryMove(-1, 0);
+                state.lastX = e.clientX;
+                state.lastY = e.clientY;
+            }
+            return;
+        }
+
+        if (totalDy > moveThreshold) {
+            tryMove(0, 1, 1);
+            startSoftDrop();
+            state.lastX = e.clientX;
+            state.lastY = e.clientY;
+        }
+    }, { passive: false });
+
+    const endPointer = (e) => {
+        if (!state.active || e.pointerId !== state.pointerId) return;
+        e.preventDefault();
+
+        const dt = Date.now() - state.startTime;
+        const dx = e.clientX - state.startX;
+        const dy = e.clientY - state.startY;
+        const absDx = Math.abs(dx);
+        const absDy = Math.abs(dy);
+
+        clearTimers();
+
+        const isTap = !state.moved && !state.longPressFired && dt <= 260 && absDx <= tapMoveThreshold && absDy <= tapMoveThreshold;
+        state.active = false;
+        state.pointerId = null;
+
+        if (isTap && isGameRunning && !isPaused && currentPiece) {
+            rotatePiece();
+            drawBoard();
+            playSound('rotate');
+        }
+    };
+
+    canvas.addEventListener('pointerup', endPointer, { passive: false });
+    canvas.addEventListener('pointercancel', endPointer, { passive: false });
+
+    canvas.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length === 2) {
+            e.preventDefault();
+            pauseGame();
+        }
+    }, { passive: false });
 }
 
 // 初始化游戏
@@ -949,7 +1018,6 @@ function initGame() {
     // 获取DOM元素引用
     canvas = document.getElementById('tetris-board');
     nextCanvas = document.getElementById('next-piece-canvas');
-    holdCanvas = document.getElementById('hold-canvas');
     scoreElement = document.getElementById('score');
     levelElement = document.getElementById('level');
     linesElement = document.getElementById('lines');
@@ -967,16 +1035,8 @@ function initGame() {
     downButton = document.getElementById('down-button');
     rotateButton = document.getElementById('rotate-button');
     dropButton = document.getElementById('drop-button');
-    holdButton = document.getElementById('hold-button');
     mobileControls = document.querySelector('.mobile-controls');
-    
-    // 确保获取到了所有必要的元素
-    console.log('DOM元素获取情况:', {
-        canvas: !!canvas,
-        startButton: !!startButton,
-        leftButton: !!leftButton,
-        mobileControls: !!mobileControls
-    });
+    pauseTouchButton = document.getElementById('pause-touch');
     
     // 初始化游戏板
     initializeBoard();
@@ -990,10 +1050,8 @@ function initGame() {
     // 绘制初始游戏板
     drawBoard();
     drawNextPiece();
-    drawHoldPiece();
     
-    // 确保移动控制器可见
-    checkAndShowMobileControls();
+    bindGestureControls();
     
     // 添加事件监听
     if (startButton) {
@@ -1016,7 +1074,7 @@ function initGame() {
     // 添加点击事件以启用音效（解决自动播放限制）
     function checkAndResumeAudio() {
         if (audioContext && audioContext.state === 'suspended') {
-            audioContext.resume().catch(e => console.log('恢复音频上下文失败:', e));
+            audioContext.resume().catch(() => {});
         }
     }
     
@@ -1028,8 +1086,6 @@ function initGame() {
     // 添加移动端触摸控制事件监听，使用更可靠的事件处理方式
     function bindTouchEvent(element, callback) {
         if (element) {
-            console.log(`绑定触摸事件到: ${element.id}`);
-            
             // 同时绑定touchstart和mousedown事件，以确保兼容性
             element.addEventListener('touchstart', (e) => {
                 e.preventDefault();
@@ -1080,38 +1136,12 @@ function initGame() {
     });
     
     bindTouchEvent(dropButton, () => {
-        if (isGameRunning && !isPaused && currentPiece) {
-            let dropped = false;
-            while (isValidMove(currentPiece, 0, 1)) {
-                currentPiece.y++;
-                score += 2;
-                dropped = true;
-            }
-            if (dropped) {
-                scoreElement.textContent = score;
-                drawBoard();
-                playSound('drop'); // 使用专门的硬下落音效
-            }
-            // 立即处理方块固定
-            setTimeout(() => {
-                if (isGameRunning && !isPaused && currentPiece) {
-                    lockPiece();
-                    clearLines();
-                    spawnNewPiece();
-                    if (currentPiece && !isValidMove(currentPiece)) {
-                        endGame();
-                    } else {
-                        drawBoard();
-                    }
-                }
-            }, 50);
-        }
+        hardDropAndLock();
     });
     
-    // 绑定HOLD按钮事件
-    bindTouchEvent(holdButton, () => {
-        if (isGameRunning && !isPaused) {
-            holdPiece();
+    bindTouchEvent(pauseTouchButton, () => {
+        if (isGameRunning) {
+            pauseGame();
         }
     });
     
@@ -1159,7 +1189,6 @@ function initGame() {
 
 // 页面加载完成时执行
 window.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM内容加载完成');
     initGame();
     
     // 调整画布尺寸
@@ -1167,26 +1196,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // 窗口大小变化时调整画布尺寸
-window.addEventListener('resize', adjustCanvasSize);
+window.addEventListener('resize', () => requestAnimationFrame(adjustCanvasSize));
 
 // 设备方向变化时调整画布尺寸
-window.addEventListener('orientationchange', adjustCanvasSize);
-
-// 监听触摸事件，防止页面滚动
-document.addEventListener('touchstart', function(e) {
-    // 阻止默认行为以防止页面滚动
-    e.preventDefault();
-}, { passive: false });
-
-document.addEventListener('touchmove', function(e) {
-    // 阻止默认行为以防止页面滚动
-    e.preventDefault();
-}, { passive: false });
-
-document.addEventListener('touchend', function(e) {
-    // 阻止默认行为
-    e.preventDefault();
-}, { passive: false });
-
-// 确保移动控制器在页面加载后立即显示
-window.addEventListener('load', checkAndShowMobileControls);
+window.addEventListener('orientationchange', () => requestAnimationFrame(adjustCanvasSize));
