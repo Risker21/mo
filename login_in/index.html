@@ -711,7 +711,7 @@
                     <div class="form-header">
                         建议
                     </div>
-                    <form id="myForm" action="https://formsubmit.co/mo@momo21.online" method="POST">
+                    <form id="myForm" action="https://formsubmit.co/ajax/cvkvkckkfkf@gmail.com" method="POST">
                         <input type="hidden" name="_subject" value="网站联系表单提交">
                         <input type="hidden" name="_template" value="table">
                         <div class="input-line">
@@ -739,7 +739,7 @@
                             <img src="./images/icon-name.png" class="icon" alt="name-icon">
                             <div class="contact-info-icon-text">
                                 <h6>姓名</h6>
-                                <p>Momo同学</p>
+                                <p>Momo</p>
                             </div>
                         </div>
                         <div class="contect-info-content-line">
@@ -753,7 +753,7 @@
                             <img src="./images/icon-phone.png" class="icon" alt="phone-icon">
                             <div class="contact-info-icon-text">
                                 <h6>电话</h6>
-                                <p>无</p>
+                                <p>未知</p>
                             </div>
                         </div>
 
@@ -761,7 +761,7 @@
                             <img src="./images/icon-email.png" class="icon" alt="email-icon">
                             <div class="contact-info-icon-text">
                                 <h6>邮箱</h6>
-                                <p>mo@momo21.online</p>
+                                <p>riskermo@gmail.com</p>
                             </div>
                         </div>
                     </div>
@@ -828,22 +828,25 @@
 
             fetch(form.action, {
                 method: 'POST',
+                headers: {
+                    'Accept': 'application/json'
+                },
                 body: new FormData(form)
             })
-                .then(response => {
-                    if (response.ok) {
-                        form.reset();
-                        document.getElementById('success-message').style.display = 'block';
-                        submitBtn.textContent = '提交成功';
-                        setTimeout(function () {
-                            submitBtn.textContent = '提交';
-                            submitBtn.disabled = false;
-                        }, 3000);
-                    } else {
+                .then(async response => {
+                    if (!response.ok) {
                         throw new Error('提交失败');
                     }
+                    await response.json().catch(() => ({}));
+                    form.reset();
+                    document.getElementById('success-message').style.display = 'block';
+                    submitBtn.textContent = '提交成功';
+                    setTimeout(function () {
+                        submitBtn.textContent = '提交';
+                        submitBtn.disabled = false;
+                    }, 3000);
                 })
-                .catch(error => {
+                .catch(() => {
                     submitBtn.textContent = '提交失败，请重试';
                     submitBtn.disabled = false;
                 });
