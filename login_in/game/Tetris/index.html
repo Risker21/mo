@@ -16,29 +16,27 @@
 </head>
 
 <body>
-    <!-- 游戏主容器 -->
-    <div class="tetris-game">
-        <!-- 游戏标题栏 -->
-        <div class="game-header">
-            <h1>俄罗斯方块</h1>
-            <!-- 音效控制 -->
-            <button id="toggle-sound" class="sound-button">
-                <i class="fas fa-volume-up"></i>
-            </button>
-        </div>
+    <div class="tetris-game" role="application" aria-label="俄罗斯方块">
+        <header class="game-header">
+            <div class="game-title">
+                <h1>俄罗斯方块</h1>
+                <div class="game-subtitle">手感优先 · 触控可玩 · 桌面键盘可用</div>
+            </div>
+            <div class="header-actions">
+                <button id="toggle-sound" class="icon-button" aria-label="切换音效">
+                    <i class="fas fa-volume-up" aria-hidden="true"></i>
+                </button>
+            </div>
+        </header>
 
-        <!-- 游戏主内容区域 -->
-        <div class="game-content">
-            <!-- 左侧区域 - HOLD和信息面板 -->
-            <div class="game-left-panel">
-                <!-- HOLD区域 -->
-                <div class="game-panel hold-panel">
-                    <div class="panel-title">暂存</div>
-                    <canvas id="hold-canvas" class="hold-canvas"></canvas>
+        <main class="game-content">
+            <section class="game-left-panel" aria-label="状态面板">
+                <div class="game-panel next-panel">
+                    <div class="panel-title">下一个</div>
+                    <canvas id="next-piece-canvas" class="next-piece-canvas" aria-label="下一个方块"></canvas>
                 </div>
 
-                <!-- 游戏信息面板 -->
-                <div class="game-panel info-panel">
+                <div class="game-panel info-panel" aria-label="游戏信息">
                     <div class="info-item">
                         <div class="info-label">分数</div>
                         <div class="info-value" id="score">0</div>
@@ -52,102 +50,83 @@
                         <div class="info-value" id="lines">0</div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- 中间区域 - 游戏主区域 -->
-            <div class="game-center-panel">
-                <div class="game-board-container">
+            <section class="game-center-panel" aria-label="游戏区域">
+                <div class="game-board-container" aria-label="游戏棋盘">
                     <canvas id="tetris-board" class="tetris-board"></canvas>
+                    <div class="gesture-hint" aria-label="移动端手势提示">
+                        <span>左右滑：移动</span>
+                        <span>下滑：加速</span>
+                        <span>点按：旋转</span>
+                        <span>长按：硬降</span>
+                        <span>双指点按：暂停</span>
+                    </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- 右侧区域 - 下一个方块和控制按钮 -->
-            <div class="game-right-panel">
-                <!-- 下一个方块预览 -->
-                <div class="game-panel next-panel">
-                    <div class="panel-title">下一个</div>
-                    <canvas id="next-piece-canvas" class="next-piece-canvas"></canvas>
-                </div>
-
-                <!-- 游戏控制按钮 -->
-                <div class="game-controls">
+            <section class="game-right-panel" aria-label="操作面板">
+                <div class="game-controls" aria-label="游戏控制">
                     <button id="start-button" class="control-button start-button">
-                        <i class="fas fa-play"></i> 开始
+                        <i class="fas fa-play" aria-hidden="true"></i> 开始
                     </button>
                     <button id="pause-button" class="control-button pause-button" disabled>
-                        <i class="fas fa-pause"></i> 暂停
+                        <i class="fas fa-pause" aria-hidden="true"></i> 暂停
                     </button>
                     <button id="reset-button" class="control-button reset-button">
-                        <i class="fas fa-redo"></i> 重置
+                        <i class="fas fa-redo" aria-hidden="true"></i> 重置
                     </button>
 
-                    <!-- 键盘控制信息 -->
-                    <div class="keyboard-controls-info">
-                        <p>键盘控制：</p>
-                        <div class="keyboard-controls-grid">
-                            <div class="key-control-item">
-                                <span class="key">&uarr;</span>
-                                <span class="key-description">旋转</span>
-                            </div>
-                            <div class="key-control-item">
-                                <span class="key">&larr;</span>
-                                <span class="key-description">左移</span>
-                            </div>
-                            <div class="key-control-item">
-                                <span class="key">&darr;</span>
-                                <span class="key-description">下移</span>
-                            </div>
-                            <div class="key-control-item">
-                                <span class="key">&rarr;</span>
-                                <span class="key-description">右移</span>
-                            </div>
-                            <div class="key-control-item">
-                                <span class="key">空格</span>
-                                <span class="key-description">快速下落</span>
-                            </div>
-                            <div class="key-control-item">
-                                <span class="key">Shift</span>
-                                <span class="key-description">暂存</span>
-                            </div>
+                    <div class="keyboard-controls-info" aria-label="桌面键盘提示">
+                        <div class="kbd-row">
+                            <span class="kbd">←</span><span class="kbd">→</span><span class="kbd">↓</span>
+                            <span class="kbd-desc">移动 / 下落</span>
+                        </div>
+                        <div class="kbd-row">
+                            <span class="kbd">↑</span>
+                            <span class="kbd-desc">旋转</span>
+                        </div>
+                        <div class="kbd-row">
+                            <span class="kbd">Space</span>
+                            <span class="kbd-desc">硬降</span>
+                        </div>
+                        <div class="kbd-row">
+                            <span class="kbd">P</span>
+                            <span class="kbd-desc">暂停</span>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-
-
-            <!-- 移动端触摸控制器 -->
-            <div class="mobile-controls">
-                <!-- 方向控制区 -->
-                <div class="control-pad">
+            <section class="mobile-controls" aria-label="移动端按钮控制（辅助）">
+                <div class="control-pad" aria-label="方向与功能">
                     <div class="pad-row">
-                        <button id="hold-button" class="pad-button hold-button">
-                            <i class="fas fa-exchange-alt"></i>
+                        <button id="rotate-button" class="pad-button rotate-button" aria-label="旋转">
+                            <i class="fas fa-sync-alt" aria-hidden="true"></i>
                         </button>
-                        <button id="rotate-button" class="pad-button rotate-button">
-                            <i class="fas fa-sync-alt"></i>
+                        <button id="pause-touch" class="pad-button pause-touch" aria-label="暂停/继续">
+                            <i class="fas fa-pause" aria-hidden="true"></i>
                         </button>
                     </div>
                     <div class="pad-row">
-                        <button id="left-button" class="pad-button left-button">
-                            <i class="fas fa-arrow-left"></i>
+                        <button id="left-button" class="pad-button left-button" aria-label="左移">
+                            <i class="fas fa-arrow-left" aria-hidden="true"></i>
                         </button>
-                        <button id="down-button" class="pad-button down-button">
-                            <i class="fas fa-arrow-down"></i>
+                        <button id="down-button" class="pad-button down-button" aria-label="下移">
+                            <i class="fas fa-arrow-down" aria-hidden="true"></i>
                         </button>
-                        <button id="right-button" class="pad-button right-button">
-                            <i class="fas fa-arrow-right"></i>
+                        <button id="right-button" class="pad-button right-button" aria-label="右移">
+                            <i class="fas fa-arrow-right" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- 快速下落按钮 -->
-                <button id="drop-button" class="action-button drop-button">
-                    <i class="fas fa-bolt"></i>
-                    <span>快速下落</span>
+                <button id="drop-button" class="action-button drop-button" aria-label="硬降">
+                    <i class="fas fa-bolt" aria-hidden="true"></i>
+                    <span>硬降</span>
                 </button>
-            </div>
-        </div>
+            </section>
+        </main>
 
         <!-- 游戏结束弹窗 -->
         <div id="game-over-modal" class="game-modal hidden">
