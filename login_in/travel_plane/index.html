@@ -75,7 +75,7 @@
           </div>
           <div class="hero-content">
             <h1 class="hero-title" id="tqyxhj">欢迎登上LOVE-520航班</h1>
-            <p class="hero-subtitle">开启一段穿越时空的浪漫之旅</p>
+            <p class="hero-subtitle">起飞倒计时结束再往下滑吧</p>
             <div class="hero-stats">
               <div class="stat-item">
                 <span class="stat-number" id="love-days">0</span>
@@ -194,12 +194,37 @@
               </div>
               <div class="letter-paragraph">
                 <p>
+                  我也很喜欢你认真生活的样子：你会把一件小事做到更好，会在不经意的地方替别人考虑，会把温柔藏在行动里。很多时候你不说，可我都看得到，也一直记在心里。
+                </p>
+              </div>
+              <div class="letter-paragraph">
+                <p>
+                  你或许不知道，你给我的影响有多大。因为你，我开始更愿意去表达、去倾听、去把日子过得踏实一点；也因为你，我学会在忙碌里停一下，看看眼前的风景，珍惜身边的人。
+                </p>
+              </div>
+              <div class="letter-paragraph">
+                <p>
                   我想告诉你，你值得所有的美好和幸福。希望你能一直保持这样的状态，做自己喜欢的事，过自己想要的生活。
                 </p>
               </div>
               <div class="letter-paragraph">
                 <p>
+                  如果你有一天觉得累了、烦了、想逃避了，也没关系。你可以把情绪交给我一点点，我愿意陪你慢慢走，陪你把复杂的事情理清楚，把难过的时刻熬过去。
+                </p>
+              </div>
+              <div class="letter-paragraph">
+                <p>
+                  我不会说太多漂亮的话，但我想做的很简单：在你开心的时候一起分享，在你低落的时候给你依靠；在你需要空间的时候尊重你，在你需要拥抱的时候第一时间出现。
+                </p>
+              </div>
+              <div class="letter-paragraph">
+                <p>
                   无论未来如何，我都会一直在这里，默默地支持你，祝福你。因为你是我见过最特别的人，值得被温柔以待。
+                </p>
+              </div>
+              <div class="letter-paragraph">
+                <p>
+                  愿你每天都能睡个好觉，吃到喜欢的东西，遇到值得期待的小惊喜；愿你被理解、被珍惜，也永远有勇气做自己。谢谢你出现在我的生命里。
                 </p>
               </div>
               <div class="letter-signature">
@@ -512,9 +537,7 @@
               ".letter-paragraph, .letter-signature",
             );
             paragraphs.forEach((paragraph, index) => {
-              setTimeout(() => {
-                paragraph.classList.add("fade-in");
-              }, index * 300); // 每个段落延迟300ms
+              paragraph.classList.add("fade-in");
             });
           }
         }
@@ -537,6 +560,13 @@
         type();
       }
 
+      function normalizeTypeText(text) {
+        return String(text || "")
+          .replace(/\s*\n\s*/g, "")
+          .replace(/[\t ]{2,}/g, " ")
+          .trim();
+      }
+
       // 初始化滚动动画和打字机效果
       document.addEventListener("DOMContentLoaded", function () {
         // 检查消息区域是否在视口中
@@ -552,7 +582,9 @@
 
                   // 重置所有段落内容
                   paragraphs.forEach((p) => {
-                    const originalText = p.querySelector("p").textContent;
+                    const originalText = normalizeTypeText(
+                      p.querySelector("p").textContent,
+                    );
                     p.querySelector("p").setAttribute(
                       "data-original",
                       originalText,
@@ -560,8 +592,9 @@
                     p.querySelector("p").textContent = "";
                   });
                   if (signature) {
-                    const originalText =
-                      signature.querySelector("p").textContent;
+                    const originalText = normalizeTypeText(
+                      signature.querySelector("p").textContent,
+                    );
                     signature
                       .querySelector("p")
                       .setAttribute("data-original", originalText);
@@ -575,8 +608,9 @@
                     if (currentIndex < paragraphs.length) {
                       const paragraph = paragraphs[currentIndex];
                       const pElement = paragraph.querySelector("p");
-                      const originalText =
-                        pElement.getAttribute("data-original");
+                      const originalText = normalizeTypeText(
+                        pElement.getAttribute("data-original"),
+                      );
 
                       typeWriter(pElement, originalText, 85, () => {
                         paragraph.classList.add("fade-in");
@@ -585,8 +619,9 @@
                       });
                     } else if (signature) {
                       const pElement = signature.querySelector("p");
-                      const originalText =
-                        pElement.getAttribute("data-original");
+                      const originalText = normalizeTypeText(
+                        pElement.getAttribute("data-original"),
+                      );
 
                       typeWriter(pElement, originalText, 85, () => {
                         signature.classList.add("fade-in");
