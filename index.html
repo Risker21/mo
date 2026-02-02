@@ -151,32 +151,39 @@
 </head>
 
 <body class="home wp-singular page-template-default page page-id-8 wp-theme-creatorspc">
-  <audio id="bgMusic" src="login_in/link/music/盲选.mp3" loop preload="auto"></audio>
+  <audio id="bgMusic" src="login_in/link/music/知我.mp3" loop preload="auto"></audio>
 
   <script>
     (function () {
       const audio = document.getElementById('bgMusic');
       if (!audio) return;
 
-      let hasStarted = false;
+      let userInteracted = false;
 
-      const startMusic = () => {
-        if (hasStarted) return;
-        hasStarted = true;
-
+      const tryPlay = () => {
+        // 如果正在播放，无需操作
+        if (!audio.paused) return;
+        
         audio.play().catch((err) => {
-          console.log("需要用户交互才能播放背景音乐", err);
-          hasStarted = false;
+          console.log("自动恢复播放失败，等待用户交互", err);
         });
-
-        // 移除事件监听器,避免重复触发
-        document.removeEventListener('click', startMusic);
-        document.removeEventListener('touchstart', startMusic);
       };
 
-      // 监听用户交互事件
-      document.addEventListener('click', startMusic, { once: true });
-      document.addEventListener('touchstart', startMusic, { once: true });
+      const handleInteraction = () => {
+        userInteracted = true;
+        tryPlay();
+      };
+
+      // 监听用户交互事件，用于首次播放和暂停后的恢复
+      document.addEventListener('click', handleInteraction);
+      document.addEventListener('touchstart', handleInteraction);
+
+      // 监听页面可见性变化，解决切后台再切回音频不恢复的问题
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && userInteracted) {
+          tryPlay();
+        }
+      });
     })();
   </script>
 
