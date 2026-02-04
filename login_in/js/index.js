@@ -237,6 +237,7 @@ $(function () {
   // 音乐列表
 
   const musicFiles = [
+    "link/music/说谎.mp3",
     "link/music/云烟成雨.mp3",
     "link/music/知我.mp3",
     "link/music/茫.mp3",
