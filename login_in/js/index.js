@@ -237,6 +237,15 @@ $(function () {
   // 音乐列表
 
   const musicFiles = [
+    "link/music/free loop.m4a",
+    "link/music/A Thousand Years.mp3",
+    "link/music/Memories.mp3",
+    "link/music/One Day.mp3",
+    "link/music/Young and Beautiful.mp3",
+    "link/music/白兰鸽巡游记.mp3",
+    "link/music/天后.mp3",
+    "link/music/谢谢.mp3",
+    "link/music/心做し.mp3",
     "link/music/counterattack.mp3",
     "link/music/说谎.mp3",
     "link/music/云烟成雨.mp3",
