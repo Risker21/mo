@@ -237,6 +237,9 @@ $(function () {
   // 音乐列表
 
   const musicFiles = [
+    "link/music/我好想你.mp3",
+    "link/music/你不是真正的快乐.mp3",
+    "link/music/一个人想着一个人.mp3",
     "link/music/最.mp3",
     "link/music/风度.mp3",
     "link/music/泡沫.mp3",
