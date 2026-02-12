@@ -237,6 +237,10 @@ $(function () {
   // 音乐列表
 
   const musicFiles = [
+    "link/music/最.mp3",
+    "link/music/风度.mp3",
+    "link/music/泡沫.mp3",
+    "link/music/坠落.mp3",
     "link/music/free loop.m4a",
     "link/music/A Thousand Years.mp3",
     "link/music/Memories.mp3",
