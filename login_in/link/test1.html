@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专属位置 | Reserved</title>
+    <link rel="icon" href="../images/favicon.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f3e5ab;
+            --bg-dark: #09090b;
+            --text-grey: #a1a1aa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            background-color: var(--bg-dark);
+            color: #fff;
+            font-family: 'Playfair Display', 'Noto Serif SC', serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* 背景Canvas */
+        #canvas-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* 噪点纹理层 - 增加胶片质感 */
+        .noise-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 60px 80px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            background: rgba(15, 15, 20, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeUp 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation-delay: 0.5s;
+        }
+
+        /* 装饰边角 */
+        .corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: var(--gold);
+            border-style: solid;
+            transition: all 0.5s ease;
+        }
+        
+        .top-left { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+        .top-right { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+        .bottom-left { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+        .bottom-right { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+        .container:hover .corner {
+            width: 30px;
+            height: 30px;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .icon-wrapper {
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .crown-icon {
+            font-size: 48px;
+            color: var(--gold);
+            opacity: 0.9;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4));
+        }
+
+        .halo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            animation: pulse 4s infinite ease-in-out;
+        }
+        
+        .halo::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 4rem;
+            font-weight: 400;
+            letter-spacing: 0.3em;
+            margin: 0;
+            background: linear-gradient(45deg, var(--gold-light), var(--gold), var(--gold-light));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shine 5s linear infinite;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--text-grey);
+            margin-top: 15px;
+            font-style: italic;
+            letter-spacing: 0.05em;
+            opacity: 0;
+            animation: fadeIn 1.5s ease forwards;
+            animation-delay: 1.2s;
+        }
+
+        .divider {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+            margin: 30px auto;
+            opacity: 0.5;
+        }
+
+        .message {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1rem;
+            color: #ccc;
+            letter-spacing: 0.2em;
+            line-height: 2;
+            opacity: 0;
+            animation: fadeIn 1.5s ease forwards;
+            animation-delay: 1.8s;
+        }
+
+        .message span {
+            display: block;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        /* 动画定义 */
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.6; }
+            100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.3; }
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .container { padding: 40px 20px; width: 90%; }
+            h1 { font-size: 2.5rem; letter-spacing: 0.15em; }
+            .subtitle { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas-bg"></canvas>
+    <div class="noise-overlay"></div>
+    
+    <div class="container">
+        <!-- 装饰角标 -->
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+
+        <div class="icon-wrapper">
+            <div class="halo"></div>
+            <div class="crown-icon">♛</div>
+        </div>
+
+        <h1>Reserved</h1>
+        <div class="subtitle">For The Special One</div>
+        
+        <div class="divider"></div>
+        
+        <div class="message">
+            星河长明 · 待你而来
+            <span>万千星辰，只为你一人闪烁</span>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Canvas 粒子网络动画
+         * 模拟星空连接的效果，缓慢、优雅
+         */
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        
+        // 配置参数
+        const config = {
+            particleCount: 60, // 粒子数量
+            connectionDistance: 150, // 连线距离
+            mouseDistance: 200, // 鼠标互动距离
+            speed: 0.3, // 运动速度
+            color: 'rgba(212, 175, 55, ', // 基础颜色 (Gold)
+        };
+
+        const mouse = { x: null, y: null };
+
+        // 粒子类
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * config.speed;
+                this.vy = (Math.random() - 0.5) * config.speed;
+                this.size = Math.random() * 2 + 1;
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // 边界反弹
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+
+                // 鼠标互动
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < config.mouseDistance) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const force = (config.mouseDistance - distance) / config.mouseDistance;
+                        const directionX = forceDirectionX * force * 0.05;
+                        const directionY = forceDirectionY * force * 0.05;
+                        this.vx += directionX;
+                        this.vy += directionY;
+                    }
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = config.color + this.opacity + ')';
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            resize();
+            particles = [];
+            // 根据屏幕大小调整粒子数量
+            const count = window.innerWidth < 768 ? 30 : config.particleCount;
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // 更新和绘制粒子
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            // 绘制连线
+            connect();
+            
+            requestAnimationFrame(animate);
+        }
+
+        function connect() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i; j < particles.length; j++) {
+                    let p1 = particles[i];
+                    let p2 = particles[j];
+                    let dx = p1.x - p2.x;
+                    let dy = p1.y - p2.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < config.connectionDistance) {
+                        let opacity = 1 - (distance / config.connectionDistance);
+                        ctx.strokeStyle = config.color + (opacity * 0.2) + ')';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        window.addEventListener('resize', init);
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+        window.addEventListener('mouseout', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        init();
+        animate();
+    </script>
+</body>
+</html>
