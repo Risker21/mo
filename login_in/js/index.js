@@ -1,11 +1,11 @@
 // 加载完成处理函数
 function handlePageLoad() {
-  gsap.to("#loader", 1, { y: "-100%" });
-  gsap.to("#loader", 1, { opacity: 0 });
-  gsap.to("#loader", 0, { display: "none", delay: 1 });
-  gsap.to("#header", 0, { display: "block", delay: 1 });
+  gsap.to("#loader", 0.5, { y: "-100%" });
+  gsap.to("#loader", 0.5, { opacity: 0 });
+  gsap.to("#loader", 0, { display: "none", delay: 0.5 });
+  gsap.to("#header", 0, { display: "block", delay: 0.5 });
   gsap.to("#navigation-content", 0, { display: "none" });
-  gsap.to("#navigation-content", 0, { display: "flex", delay: 1 });
+  gsap.to("#navigation-content", 0, { display: "flex", delay: 0.5 });
 
   // 清除超时定时器，防止重复执行
   if (window.loadTimeout) {
@@ -24,7 +24,7 @@ window.loadTimeout = setTimeout(function () {
 }, 3000);
 
 // 页面加载完成事件
-$(window).on("load", handlePageLoad);
+$(document).ready(handlePageLoad);
 
 // 如果页面已经加载完成，立即执行
 if (document.readyState === "complete") {
@@ -112,21 +112,20 @@ $(function () {
     }, delta);
   };
 
-  window.onload = function () {
-    var elements = document.getElementsByClassName("txt-rotate");
-    for (var i = 0; i < elements.length; i++) {
-      var toRotate = elements[i].getAttribute("data-rotate");
-      var period = elements[i].getAttribute("data-period");
-      if (toRotate) {
-        new TxtRotate(elements[i], JSON.parse(toRotate), period);
-      }
+  // 立即初始化打字机效果
+  var elements = document.getElementsByClassName("txt-rotate");
+  for (var i = 0; i < elements.length; i++) {
+    var toRotate = elements[i].getAttribute("data-rotate");
+    var period = elements[i].getAttribute("data-period");
+    if (toRotate) {
+      new TxtRotate(elements[i], JSON.parse(toRotate), period);
     }
-    // INJECT CSS
-    var css = document.createElement("style");
-    css.type = "text/css";
-    css.innerHTML = ".txt-rotate > .wrap { border-right: 0em solid #666 ; }";
-    document.body.appendChild(css);
-  };
+  }
+  // INJECT CSS
+  var css = document.createElement("style");
+  css.type = "text/css";
+  css.innerHTML = ".txt-rotate > .wrap { border-right: 0em solid #666 ; }";
+  document.body.appendChild(css);
 });
 $(function () {
   $("#about-link").on("click", function () {
