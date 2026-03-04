@@ -236,6 +236,7 @@ $(function () {
   // 音乐列表
 
   const musicFiles = [
+    "link/music/love me like you do.mp3",
     "link/music/侧脸.mp3",
     "link/music/最美的瞬间.mp3",
     "link/music/我好想你.mp3",
