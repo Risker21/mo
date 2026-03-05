@@ -236,6 +236,11 @@ $(function () {
   // 音乐列表
 
   const musicFiles = [
+    "link/music/洋葱.mp3",
+    "link/music/少一点天分.mp3",
+    "link/music/落空.mp3",
+    "link/music/我太笨.mp3",
+    "link/music/你要的全拿走.mp3",
     "link/music/love me like you do.mp3",
     "link/music/侧脸.mp3",
     "link/music/最美的瞬间.mp3",
