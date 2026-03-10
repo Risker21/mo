@@ -2,16 +2,13 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>访问受限</title>
-    <link rel="icon" type="image/png" href="wp-content/themes/creatorspc/static/favicon/tapedotpink_logo_96x96.jpg"
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <link rel="icon" type="image/png" href="wp-content/themes/creatorspc/static/favicon/tapedotpink_logo_96x96.jpg"
     sizes="96x96" />
+    <title>访问受限 - ACCESS DENIED</title>
     <style>
         :root {
             --bg-dark: #010409;
-            --char-blue: #3b82f6;
-            --char-purple: #a855f7;
-            --char-teal: #14b8a6;
             --accent-glow: rgba(99, 102, 241, 0.3);
         }
 
@@ -19,27 +16,50 @@
             margin: 0; padding: 0; box-sizing: border-box;
             font-family: 'Inter', -apple-system, sans-serif;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: var(--bg-dark);
-            height: 100vh;
+            background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #0f172a);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            height: 100vh; width: 100vw;
             display: flex; align-items: center; justify-content: center;
             overflow: hidden; perspective: 2000px;
+            touch-action: none;
         }
 
-        /* --- 动态粒子背景 --- */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- 背景 --- */
         #particleCanvas {
             position: fixed; inset: 0; z-index: 0;
-            pointer-events: none;
-            opacity: 0.5;
+            opacity: 0.8; pointer-events: none;
         }
 
         .background-aura {
             position: fixed; inset: 0; z-index: -1;
             background: 
-                radial-gradient(circle at 50% 50%, #0d1117 0%, #010409 100%);
-            filter: contrast(1.2);
+                radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.15) 0%, transparent 50%);
+            animation: pulseAura 8s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulseAura {
+            0% { opacity: 0.5; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1;
+            /* Simple SVG noise */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.4'/%3E%3C/svg%3E");
+            opacity: 0.08;
         }
 
         /* --- 舞台 --- */
@@ -47,216 +67,166 @@
 
         .characters-group {
             display: flex; align-items: flex-end; justify-content: center;
-            gap: 5rem; margin-bottom: 5rem; height: 350px;
-            transition: transform 0.1s ease-out;
+            gap: 4rem; margin-bottom: 3rem; height: 320px;
+            will-change: transform;
         }
 
         /* --- 角色容器 --- */
         .char-container {
             position: relative;
             display: flex; flex-direction: column; align-items: center;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* --- 对话框 (高级磨砂 + 动态阴影) --- */
+        /* --- 对话框 --- */
         .speech-bubble {
             position: absolute; bottom: 120%;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 0.9rem 1.8rem;
-            border-radius: 28px;
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.95);
-            font-weight: 500;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.7rem 1.4rem;
+            border-radius: 20px;
+            font-size: 0.9rem; color: white;
             white-space: nowrap;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 0 20px rgba(255,255,255,0.05);
-            opacity: 0;
-            transform: translateY(25px) scale(0.7);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: none;
-            z-index: 100;
+            opacity: 0; transform: translateY(10px) scale(0.8);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none; z-index: 100;
         }
 
-        .speech-bubble.active {
-            opacity: 1; transform: translateY(0) scale(1);
-        }
+        .speech-bubble.active { opacity: 1; transform: translateY(0) scale(1); }
 
-        /* --- 角色基础 (动态流光效果) --- */
+        /* --- 角色核心样式 --- */
         .character {
-            position: relative;
-            border-radius: 50%;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; border-radius: 50%;
+            transition: border-radius 0.3s ease;
             transform-style: preserve-3d;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
             display: flex; align-items: center; justify-content: center;
             cursor: pointer;
-            overflow: visible;
         }
 
-        /* 内部光泽 */
-        .highlight {
-            position: absolute; inset: 0;
-            border-radius: inherit;
-            background: radial-gradient(circle at var(--light-x, 50%) var(--light-y, 50%), rgba(255,255,255,0.4) 0%, transparent 65%);
-            z-index: 5;
-            pointer-events: none;
-        }
+        .char-main { width: 170px; height: 170px; }
+        .char-side { width: 110px; height: 110px; }
 
-        .char-main { width: 200px; height: 200px; animation: breathe 4s infinite ease-in-out; }
-        .char-side { width: 130px; height: 130px; animation: breathe 6s infinite ease-in-out reverse; }
+        /* 呼吸动画 */
+        .char-container:nth-child(1) .character { animation: breathe 5s infinite ease-in-out; }
+        .char-container:nth-child(2) .character { animation: breathe 4s infinite ease-in-out -1s; }
+        .char-container:nth-child(3) .character { animation: breathe 6s infinite ease-in-out -2.5s; }
 
         @keyframes breathe {
-            0%, 100% { transform: translateY(0) scale(1); filter: brightness(1); }
-            50% { transform: translateY(-15px) scale(1.02); filter: brightness(1.1); }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
         }
 
-        /* --- 角色特定样式 --- */
-        .effect-sad { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: 4px solid rgba(147, 197, 253, 0.5); }
-        .effect-surprised { background: linear-gradient(135deg, #a855f7, #7c3aed); border: 4px solid rgba(233, 213, 255, 0.5); }
-        .effect-shy { background: linear-gradient(135deg, #fbcfe8, #db2777); border: 4px solid rgba(252, 231, 243, 0.5); }
-        .effect-angry { background: linear-gradient(135deg, #f87171, #dc2626); border: 4px solid rgba(254, 226, 226, 0.5); animation: shake 0.1s infinite !important; }
-        .effect-dizzy { background: linear-gradient(135deg, #34d399, #059669); border: 4px solid rgba(209, 250, 229, 0.5); }
-        .effect-blank { background: linear-gradient(135deg, #2dd4bf, #0d9488); border: 4px solid rgba(204, 251, 241, 0.5); }
-
-        @keyframes shake { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(4px, -4px); } }
-
-        /* --- 面部元素 (夸张联动) --- */
-        .face { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; z-index: 1; }
+        /* 效果状态 */
+        .effect-blank { background: linear-gradient(135deg, #2dd4bf, #0d9488); border: 4px solid #5eead4; }
+        .effect-sad { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: 4px solid #93c5fd; }
+        .effect-surprised { background: linear-gradient(135deg, #a855f7, #7c3aed); border: 4px solid #ddd6fe; }
+        .effect-angry { background: linear-gradient(135deg, #f87171, #dc2626); border: 4px solid #fecaca; animation: shake 0.1s infinite !important; }
         
-        .brow-group {
-            position: absolute; top: 25%; width: 75%; left: 50%;
-            transform: translateX(-50%) translateZ(100px);
-            display: flex; justify-content: space-between;
-            transition: all 0.15s cubic-bezier(0.2, 0, 0.2, 1);
-        }
-        .brow {
-            width: 35px; height: 6px; background: rgba(15, 23, 42, 0.9);
-            border-radius: 4px; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .char-side .brow { width: 24px; height: 5px; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(3px, -3px); } }
 
-        .eye-group {
-            position: absolute; top: 38%; width: 70%; left: 50%;
-            transform: translateX(-50%) translateZ(90px);
-            display: flex; justify-content: space-between;
-            transition: all 0.1s ease-out;
-        }
-        .eye { 
-            width: 32px; height: 32px; background: white; border-radius: 50%; 
-            position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .char-side .eye { width: 22px; height: 22px; }
-        .pupil { width: 14px; height: 14px; background: #0f172a; border-radius: 50%; transition: transform 0.05s linear; }
+        /* --- 面部元素 --- */
+        .face { width: 100%; height: 100%; position: relative; pointer-events: none; }
         
-        .mouth-wrap { 
-            position: absolute; bottom: 20%; left: 50%; 
-            transform: translateX(-50%) translateZ(70px);
-            transition: all 0.15s cubic-bezier(0.2, 0, 0.2, 1);
-        }
-        .mouth-svg { 
-            width: 70px; height: 35px; fill: none; stroke: rgba(15, 23, 42, 0.85); 
-            stroke-width: 6; stroke-linecap: round;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
+        .brow-group { position: absolute; top: 25%; width: 70%; left: 15%; display: flex; justify-content: space-between; }
+        .brow { width: 35%; height: 6px; background: #0f172a; border-radius: 4px; transition: transform 0.1s ease-out; }
 
-        /* --- 内容文字 --- */
-        .content { color: white; position: relative; z-index: 10; margin-top: 1rem; }
+        .eye-group { position: absolute; top: 38%; width: 66%; left: 17%; display: flex; justify-content: space-between; }
+        .eye { width: 26px; height: 26px; background: white; border-radius: 50%; position: relative; overflow: hidden; }
+        .char-side .eye { width: 18px; height: 18px; }
+        .pupil { width: 12px; height: 12px; background: #0f172a; border-radius: 50%; position: absolute; top: 20%; left: 20%; transition: transform 0.05s linear; }
+
+        .mouth-wrap { position: absolute; bottom: 15%; left: 50%; transform: translateX(-50%); }
+        .mouth-svg { width: 60px; height: 30px; fill: none; stroke: #0f172a; stroke-width: 6; stroke-linecap: round; }
+
+        /* --- 文案 --- */
+        .content { 
+            color: white; margin-top: 3rem; 
+            position: relative;
+        }
+        
         h1 { 
-            font-size: 4.5rem; font-weight: 900; margin-bottom: 1.5rem; letter-spacing: -0.06em; 
-            background: linear-gradient(to bottom, #fff 40%, #475569 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6));
-            animation: textGlow 3s infinite alternate;
+            font-size: 4rem; font-weight: 900; 
+            background: linear-gradient(to bottom, #ffffff, #94a3b8); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            letter-spacing: -2px;
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.3));
+            animation: floatText 6s ease-in-out infinite;
         }
-        @keyframes textGlow {
-            from { filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6)); }
-            to { filter: drop-shadow(0 15px 30px rgba(99, 102, 241, 0.4)); }
-        }
-        p { 
-            color: #94a3b8; font-size: 1.3rem; line-height: 1.8; max-width: 600px; 
-            margin: 0 auto; letter-spacing: 0.03em; font-weight: 500;
+        
+        @keyframes floatText {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        /* --- 点击涟漪 --- */
+        p { 
+            color: #94a3b8; font-size: 1.2rem; margin-top: 1rem; 
+            font-weight: 300; letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* --- 移动端适配 --- */
+        @media (max-width: 768px) {
+            .characters-group { gap: 1.2rem; height: 240px; }
+            .char-main { width: 130px; height: 130px; }
+            .char-side { width: 85px; height: 85px; }
+            h1 { font-size: 2rem; }
+            .eye { width: 18px; height: 18px; }
+            .char-side .eye { width: 14px; height: 14px; }
+            .mouth-svg { width: 45px; height: 25px; }
+        }
+
         .ripple {
-            position: absolute; border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            animation: rippleEffect 0.8s ease-out;
-            pointer-events: none;
-            z-index: 100;
+            position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.4);
+            transform: translate(-50%, -50%); pointer-events: none; animation: rippleEffect 0.6s ease-out;
         }
-        @keyframes rippleEffect {
-            from { width: 0; height: 0; opacity: 1; }
-            to { width: 500px; height: 500px; opacity: 0; }
-        }
+        @keyframes rippleEffect { from { width: 0; height: 0; opacity: 1; } to { width: 300px; height: 300px; opacity: 0; } }
     </style>
 </head>
 <body>
     <canvas id="particleCanvas"></canvas>
     <div class="background-aura"></div>
+    <div class="noise-overlay"></div>
 
     <div class="stage">
         <div class="characters-group" id="mainGroup">
-            <!-- 角色 1 (左) - 惊讶/呆滞 -->
-            <div class="char-container" id="container-0">
-                <div class="speech-bubble" id="bubble-0"></div>
-                <div class="character char-side effect-blank" id="char-0">
-                    <div class="highlight"></div>
+            <div class="char-container">
+                <div class="speech-bubble"></div>
+                <div class="character char-side effect-blank">
                     <div class="face">
-                        <div class="brow-group">
-                            <div class="brow left"></div><div class="brow right"></div>
-                        </div>
+                        <div class="brow-group"><div class="brow"></div><div class="brow"></div></div>
                         <div class="eye-group">
                             <div class="eye"><div class="pupil"></div></div>
                             <div class="eye"><div class="pupil"></div></div>
                         </div>
-                        <div class="mouth-wrap">
-                            <svg class="mouth-svg" viewBox="0 0 60 30"><path class="mouth-path" d="M 10 15 L 50 15" /></svg>
-                        </div>
+                        <div class="mouth-wrap"><svg class="mouth-svg" viewBox="0 0 60 30"><path class="mouth-path" d="M 15 15 L 45 15" /></svg></div>
                     </div>
                 </div>
             </div>
-
-            <!-- 角色 2 (中) - 委屈/主控 -->
-            <div class="char-container" id="container-1">
-                <div class="speech-bubble" id="bubble-1"></div>
-                <div class="character char-main effect-sad" id="char-1">
-                    <div class="highlight"></div>
+            <div class="char-container">
+                <div class="speech-bubble"></div>
+                <div class="character char-main effect-sad">
                     <div class="face">
-                        <div class="brow-group">
-                            <div class="brow left"></div><div class="brow right"></div>
-                        </div>
+                        <div class="brow-group"><div class="brow"></div><div class="brow"></div></div>
                         <div class="eye-group">
                             <div class="eye"><div class="pupil"></div></div>
                             <div class="eye"><div class="pupil"></div></div>
                         </div>
-                        <div class="mouth-wrap">
-                            <svg class="mouth-svg" viewBox="0 0 60 30"><path class="mouth-path" d="M 10 20 Q 30 5 50 20" /></svg>
-                        </div>
+                        <div class="mouth-wrap"><svg class="mouth-svg" viewBox="0 0 60 30"><path class="mouth-path" d="M 10 20 Q 30 5 50 20" /></svg></div>
                     </div>
                 </div>
             </div>
-
-            <!-- 角色 3 (右) - 傲娇/愤怒 -->
-            <div class="char-container" id="container-2">
-                <div class="speech-bubble" id="bubble-2"></div>
-                <div class="character char-side effect-surprised" id="char-2">
-                    <div class="highlight"></div>
+            <div class="char-container">
+                <div class="speech-bubble"></div>
+                <div class="character char-side effect-surprised">
                     <div class="face">
-                        <div class="brow-group">
-                            <div class="brow left"></div><div class="brow right"></div>
-                        </div>
+                        <div class="brow-group"><div class="brow"></div><div class="brow"></div></div>
                         <div class="eye-group">
                             <div class="eye"><div class="pupil"></div></div>
                             <div class="eye"><div class="pupil"></div></div>
                         </div>
-                        <div class="mouth-wrap">
-                            <svg class="mouth-svg" viewBox="0 0 60 30"><path class="mouth-path" d="M 20 15 A 10 10 0 1 0 40 15 A 10 10 0 1 0 20 15" /></svg>
-                        </div>
+                        <div class="mouth-wrap"><svg class="mouth-svg" viewBox="0 0 60 30"><path class="mouth-path" d="M 20 20 A 10 10 0 1 0 40 20" /></svg></div>
                     </div>
                 </div>
             </div>
@@ -264,189 +234,236 @@
 
         <div class="content">
             <h1>ACCESS DENIED</h1>
-            <p>很抱歉，你没有访问此网站的资格</p>
+            <p>抱歉，你暂时没有访问权限</p>
         </div>
     </div>
 
     <script>
-        // --- 1. 高级物理粒子背景 ---
+        // --- 粒子系统 ---
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        let mouse = { x: -1000, y: -1000 };
+        
+        // 交互状态管理
+        let input = { x: -1000, y: -1000 }; // 原始输入坐标
+        let current = { x: window.innerWidth/2, y: window.innerHeight/2 }; // 平滑后的坐标
+        let isMoving = false; // 是否有触摸/鼠标交互
+        let gyroInput = null; // 陀螺仪数据
 
-        function resize() {
+        function initCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.baseX = this.x;
-                this.baseY = this.y;
-                this.density = (Math.random() * 30) + 5;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-            update() {
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < 180) {
-                    let force = (180 - distance) / 180;
-                    this.x -= (dx / distance) * force * this.density;
-                    this.y -= (dy / distance) * force * this.density;
-                } else {
-                    this.x += (this.baseX - this.x) * 0.05;
-                    this.y += (this.baseY - this.y) * 0.05;
-                }
-            }
-        }
-
-        function initParticles() {
             particles = [];
-            for (let i = 0; i < 180; i++) particles.push(new Particle());
-        }
-        initParticles();
-
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
-
-        // --- 2. 交互逻辑与个性化对话系统 ---
-        const chars = document.querySelectorAll('.character');
-        const bubbles = document.querySelectorAll('.speech-bubble');
-        const mainGroup = document.getElementById('mainGroup');
-        const effects = ['effect-sad', 'effect-surprised', 'effect-shy', 'effect-angry', 'effect-dizzy', 'effect-blank'];
-        
-        // 每个角色独立的日常对话库
-        const scenarios = [
-            ["有人闯入！", "快看，有访客", "嘘...别出声", "他在干嘛呢？"],
-            ["哎呀，你没权限", "没钥匙进不来哦", "呜呜，我也帮不了你", "这里是受保护的区域"],
-            ["快走开啦！", "别盯着我看", "哼，真是个怪人", "再不走我就报警了"]
-        ];
-
-        // 每个角色独立的点击反馈对话库
-        const clickResponses = [
-            ["哎呀！轻点儿！", "干嘛点我？", "别碰我啦...", "呜呜，好疼"],
-            ["唔！好晕呀", "你要做什么？", "哎呀，被点到了", "轻点轻点！"],
-            ["放开我！", "别烦我！", "讨厌！", "谁让你点我的？"]
-        ];
-
-        document.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-            
-            const x = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
-            const y = (e.clientY - window.innerHeight / 2) / (innerHeight / 2);
-
-            mainGroup.style.transform = `translate(${x * 10}px, ${y * 10}px)`;
-
-            chars.forEach((char, i) => {
-                const rect = char.getBoundingClientRect();
-                const charCenterX = rect.left + rect.width / 2;
-                const charCenterY = rect.top + rect.height / 2;
-                const dist = Math.sqrt(Math.pow(e.clientX - charCenterX, 2) + Math.pow(e.clientY - charCenterY, 2));
-                const proximity = Math.max(0, 1 - dist / 450); 
-
-                const factor = 1 + i * 0.12;
-                char.style.transform = `rotateX(${-y * 35 * factor}deg) rotateY(${x * 40 * factor}deg)`;
-                char.style.setProperty('--light-x', `${50 + x * 70}%`);
-                char.style.setProperty('--light-y', `${50 + y * 70}%`);
-
-                const tl = 45 + y * 18; const tr = 55 - y * 18;
-                const bl = 50 - x * 15; const br = 50 + x * 15;
-                char.style.borderRadius = `${tl}% ${tr}% ${br}% ${bl}% / ${50 + y * 15}% ${50 + y * 15}% ${50 - y * 15}% ${50 - y * 15}%`;
-
-                const browGroup = char.querySelector('.brow-group');
-                const eyeGroup = char.querySelector('.eye-group');
-                const mouthWrap = char.querySelector('.mouth-wrap');
-                const mouthPath = char.querySelector('.mouth-path');
-
-                browGroup.style.transform = `translateX(-50%) translateZ(100px) translateY(${y * 20 - proximity * 15}px)`;
-                char.querySelectorAll('.brow').forEach((b, j) => {
-                    const angle = (j === 0 ? -12 : 12) + (y * 25) + (proximity * (j === 0 ? 35 : -35));
-                    b.style.transform = `rotate(${angle}deg)`;
-                });
-
-                char.querySelectorAll('.eye').forEach(eye => {
-                    eye.style.transform = `scale(${1 + proximity * 0.5})`;
-                    const pupil = eye.querySelector('.pupil');
-                    pupil.style.transform = `translate(${x * 12}px, ${y * 12}px)`;
-                });
-
-                const mY = y * 15 + proximity * 20;
-                mouthWrap.style.transform = `translateX(-50%) translateZ(80px) translateY(${mY}px)`;
-                
-                if (i === 1) { 
-                    const bend = 20 - proximity * 50;
-                    mouthPath.setAttribute('d', `M 10 ${20 - proximity * 8} Q 30 ${bend} 50 ${20 - proximity * 8}`);
-                }
+            const count = window.innerWidth < 768 ? 50 : 120;
+            for(let i=0; i<count; i++) particles.push({
+                x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+                bx: Math.random()*canvas.width, by: Math.random()*canvas.height,
+                s: Math.random()*2, d: Math.random()*20+5
             });
-        });
+            // 重置坐标
+            current.x = canvas.width / 2;
+            current.y = canvas.height / 2;
+        }
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
 
-        // 点击效果与个性化反馈
-        chars.forEach((char, i) => {
-            char.addEventListener('click', (e) => {
-                const ripple = document.createElement('div');
-                ripple.className = 'ripple';
-                ripple.style.left = `${e.clientX}px`;
-                ripple.style.top = `${e.clientY}px`;
-                document.body.appendChild(ripple);
-                setTimeout(() => ripple.remove(), 800);
-
-                const nextEff = effects[Math.floor(Math.random() * effects.length)];
-                effects.forEach(eff => char.classList.remove(eff));
-                char.classList.add(nextEff);
-
-                // 触发个性化点击反馈对话
-                const bubble = bubbles[i];
-                const charResponses = clickResponses[i];
-                bubble.innerText = charResponses[Math.floor(Math.random() * charResponses.length)];
-                bubble.classList.add('active');
-                
-                // 点击后暂停日常对话一段时间
-                clearTimeout(char.chatTimer);
-                setTimeout(() => {
-                    bubble.classList.remove('active');
-                }, 1500);
-            });
-        });
-
-        // 智能剧情对话逻辑
-        let currentTalker = 0;
-        function runStory() {
-            const bubble = bubbles[currentTalker];
-            const charScenarios = scenarios[currentTalker];
+        function drawParticles() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
             
-            // 如果对话框已经是激活状态（可能刚被点击），则跳过本次自动对话
-            if (!bubble.classList.contains('active')) {
-                bubble.innerText = charScenarios[Math.floor(Math.random() * charScenarios.length)];
-                bubble.classList.add('active');
-                
-                setTimeout(() => {
-                    bubble.classList.remove('active');
-                    currentTalker = (currentTalker + 1) % 3;
-                    setTimeout(runStory, 2000 + Math.random() * 2000);
-                }, 3000);
+            // 目标坐标计算
+            let targetX, targetY;
+            if (isMoving) {
+                targetX = input.x;
+                targetY = input.y;
+            } else if (gyroInput) {
+                targetX = gyroInput.x;
+                targetY = gyroInput.y;
             } else {
-                currentTalker = (currentTalker + 1) % 3;
-                setTimeout(runStory, 1000);
+                targetX = canvas.width/2;
+                targetY = canvas.height/2;
             }
+
+            // 平滑插值 (Lerp)
+            // 交互时更快(0.1)，回正/陀螺仪时更慢更平滑(0.05)
+            const speed = isMoving ? 0.1 : 0.05;
+            current.x += (targetX - current.x) * speed;
+            current.y += (targetY - current.y) * speed;
+
+            // 更新角色状态 (统一在 RAF 中调用以保证流畅)
+            updateCharacters(current.x, current.y);
+            
+            // Draw connections first (behind particles)
+            ctx.lineWidth = 0.5;
+            for(let i=0; i<particles.length; i++) {
+                for(let j=i+1; j<particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    
+                    if(dist < 100) {
+                        let opacity = 1 - (dist / 100);
+                        ctx.strokeStyle = `rgba(147, 197, 253, ${opacity * 0.4})`; // blue-300
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            particles.forEach(p => {
+                // 粒子避让使用平滑后的 current 坐标
+                // 只有在有交互或陀螺仪生效时才避让，避免初始状态乱跑
+                let dx = current.x - p.x; let dy = current.y - p.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
+                
+                // 如果是默认中心点(无交互)，减弱避让效果或不避让
+                // 这里我们选择只要 current 在动就避让
+                if(dist < 150) {
+                    p.x -= (dx/dist)*2; p.y -= (dy/dist)*2;
+                } else {
+                    p.x += (p.bx - p.x)*0.05; p.y += (p.by - p.y)*0.05;
+                }
+                
+                ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.3 + 0.3})`;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
+            });
+            requestAnimationFrame(drawParticles);
         }
-        setTimeout(runStory, 1500);
+        // 删除这里的 drawParticles() 调用，因为 handleMove 之前是直接调用的，
+        // 但现在我们在下面初始化。不过原代码是在这里调用的。
+        // 我们稍后在脚本末尾统一启动。
+        
+        // --- 核心面部交互逻辑 ---
+        const charContainers = document.querySelectorAll('.char-container');
+        const mainGroup = document.getElementById('mainGroup');
+        const effects = ['effect-blank', 'effect-sad', 'effect-surprised', 'effect-angry'];
+
+        // 将原 handleMove 的 DOM 操作逻辑提取为 updateCharacters
+        function updateCharacters(posX, posY) {
+            const normX = (posX - window.innerWidth/2) / (window.innerWidth/2);
+            const normY = (posY - window.innerHeight/2) / (window.innerHeight/2);
+
+            mainGroup.style.transform = `translate(${normX * 15}px, ${normY * 15}px)`;
+
+            charContainers.forEach((container, i) => {
+                const char = container.querySelector('.character');
+                const rect = char.getBoundingClientRect();
+                const cX = rect.left + rect.width/2;
+                const cY = rect.top + rect.height/2;
+                const dist = Math.sqrt(Math.pow(posX - cX, 2) + Math.pow(posY - cY, 2));
+                const proximity = Math.max(0, 1 - dist / 350); // 感应半径 350px
+
+                // 1. 整体倾斜
+                char.style.transform = `rotateX(${-normY * 25}deg) rotateY(${normX * 30}deg)`;
+                
+                // 2. 眼神
+                char.querySelectorAll('.pupil').forEach(p => {
+                    p.style.transform = `translate(${normX * 10}px, ${normY * 10}px)`;
+                });
+
+                // 3. 眉毛挑动 (核心修复：根据接近距离 proximity 实时变化)
+                char.querySelectorAll('.brow').forEach((b, j) => {
+                    const lift = -proximity * 15; // 靠近时眉毛上扬
+                    const tilt = (j === 0 ? -1 : 1) * (normY * 15 + proximity * 20);
+                    b.style.transform = `translateY(${lift}px) rotate(${tilt}deg)`;
+                });
+
+                // 4. 嘴巴变形 (核心修复：实时修改 SVG Path)
+                const mouthPath = char.querySelector('.mouth-path');
+                if(i === 0) { // 左边：拉长
+                    const len = 15 + proximity * 20;
+                    mouthPath.setAttribute('d', `M ${30-len} 15 L ${30+len} 15`);
+                } else if(i === 1) { // 中间：委屈变张嘴
+                    const curve = 5 - proximity * 40; 
+                    mouthPath.setAttribute('d', `M 10 20 Q 30 ${curve} 50 20`);
+                } else if(i === 2) { // 右边：惊讶变大
+                    const r = 5 + proximity * 10;
+                    mouthPath.setAttribute('d', `M ${30-r} 20 A ${r} ${r} 0 1 0 ${30+r} 20 A ${r} ${r} 0 1 0 ${30-r} 20`);
+                }
+                
+                // 5. 身体变形
+                const rVal = 50 - proximity * 15;
+                char.style.borderRadius = `${rVal}% ${rVal}% ${rVal}% ${rVal}%`;
+            });
+        }
+
+        // 输入处理函数
+        function handleInput(x, y) {
+            input.x = x;
+            input.y = y;
+            isMoving = true;
+        }
+
+        window.addEventListener('mousemove', e => handleInput(e.clientX, e.clientY));
+        window.addEventListener('mouseleave', () => { isMoving = false; }); // 鼠标移出复位
+
+        // 触摸事件处理优化
+        window.addEventListener('touchmove', e => {
+            e.preventDefault(); // 防止滚动
+            handleInput(e.touches[0].clientX, e.touches[0].clientY);
+        }, {passive: false});
+
+        window.addEventListener('touchstart', e => {
+            handleInput(e.touches[0].clientX, e.touches[0].clientY);
+        }, {passive: false});
+
+        window.addEventListener('touchend', () => {
+            isMoving = false; // 手指离开后自动复位
+        });
+        
+        // 陀螺仪支持 (可选，增加沉浸感)
+        window.addEventListener('deviceorientation', (e) => {
+            if (!isMoving && e.gamma && e.beta) {
+                // 将陀螺仪数据映射到屏幕坐标
+                // gamma: 左-90 ~ 右90
+                // beta: 上-180 ~ 下180
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+                const maxTiltX = 30; // 最大倾斜角度范围
+                const maxTiltY = 30;
+
+                let tiltX = Math.max(-maxTiltX, Math.min(maxTiltX, e.gamma));
+                let tiltY = Math.max(-maxTiltY, Math.min(maxTiltY, e.beta - 45)); // 默认手持角度45度
+
+                if (!gyroInput) gyroInput = { x: 0, y: 0 };
+                gyroInput.x = centerX + (tiltX / maxTiltX) * (centerX * 0.8);
+                gyroInput.y = centerY + (tiltY / maxTiltY) * (centerY * 0.8);
+            }
+        });
+
+        // 启动动画
+        drawParticles();
+
+        // 点击反馈
+        charContainers.forEach((container, i) => {
+            const char = container.querySelector('.character');
+            const bubble = container.querySelector('.speech-bubble');
+            const msgs = [
+                ["哎呀！", "别碰我", "唔..."],
+                ["好晕好晕", "呜呜别点我", "你要干嘛"],
+                ["！吓死我了", "哼！", "快停下"]
+            ];
+
+            char.addEventListener('click', (e) => {
+                // 涟漪效果
+                const r = document.createElement('div');
+                r.className = 'ripple';
+                r.style.left = `${e.clientX || e.pageX}px`;
+                r.style.top = `${e.clientY || e.pageY}px`;
+                document.body.appendChild(r);
+                setTimeout(()=>r.remove(), 600);
+
+                // 随机切换状态
+                effects.forEach(eff => char.classList.remove(eff));
+                char.classList.add(effects[Math.floor(Math.random()*effects.length)]);
+
+                // 气泡
+                bubble.innerText = msgs[i][Math.floor(Math.random()*msgs[i].length)];
+                bubble.classList.add('active');
+                setTimeout(()=>bubble.classList.remove('active'), 1500);
+            });
+        });
     </script>
 </body>
 </html>
