@@ -18,6 +18,7 @@ module.exports = async function handler(req, res) {
         const userMessage = (body.message || '').toString().trim();
         const currentPage = (body.currentPage || '').toString().trim();
         const pageTitle = (body.pageTitle || '').toString().trim();
+        const useStream = body.stream !== false;
 
         if (!userMessage) {
             return res.status(400).json({ error: 'message is required.' });
@@ -78,6 +79,7 @@ module.exports = async function handler(req, res) {
             body: JSON.stringify({
                 model,
                 temperature: 0.7,
+                stream: useStream,
                 messages: [
                     { role: 'system', content: [siteContext, customSystemPrompt].filter(Boolean).join('\n\n') },
                     { role: 'system', content: runtimeContext },
@@ -96,6 +98,28 @@ module.exports = async function handler(req, res) {
                     model
                 }
             });
+        }
+
+        if (useStream) {
+            if (!response.body) {
+                return res.status(502).json({ error: 'Upstream stream is empty.' });
+            }
+
+            res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+            res.setHeader('Cache-Control', 'no-cache, no-transform');
+            res.setHeader('Connection', 'keep-alive');
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                res.write(decoder.decode(value, { stream: true }));
+            }
+
+            res.end();
+            return;
         }
 
         const data = await response.json();

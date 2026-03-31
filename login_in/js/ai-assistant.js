@@ -365,6 +365,7 @@
         div.textContent = text;
         messages.appendChild(div);
         messages.scrollTop = messages.scrollHeight;
+        return div;
     }
 
     async function askAI() {
@@ -375,6 +376,7 @@
         input.value = '';
         send.disabled = true;
         send.textContent = '发送中...';
+        const botMessageEl = appendMessage('bot', '思考中...');
 
         try {
             const resp = await fetch(endpoint, {
@@ -383,18 +385,61 @@
                 body: JSON.stringify({
                     message,
                     currentPage: window.location.pathname,
-                    pageTitle: document.title
+                    pageTitle: document.title,
+                    stream: true
                 })
             });
 
-            const data = await resp.json();
             if (!resp.ok) {
+                const data = await resp.json().catch(() => ({}));
                 const detail = data && (data.detail || (data.debug && JSON.stringify(data.debug)));
                 throw new Error((data && data.error ? data.error : '请求失败') + (detail ? `：${detail}` : ''));
             }
-            appendMessage('bot', data.answer || '我暂时没有想到合适的回复。');
+
+            if (!resp.body) {
+                throw new Error('流式响应不可用');
+            }
+
+            botMessageEl.textContent = '';
+
+            const reader = resp.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let buffer = '';
+            let fullText = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split('\n');
+                buffer = lines.pop() || '';
+
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (!trimmed.startsWith('data:')) continue;
+                    const payload = trimmed.slice(5).trim();
+                    if (!payload || payload === '[DONE]') continue;
+
+                    try {
+                        const json = JSON.parse(payload);
+                        const delta = json?.choices?.[0]?.delta?.content;
+                        if (delta) {
+                            fullText += delta;
+                            botMessageEl.textContent = fullText;
+                            messages.scrollTop = messages.scrollHeight;
+                        }
+                    } catch (e) {
+                        // 忽略解析失败的碎片行
+                    }
+                }
+            }
+
+            if (!fullText.trim()) {
+                botMessageEl.textContent = '我暂时没有想到合适的回复。';
+            }
         } catch (err) {
-            appendMessage('bot', '连接 AI 服务失败：' + (err && err.message ? err.message : '请稍后再试。'));
+            botMessageEl.textContent = '连接 AI 服务失败：' + (err && err.message ? err.message : '请稍后再试。');
             console.error(err);
         } finally {
             send.disabled = false;
