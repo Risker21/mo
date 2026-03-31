@@ -117,6 +117,28 @@
             color: #f6e9ff;
             background: linear-gradient(135deg, rgba(255, 111, 179, 0.25), rgba(154, 107, 255, 0.25));
             border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .mo-ai-close {
+            border: none;
+            background: rgba(255, 255, 255, 0.14);
+            color: #fff;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            line-height: 1;
+            font-size: 16px;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+        }
+
+        .mo-ai-close:hover {
+            background: rgba(255, 255, 255, 0.24);
         }
 
         .mo-ai-messages {
@@ -216,7 +238,10 @@
     const panel = document.createElement('section');
     panel.className = 'mo-ai-panel';
     panel.innerHTML = `
-        <div class="mo-ai-header">Mo AI 小助手</div>
+        <div class="mo-ai-header">
+            <span>Mo AI 小助手</span>
+            <button class="mo-ai-close" id="mo-ai-close" type="button" aria-label="关闭 AI 面板">×</button>
+        </div>
         <div class="mo-ai-messages" id="mo-ai-messages"></div>
         <div class="mo-ai-input-wrap">
             <input class="mo-ai-input" id="mo-ai-input" type="text" placeholder="输入你的问题..." />
@@ -230,6 +255,7 @@
     const messages = panel.querySelector('#mo-ai-messages');
     const input = panel.querySelector('#mo-ai-input');
     const send = panel.querySelector('#mo-ai-send');
+    const closeBtn = panel.querySelector('#mo-ai-close');
     const positionKey = 'mo-ai-entry-position-v1';
     const edgePadding = 12;
     let hasDragged = false;
@@ -354,7 +380,11 @@
             const resp = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message })
+                body: JSON.stringify({
+                    message,
+                    currentPage: window.location.pathname,
+                    pageTitle: document.title
+                })
             });
 
             const data = await resp.json();
@@ -372,7 +402,7 @@
         }
     }
 
-    appendMessage('bot', '你好，我是 Mo 的 AI 小助手。想聊点什么？');
+    appendMessage('bot', '你好，我是 Mo 的 AI 小助手。我可以帮你快速找到功能入口、介绍每个 Demo 怎么玩、以及排查常见问题。');
 
     loadOrInitEntryPosition();
     updatePanelPosition();
@@ -388,6 +418,11 @@
             updatePanelPosition();
             input.focus();
         }
+    });
+
+    closeBtn.addEventListener('click', function () {
+        panel.classList.remove('show');
+        entry.classList.remove('active');
     });
 
     entry.addEventListener('pointerdown', function (event) {
@@ -421,5 +456,16 @@
         setEntryPosition(currentLeft, currentTop);
         updatePanelPosition();
         saveEntryPosition();
+    });
+
+    document.addEventListener('pointerdown', function (event) {
+        if (!panel.classList.contains('show')) return;
+        const target = event.target;
+        const clickedInsidePanel = panel.contains(target);
+        const clickedEntry = entry.contains(target);
+        if (!clickedInsidePanel && !clickedEntry) {
+            panel.classList.remove('show');
+            entry.classList.remove('active');
+        }
     });
 })();
