@@ -359,11 +359,12 @@
 
             const data = await resp.json();
             if (!resp.ok) {
-                throw new Error(data.error || '请求失败');
+                const detail = data && (data.detail || (data.debug && JSON.stringify(data.debug)));
+                throw new Error((data && data.error ? data.error : '请求失败') + (detail ? `：${detail}` : ''));
             }
             appendMessage('bot', data.answer || '我暂时没有想到合适的回复。');
         } catch (err) {
-            appendMessage('bot', '连接 AI 服务失败，请稍后再试。');
+            appendMessage('bot', '连接 AI 服务失败：' + (err && err.message ? err.message : '请稍后再试。'));
             console.error(err);
         } finally {
             send.disabled = false;

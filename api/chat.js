@@ -5,7 +5,8 @@ module.exports = async function handler(req, res) {
 
     const apiKey = process.env.AI_API_KEY;
     const model = process.env.AI_MODEL || 'gpt-4o-mini';
-    const baseUrl = (process.env.AI_BASE_URL || 'https://api.openai.com/v1').replace(/\/$/, '');
+    const rawBaseUrl = (process.env.AI_BASE_URL || 'https://api.openai.com/v1').trim();
+    const baseUrl = rawBaseUrl.replace(/\/$/, '');
     const systemPrompt = process.env.AI_SYSTEM_PROMPT || '你是网站里的中文 AI 小助手，回答简洁、友好、实用。';
 
     if (!apiKey) {
@@ -20,7 +21,12 @@ module.exports = async function handler(req, res) {
             return res.status(400).json({ error: 'message is required.' });
         }
 
-        const response = await fetch(baseUrl + '/chat/completions', {
+        // 兼容用户把 AI_BASE_URL 填成 .../v1、.../v1/ 或 .../chat/completions 三种格式
+        const requestUrl = /\/chat\/completions\/?$/.test(baseUrl)
+            ? baseUrl
+            : (baseUrl + '/chat/completions');
+
+        const response = await fetch(requestUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,7 +44,14 @@ module.exports = async function handler(req, res) {
 
         if (!response.ok) {
             const errText = await response.text();
-            return res.status(response.status).json({ error: 'Upstream API error', detail: errText });
+            return res.status(response.status).json({
+                error: 'Upstream API error',
+                detail: errText,
+                debug: {
+                    requestUrl,
+                    model
+                }
+            });
         }
 
         const data = await response.json();
@@ -50,6 +63,13 @@ module.exports = async function handler(req, res) {
 
         return res.status(200).json({ answer });
     } catch (error) {
-        return res.status(500).json({ error: 'Internal server error', detail: error.message });
+        return res.status(500).json({
+            error: 'Internal server error',
+            detail: error.message,
+            debug: {
+                baseUrl,
+                model
+            }
+        });
     }
 };
