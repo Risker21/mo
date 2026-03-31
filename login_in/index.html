@@ -501,7 +501,7 @@
 
             <div class="blog-content">
                 <div class="blogs">
-                    <a href="./game/Christmas/index.html" target="_blank">
+                    <a href="./game/Christmas/index.html" target="_blank" class="password-protected-demo" data-demo-name="手势圣诞">
                         <div class="img">
                             <img src="images/圣诞.webp" alt="blog-six">
                             <div class="blog-date">浪漫</div>
@@ -521,7 +521,7 @@
                 </div>
 
                 <div class="blogs">
-                    <a href="./image_fancy/index.html" target="_blank">
+                    <a href="./image_fancy/index.html" target="_blank" class="password-protected-demo" data-demo-name="花式图片册">
                         <div class="img">
                             <img src="https://q6.itc.cn/q_70,c_zoom,h_1200/images01/20260127/d095fff979a24bf48e803c2b08ff8358.png" alt="blog-one">
                             <div class="blog-date">浪漫</div>
@@ -538,7 +538,7 @@
                     </a>
                 </div>
                 <div class="blogs">
-                    <a href="./lovestory/index.html" target="_blank">
+                    <a href="./lovestory/index.html" target="_blank" class="password-protected-demo" data-demo-name="爱心纪念册">
                         <div class="img">
                             <img src="https://q5.itc.cn/q_70,c_zoom,h_1200/images01/20260127/ba002b648e304ec99b0128c1947f75b7.png" alt="blog-two">
                             <div class="blog-date">浪漫</div>
@@ -554,7 +554,7 @@
                     </a>
                 </div>
                 <div class="blogs">
-                    <a href="./travel_plane/index.html" target="_blank">
+                    <a href="./travel_plane/index.html" target="_blank" class="password-protected-demo" data-demo-name="穿越时空的旅行">
                         <div class="img">
                             <img src="https://q5.itc.cn/q_70,c_zoom,h_1200/images01/20260127/7ed4cab2b4db4feb808bea51bc3ff6cc.png" alt="blog-three">
                             <div class="blog-date">浪漫</div>
@@ -661,7 +661,7 @@
 
 
                  <div class="blogs">
-                    <a href="./game/Browse Baidu/index.html" target="_blank">
+                    <a href="./game/Browse Baidu/index.html" target="_blank" class="password-protected-demo" data-demo-name="逛逛百度">
                         <div class="img">
                             <img src="https://q7.itc.cn/q_70/images01/20260201/9e390c8554e143b89f4431162544b2e6.png" alt="blog-six">
                             <div class="blog-date">浪漫</div>
@@ -706,11 +706,12 @@
                             <div class="blog-date">专属位</div>
                         </div>
                         <div class="blog-text">
-                            <h3>只为特殊的人</h3>
+                            <h3>密语档案</h3>
                             <p>
-                                <strong style="color: #28bb68; font-size: 23px;">(*≧︶≦)、(￣▽￣* )ゞ</strong>
+                                <strong style="color: #28bb68; font-size: 23px;">不是所有人都能读到这页心事</strong>
                                 <br>
-                                这个位置独一无二，只属于那个特别的人。
+                                一道只对“特别的人”开放的神秘入口，
+                                <br>字里行间都藏着未公开的温柔与暗号。
                                 <!-- 世界那么大，偏偏是你穿过人海停在我面前，像一本翻到最合适章节的书，像迷路时偶然撞见的灯塔。 -->
 
                             </p>
@@ -845,6 +846,7 @@
     <script src="js/particles.js"></script>
     <script src="js/particles.min.js"></script>
     <script src="js/index.js"></script>
+    <script src="js/ai-assistant.js"></script>
     <!--粒子效果脚本-->
     <script>
         particlesJS("particles", { "particles": { "number": { "value": 40, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#ffffff" }, "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" }, "polygon": { "nb_sides": 5 }, "image": { "src": "img/github.svg", "width": 100, "height": 100 } }, "opacity": { "value": 0.5, "random": false, "anim": { "enable": false, "speed": 1, "opacity_min": 0.1, "sync": false } }, "size": { "value": 3, "random": true, "anim": { "enable": false, "speed": 40, "size_min": 0.1, "sync": false } }, "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 6, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false, "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 } } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" }, "resize": true }, "modes": { "grab": { "distance": 400, "line_linked": { "opacity": 1 } }, "bubble": { "distance": 400, "size": 40, "duration": 2, "opacity": 8, "speed": 3 }, "repulse": { "distance": 200, "duration": 0.4 }, "push": { "particles_nb": 4 }, "remove": { "particles_nb": 2 } } }, "retina_detect": true });
@@ -1078,6 +1080,30 @@
                 audio.pause();
                 this.src = 'link/img/music_off.png';
             }
+        });
+    </script>
+    <script>
+        // 指定 Demo 需输入密码才能访问
+        document.addEventListener('DOMContentLoaded', function () {
+            const protectedDemoLinks = document.querySelectorAll('.password-protected-demo');
+            const DEMO_PASSWORD = '5211314';
+
+            protectedDemoLinks.forEach(function (link) {
+                link.addEventListener('click', function (event) {
+                    const demoName = this.dataset.demoName || '该 Demo';
+                    const userInput = window.prompt('进入《' + demoName + '》前请输入密码：');
+
+                    if (userInput === null) {
+                        event.preventDefault();
+                        return;
+                    }
+
+                    if (userInput.trim() !== DEMO_PASSWORD) {
+                        event.preventDefault();
+                        window.alert('密码错误，无法进入该 Demo。');
+                    }
+                });
+            });
         });
     </script>
 </body>

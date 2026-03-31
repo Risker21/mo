@@ -79,3 +79,34 @@
 ---
 *文档更新日期：2026-03-08*  
 *© 2026 Mo小窝 | 由 Momo同学 倾情打造*
+
+## 6. AI 小助手（方案 B：自建）
+
+项目已内置前端聊天组件与后端代理接口：
+
+- 前端入口：`/login_in/js/ai-assistant.js`
+- 页面接入：`/login_in/index.html`
+- 后端接口：`/api/chat.js`
+
+### 6.1 你需要配置的环境变量
+
+在部署平台（如 Vercel）中添加：
+
+- `AI_API_KEY`：模型平台的 API Key（必填）
+- `AI_MODEL`：模型名（可选，默认 `gpt-4o-mini`）
+- `AI_BASE_URL`：兼容 OpenAI Chat Completions 的地址（可选，默认 `https://api.openai.com/v1`）
+- `AI_SYSTEM_PROMPT`：助手系统提示词（可选）
+
+### 6.2 调用方式
+
+前端会调用同域接口 `POST /api/chat`，请求体示例：
+
+```json
+{ "message": "你好，介绍一下这个网站" }
+```
+
+接口返回：
+
+```json
+{ "answer": "..." }
+```

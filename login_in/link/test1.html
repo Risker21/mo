@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>专属位置 | Reserved</title>
+    <title>夜色备忘录 | Midnight Note</title>
     <link rel="icon" href="../images/favicon.jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@300;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Noto+Serif+SC:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #d4af37;
-            --gold-light: #f3e5ab;
-            --bg-dark: #09090b;
-            --text-grey: #a1a1aa;
+            --bg: #070710;
+            --panel: rgba(14, 13, 28, 0.68);
+            --rose: #f472b6;
+            --violet: #8b5cf6;
+            --gold: #f4d58d;
+            --light: #fdf4ff;
+            --muted: #b7a5c6;
         }
 
         * {
@@ -21,350 +24,389 @@
         }
 
         body {
-            height: 100vh;
-            background-color: var(--bg-dark);
-            color: #fff;
-            font-family: 'Playfair Display', 'Noto Serif SC', serif;
+            min-height: 100vh;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Noto Serif SC', serif;
+            background:
+                radial-gradient(1200px 700px at 8% 10%, rgba(139, 92, 246, 0.2), transparent 60%),
+                radial-gradient(900px 580px at 92% 85%, rgba(244, 114, 182, 0.2), transparent 62%),
+                radial-gradient(1000px 600px at 52% 30%, rgba(244, 213, 141, 0.1), transparent 75%),
+                var(--bg);
+            color: var(--light);
             position: relative;
+            display: grid;
+            place-items: center;
         }
 
-        /* 背景Canvas */
-        #canvas-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        #stars {
+            position: fixed;
+            inset: 0;
             z-index: 0;
         }
 
-        /* 噪点纹理层 - 增加胶片质感 */
-        .noise-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        .grain {
+            position: fixed;
+            inset: 0;
             pointer-events: none;
             z-index: 1;
+            opacity: 0.18;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
         }
 
-        .container {
+        .stage {
             position: relative;
             z-index: 2;
-            text-align: center;
-            padding: 60px 80px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            background: rgba(15, 15, 20, 0.4);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
-            transform: translateY(20px);
-            opacity: 0;
-            animation: fadeUp 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-            animation-delay: 0.5s;
+            width: min(92vw, 980px);
+            min-height: 560px;
+            border-radius: 26px;
+            border: 1px solid rgba(244, 213, 141, 0.2);
+            background: linear-gradient(135deg, rgba(17, 16, 35, 0.9), var(--panel));
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55), inset 0 0 55px rgba(139, 92, 246, 0.12);
+            backdrop-filter: blur(12px);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
         }
 
-        /* 装饰边角 */
-        .corner {
+        .stage::before {
+            content: "";
             position: absolute;
-            width: 20px;
-            height: 20px;
-            border-color: var(--gold);
-            border-style: solid;
-            transition: all 0.5s ease;
-        }
-        
-        .top-left { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
-        .top-right { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
-        .bottom-left { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
-        .bottom-right { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
-
-        .container:hover .corner {
-            width: 30px;
-            height: 30px;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            inset: 0;
+            background: linear-gradient(120deg, rgba(244, 114, 182, 0.08), transparent 45%, rgba(244, 213, 141, 0.07));
+            pointer-events: none;
         }
 
-        .icon-wrapper {
-            margin-bottom: 30px;
-            position: relative;
-            display: inline-block;
+        .left {
+            padding: 48px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 20px;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .crown-icon {
-            font-size: 48px;
-            color: var(--gold);
-            opacity: 0.9;
-            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4));
-        }
-
-        .halo {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80px;
-            height: 80px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 50%;
-            animation: pulse 4s infinite ease-in-out;
-        }
-        
-        .halo::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 120%;
-            height: 120%;
-            border: 1px solid rgba(212, 175, 55, 0.1);
-            border-radius: 50%;
-        }
-
-        h1 {
+        .tag {
             font-family: 'Cinzel', serif;
-            font-size: 4rem;
-            font-weight: 400;
-            letter-spacing: 0.3em;
-            margin: 0;
-            background: linear-gradient(45deg, var(--gold-light), var(--gold), var(--gold-light));
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: shine 5s linear infinite;
+            letter-spacing: 0.22em;
+            font-size: 12px;
+            color: #f6d7f4;
             text-transform: uppercase;
         }
 
-        .subtitle {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: var(--text-grey);
-            margin-top: 15px;
-            font-style: italic;
-            letter-spacing: 0.05em;
+        h1 {
+            margin-top: 14px;
+            line-height: 1.22;
+            font-size: clamp(28px, 4.2vw, 52px);
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            background: linear-gradient(90deg, #fff0fb, #f4d58d, #ffd6ee);
+            background-size: 220% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: glowMove 7s linear infinite;
+        }
+
+        .lead {
+            margin-top: 18px;
+            font-size: 16px;
+            color: #e8d8f4;
+            line-height: 1.9;
+            max-width: 560px;
+        }
+
+        .typing {
+            margin-top: 12px;
+            color: var(--gold);
+            min-height: 28px;
+            letter-spacing: 0.1em;
+            font-size: 15px;
+        }
+
+        .controls {
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff6ff;
+            padding: 10px 18px;
+            border-radius: 999px;
+            letter-spacing: 0.12em;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            border-color: rgba(244, 114, 182, 0.55);
+            background: linear-gradient(120deg, rgba(244, 114, 182, 0.2), rgba(139, 92, 246, 0.2));
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .quote {
+            margin-top: auto;
+            padding-top: 18px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.16);
+            color: #d4c3e2;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .right {
+            padding: 42px 34px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .card {
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.03);
+            padding: 18px;
+        }
+
+        .card h3 {
+            font-size: 15px;
+            letter-spacing: 0.08em;
+            color: #f9d8ea;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #d6c9e0;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .seal-area {
+            text-align: center;
+            padding: 12px 0 4px;
+        }
+
+        .seal {
+            width: 88px;
+            height: 88px;
+            margin: 0 auto;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-family: 'Cinzel', serif;
+            font-size: 28px;
+            color: #fff3f8;
+            border: 1px solid rgba(244, 213, 141, 0.5);
+            background: radial-gradient(circle at 30% 25%, rgba(244, 114, 182, 0.5), rgba(139, 92, 246, 0.45));
+            box-shadow: 0 0 28px rgba(244, 114, 182, 0.38);
+            cursor: pointer;
+            transition: transform 0.35s ease;
+            user-select: none;
+        }
+
+        .seal:hover {
+            transform: scale(1.06) rotate(-6deg);
+        }
+
+        .secret {
             opacity: 0;
-            animation: fadeIn 1.5s ease forwards;
-            animation-delay: 1.2s;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.45s ease;
         }
 
-        .divider {
-            width: 1px;
-            height: 40px;
-            background: linear-gradient(to bottom, transparent, var(--gold), transparent);
-            margin: 30px auto;
-            opacity: 0.5;
-        }
-
-        .message {
-            font-family: 'Noto Serif SC', serif;
-            font-size: 1rem;
-            color: #ccc;
-            letter-spacing: 0.2em;
-            line-height: 2;
-            opacity: 0;
-            animation: fadeIn 1.5s ease forwards;
-            animation-delay: 1.8s;
-        }
-
-        .message span {
-            display: block;
-            font-size: 0.85rem;
-            color: #666;
+        .secret.show {
+            opacity: 1;
+            max-height: 180px;
             margin-top: 10px;
         }
 
-        /* 动画定义 */
-        @keyframes fadeUp {
-            to { opacity: 1; transform: translateY(0); }
+        .secret p {
+            color: #ffe3f3;
+            line-height: 1.9;
+            font-size: 14px;
+            letter-spacing: 0.04em;
         }
 
-        @keyframes fadeIn {
-            to { opacity: 1; }
+        @keyframes glowMove {
+            to { background-position: 220% center; }
         }
 
-        @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.3; }
-            50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.6; }
-            100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.3; }
-        }
+        @media (max-width: 900px) {
+            .stage {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
 
-        @keyframes shine {
-            to { background-position: 200% center; }
-        }
+            .left {
+                border-right: 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                padding: 34px 24px;
+            }
 
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            .container { padding: 40px 20px; width: 90%; }
-            h1 { font-size: 2.5rem; letter-spacing: 0.15em; }
-            .subtitle { font-size: 1.2rem; }
+            .right {
+                padding: 28px 24px 34px;
+            }
+
+            .lead {
+                font-size: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <canvas id="canvas-bg"></canvas>
-    <div class="noise-overlay"></div>
-    
-    <div class="container">
-        <!-- 装饰角标 -->
-        <div class="corner top-left"></div>
-        <div class="corner top-right"></div>
-        <div class="corner bottom-left"></div>
-        <div class="corner bottom-right"></div>
+    <canvas id="stars"></canvas>
+    <div class="grain"></div>
 
-        <div class="icon-wrapper">
-            <div class="halo"></div>
-            <div class="crown-icon">♛</div>
-        </div>
+    <main class="stage">
+        <section class="left">
+            <div>
+                <div class="tag">midnight note</div>
+                <h1>夜色已深，<br>有些话慢慢说</h1>
+                <p class="lead">
+                    这一页没有标准答案，也不急着给出解释。
+                    风很轻，灯很暗，刚好适合把想说的话放慢一点。
+                </p>
+                <div class="typing" id="typing-line"></div>
+                <div class="controls">
+                    <button class="btn btn-primary" id="unlock-btn">展开备忘录</button>
+                    <button class="btn" id="switch-btn">换一句夜话</button>
+                </div>
+            </div>
 
-        <h1>Reserved</h1>
-        <div class="subtitle">For The Special One</div>
-        
-        <div class="divider"></div>
-        
-        <div class="message">
-            星河长明 · 待你而来
-            <span>万千星辰，只为你一人闪烁</span>
-        </div>
-    </div>
+            <div class="quote" id="quote-box">
+                “有些人不用站在聚光灯下，也会被一眼认出。”
+            </div>
+        </section>
+
+        <section class="right">
+            <article class="card">
+                <h3>01 / 今晚记录</h3>
+                <p>没有宏大叙事，只有一些零碎而认真的句子，留给愿意慢下来的人。</p>
+            </article>
+
+            <article class="card">
+                <h3>02 / 偏爱线索</h3>
+                <p>有些偏爱不需要被宣布，它只会出现在细节里，像夜里迟到的一束光。</p>
+            </article>
+
+            <div class="seal-area">
+                <div class="seal" id="seal">M</div>
+                <p style="margin-top:10px; color:#e9d2e9; letter-spacing:0.08em;">点击封印，查看隐藏片段</p>
+                <div class="secret card" id="secret-box">
+                    <p>
+                        我把情绪写得很轻，像怕惊动夜色。<br>
+                        如果你刚好读懂，就当是彼此的默契。
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <script>
-        /**
-         * Canvas 粒子网络动画
-         * 模拟星空连接的效果，缓慢、优雅
-         */
-        const canvas = document.getElementById('canvas-bg');
+        const canvas = document.getElementById('stars');
         const ctx = canvas.getContext('2d');
-        
-        let width, height;
-        let particles = [];
-        
-        // 配置参数
-        const config = {
-            particleCount: 60, // 粒子数量
-            connectionDistance: 150, // 连线距离
-            mouseDistance: 200, // 鼠标互动距离
-            speed: 0.3, // 运动速度
-            color: 'rgba(212, 175, 55, ', // 基础颜色 (Gold)
-        };
-
-        const mouse = { x: null, y: null };
-
-        // 粒子类
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * config.speed;
-                this.vy = (Math.random() - 0.5) * config.speed;
-                this.size = Math.random() * 2 + 1;
-                this.opacity = Math.random() * 0.5 + 0.2;
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-
-                // 边界反弹
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-
-                // 鼠标互动
-                if (mouse.x != null) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < config.mouseDistance) {
-                        const forceDirectionX = dx / distance;
-                        const forceDirectionY = dy / distance;
-                        const force = (config.mouseDistance - distance) / config.mouseDistance;
-                        const directionX = forceDirectionX * force * 0.05;
-                        const directionY = forceDirectionY * force * 0.05;
-                        this.vx += directionX;
-                        this.vy += directionY;
-                    }
-                }
-            }
-
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = config.color + this.opacity + ')';
-                ctx.fill();
-            }
-        }
-
-        function init() {
-            resize();
-            particles = [];
-            // 根据屏幕大小调整粒子数量
-            const count = window.innerWidth < 768 ? 30 : config.particleCount;
-            for (let i = 0; i < count; i++) {
-                particles.push(new Particle());
-            }
-        }
+        let stars = [];
+        let w = 0;
+        let h = 0;
 
         function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
         }
 
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            
-            // 更新和绘制粒子
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-
-            // 绘制连线
-            connect();
-            
-            requestAnimationFrame(animate);
+        function createStars() {
+            stars = Array.from({ length: window.innerWidth < 900 ? 70 : 120 }, () => ({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                r: Math.random() * 1.6 + 0.3,
+                o: Math.random() * 0.7 + 0.2,
+                v: Math.random() * 0.35 + 0.1
+            }));
         }
 
-        function connect() {
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i; j < particles.length; j++) {
-                    let p1 = particles[i];
-                    let p2 = particles[j];
-                    let dx = p1.x - p2.x;
-                    let dy = p1.y - p2.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < config.connectionDistance) {
-                        let opacity = 1 - (distance / config.connectionDistance);
-                        ctx.strokeStyle = config.color + (opacity * 0.2) + ')';
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(p1.x, p1.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.stroke();
-                    }
+        function drawStars() {
+            ctx.clearRect(0, 0, w, h);
+            for (const s of stars) {
+                s.y -= s.v;
+                if (s.y < -2) {
+                    s.y = h + 2;
+                    s.x = Math.random() * w;
                 }
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255,245,255,${s.o})`;
+                ctx.fill();
             }
+            requestAnimationFrame(drawStars);
         }
 
-        window.addEventListener('resize', init);
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.x;
-            mouse.y = e.y;
-        });
-        window.addEventListener('mouseout', () => {
-            mouse.x = null;
-            mouse.y = null;
+        resize();
+        createStars();
+        drawStars();
+        window.addEventListener('resize', () => {
+            resize();
+            createStars();
         });
 
-        init();
-        animate();
+        const typingLine = document.getElementById('typing-line');
+        const quoteBox = document.getElementById('quote-box');
+        const unlockBtn = document.getElementById('unlock-btn');
+        const switchBtn = document.getElementById('switch-btn');
+        const seal = document.getElementById('seal');
+        const secretBox = document.getElementById('secret-box');
+
+        const typingTexts = [
+            '状态良好：夜色安静。',
+            '信号正常：适合说真话。',
+            '坐标确认：此刻。'
+        ];
+        let tIndex = 0;
+
+        const quoteTexts = [
+            '“世界很吵，安静的人反而更珍贵。”',
+            '“有些靠近不喧哗，却会被反复想起。”',
+            '“夜色负责降温，某些目光负责升温。”'
+        ];
+        let qIndex = 0;
+
+        function playTyping(text) {
+            typingLine.textContent = '';
+            let i = 0;
+            const timer = setInterval(() => {
+                typingLine.textContent += text[i];
+                i += 1;
+                if (i >= text.length) clearInterval(timer);
+            }, 58);
+        }
+
+        playTyping(typingTexts[tIndex]);
+        setInterval(() => {
+            tIndex = (tIndex + 1) % typingTexts.length;
+            playTyping(typingTexts[tIndex]);
+        }, 4600);
+
+        unlockBtn.addEventListener('click', () => {
+            secretBox.classList.add('show');
+            quoteBox.textContent = '“秘密并不复杂：有些人，值得被温柔地记住。”';
+        });
+
+        switchBtn.addEventListener('click', () => {
+            qIndex = (qIndex + 1) % quoteTexts.length;
+            quoteBox.textContent = quoteTexts[qIndex];
+        });
+
+        seal.addEventListener('click', () => {
+            secretBox.classList.toggle('show');
+        });
     </script>
 </body>
 </html>
