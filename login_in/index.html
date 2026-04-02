@@ -1193,6 +1193,24 @@
                     }
                 });
             });
+
+            // 微信浏览器兼容性处理
+            const isWechat = /MicroMessenger/i.test(navigator.userAgent);
+            if (isWechat) {
+                // 阻止页面意外关闭
+                window.addEventListener('beforeunload', function (e) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                });
+
+                // 处理链接点击，避免微信浏览器问题
+                document.querySelectorAll('a[target="_blank"]').forEach(function (link) {
+                    link.addEventListener('click', function (e) {
+                        // 不阻止默认行为，但添加一些处理
+                        console.log('在微信浏览器中打开外部链接');
+                    });
+                });
+            }
         });
     </script>
 </body>
