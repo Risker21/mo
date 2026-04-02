@@ -368,6 +368,37 @@
         return div;
     }
 
+    function checkAndExecuteMusicCommands(message) {
+        const lowerMessage = message.toLowerCase();
+        let response = null;
+
+        if (window.currentMusic) {
+            // 切歌指令
+            if (lowerMessage.includes('切歌') || lowerMessage.includes('下一首') || lowerMessage.includes('换一首')) {
+                if (typeof window.currentMusic.nextSong === 'function') {
+                    const newSong = window.currentMusic.nextSong();
+                    response = `好的，已切到下一首《${newSong}》！`;
+                }
+            }
+            // 单曲循环指令
+            else if (lowerMessage.includes('单曲循环') || lowerMessage.includes('循环播放')) {
+                if (typeof window.currentMusic.setLoop === 'function') {
+                    window.currentMusic.setLoop(true);
+                    response = '好的，已开启单曲循环模式！';
+                }
+            }
+            // 关闭循环指令
+            else if (lowerMessage.includes('关闭循环') || lowerMessage.includes('取消循环')) {
+                if (typeof window.currentMusic.setLoop === 'function') {
+                    window.currentMusic.setLoop(false);
+                    response = '好的，已关闭单曲循环模式！';
+                }
+            }
+        }
+
+        return response;
+    }
+
     async function askAI() {
         const message = input.value.trim();
         if (!message) return;
@@ -376,6 +407,16 @@
         input.value = '';
         send.disabled = true;
         send.textContent = '发送中...';
+
+        // 先检查是否是音乐控制指令
+        const musicResponse = checkAndExecuteMusicCommands(message);
+        if (musicResponse) {
+            const botMessageEl = appendMessage('bot', musicResponse);
+            send.disabled = false;
+            send.textContent = '发送';
+            return;
+        }
+
         const botMessageEl = appendMessage('bot', '思考中...');
 
         try {
@@ -454,7 +495,7 @@
         }
     }
 
-    appendMessage('bot', '你好，我是 Mo 的 AI 小助手。我可以帮你快速找到功能入口、介绍每个 Demo 怎么玩、以及排查常见问题。');
+    appendMessage('bot', '你好，我是 Mo小窝 AI 小助手。我可以帮你快速找到功能入口、介绍每个 Demo 怎么玩、以及排查常见问题。');
 
     loadOrInitEntryPosition();
     updatePanelPosition();

@@ -174,8 +174,28 @@
           isPlaying: !audio.paused,
           currentTime: audio.currentTime,
           duration: audio.duration,
-          volume: audio.volume
-        })
+          volume: audio.volume,
+          nextTitle: null,
+          nextSrc: null,
+          isLooping: audio.loop
+        }),
+        nextSong: () => {
+          audio.currentTime = 0;
+          if (!audio.paused || userInteracted) {
+            audio.play().catch(err => {
+              console.log('重新播放失败', err);
+            });
+          }
+          return audio.src.split('/').pop().replace('.mp3', '');
+        },
+        toggleLoop: () => {
+          audio.loop = !audio.loop;
+          return audio.loop;
+        },
+        setLoop: (shouldLoop) => {
+          audio.loop = shouldLoop;
+          return audio.loop;
+        }
       };
 
       const tryPlay = () => {

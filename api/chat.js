@@ -36,6 +36,7 @@ module.exports = async function handler(req, res) {
 - 播放状态: ${musicInfo.isPlaying ? '正在播放' : '已暂停'}
 - 播放进度: ${Math.round(musicInfo.currentTime)}/${Math.round(musicInfo.duration)}秒
 - 音量: ${Math.round(musicInfo.volume * 100)}%
+${musicInfo.nextTitle ? `- 下一首: ${musicInfo.nextTitle}` : ''}
 `.trim();
         }
 

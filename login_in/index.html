@@ -1057,27 +1057,63 @@
             'Anyone.mp3'
         ];
 
-        function getRandomMusic() {
+        let nextMusicPath = '';
+        let nextMusicTitle = '';
+
+        function getRandomMusicPath() {
             const randomIndex = Math.floor(Math.random() * musicFiles.length);
             return `./link/music/${musicFiles[randomIndex]}`;
         }
 
+        function getMusicTitleFromPath(path) {
+            return path.split('/').pop().replace('.mp3', '').replace('.m4a', '');
+        }
+
+        function prepareNextMusic() {
+            nextMusicPath = getRandomMusicPath();
+            nextMusicTitle = getMusicTitleFromPath(nextMusicPath);
+        }
+
         const audio = document.getElementById('bg-music');
-        audio.src = getRandomMusic();
+        audio.src = getRandomMusicPath();
         audio.loop = false;
+
+        // 初始化时准备第一首下一首歌曲
+        prepareNextMusic();
 
         let userInteracted = false;
 
         // 暴露音乐信息给全局，让AI可以实时获取
         window.currentMusic = {
             getInfo: () => ({
-                title: audio.src.split('/').pop().replace('.mp3', '').replace('.m4a', ''),
+                title: getMusicTitleFromPath(audio.src),
                 src: audio.src,
                 isPlaying: !audio.paused,
                 currentTime: audio.currentTime,
                 duration: audio.duration,
-                volume: audio.volume
-            })
+                volume: audio.volume,
+                nextTitle: nextMusicTitle,
+                nextSrc: nextMusicPath,
+                isLooping: audio.loop
+            }),
+            nextSong: () => {
+                audio.src = nextMusicPath;
+                prepareNextMusic();
+                if (!audio.paused || userInteracted) {
+                    audio.play().catch(err => {
+                        console.log('播放下一首失败', err);
+                    });
+                }
+                return getMusicTitleFromPath(audio.src);
+            },
+            toggleLoop: () => {
+                audio.loop = !audio.loop;
+                return audio.loop;
+            },
+            setLoop: (shouldLoop) => {
+                audio.loop = shouldLoop;
+                return audio.loop;
+            }
         };
 
         const tryPlay = () => {
@@ -1098,7 +1134,10 @@
         document.addEventListener('touchstart', handleInteraction);
 
         audio.addEventListener('ended', function () {
-            this.src = getRandomMusic();
+            // 播放下一首歌曲
+            this.src = nextMusicPath;
+            // 准备新的下一首歌曲
+            prepareNextMusic();
             if (userInteracted) {
                 this.play();
             }
