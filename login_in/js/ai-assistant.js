@@ -380,18 +380,18 @@
                     response = `好的，已切到下一首《${newSong}》！`;
                 }
             }
+            // 关闭循环指令（先检查，避免与开启指令冲突）
+            else if (lowerMessage.includes('关闭循环') || lowerMessage.includes('取消循环') || lowerMessage.includes('关闭单曲')) {
+                if (typeof window.currentMusic.setLoop === 'function') {
+                    window.currentMusic.setLoop(false);
+                    response = '好的，已关闭单曲循环模式！';
+                }
+            }
             // 单曲循环指令
             else if (lowerMessage.includes('单曲循环') || lowerMessage.includes('循环播放')) {
                 if (typeof window.currentMusic.setLoop === 'function') {
                     window.currentMusic.setLoop(true);
                     response = '好的，已开启单曲循环模式！';
-                }
-            }
-            // 关闭循环指令
-            else if (lowerMessage.includes('关闭循环') || lowerMessage.includes('取消循环')) {
-                if (typeof window.currentMusic.setLoop === 'function') {
-                    window.currentMusic.setLoop(false);
-                    response = '好的，已关闭单曲循环模式！';
                 }
             }
         }
