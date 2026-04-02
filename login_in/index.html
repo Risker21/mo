@@ -1066,6 +1066,18 @@
         audio.src = getRandomMusic();
         audio.loop = false;
 
+        // 暴露音乐信息给全局，让AI可以实时获取
+        window.currentMusic = {
+            getInfo: () => ({
+                title: audio.src.split('/').pop().replace('.mp3', ''),
+                src: audio.src,
+                isPlaying: !audio.paused,
+                currentTime: audio.currentTime,
+                duration: audio.duration,
+                volume: audio.volume
+            })
+        };
+
         audio.addEventListener('ended', function () {
             this.src = getRandomMusic();
             this.play();
