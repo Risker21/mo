@@ -20,16 +20,31 @@ module.exports = async function handler(req, res) {
         const userMessage = (body.message || '').toString().trim();
         const currentPage = (body.currentPage || '').toString().trim();
         const pageTitle = (body.pageTitle || '').toString().trim();
+        const musicInfo = body.musicInfo || null;
         const useStream = body.stream !== false;
 
         if (!userMessage) {
             return res.status(400).json({ error: 'message is required.' });
         }
 
+        // 构建音乐信息上下文
+        let musicContext = '';
+        if (musicInfo) {
+            musicContext = `
+当前播放音乐信息：
+- 音乐名称: ${musicInfo.title || 'unknown'}
+- 播放状态: ${musicInfo.isPlaying ? '正在播放' : '已暂停'}
+- 播放进度: ${Math.round(musicInfo.currentTime)}/${Math.round(musicInfo.duration)}秒
+- 音量: ${Math.round(musicInfo.volume * 100)}%
+`.trim();
+        }
+
         const runtimeContext = `
 当前页面信息：
 - pageTitle: ${pageTitle || 'unknown'}
 - currentPage: ${currentPage || 'unknown'}
+${musicContext ? `
+${musicContext}` : ''}
 `.trim();
 
         // 兼容用户把 AI_BASE_URL 填成 .../v1、.../v1/ 或 .../chat/completions 三种格式

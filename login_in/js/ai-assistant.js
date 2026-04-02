@@ -379,6 +379,12 @@
         const botMessageEl = appendMessage('bot', '思考中...');
 
         try {
+            // 获取当前页面的音乐信息
+            let musicInfo = null;
+            if (window.currentMusic && typeof window.currentMusic.getInfo === 'function') {
+                musicInfo = window.currentMusic.getInfo();
+            }
+
             const resp = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -386,6 +392,7 @@
                     message,
                     currentPage: window.location.pathname,
                     pageTitle: document.title,
+                    musicInfo: musicInfo,
                     stream: true
                 })
             });
