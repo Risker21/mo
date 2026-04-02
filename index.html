@@ -161,6 +161,14 @@
       const audio = document.getElementById('bgMusic');
       if (!audio) return;
 
+      function getMusicTitleFromPath(path) {
+        try {
+          return decodeURIComponent(path.split('/').pop()).replace('.mp3', '').replace('.m4a', '');
+        } catch (e) {
+          return path.split('/').pop().replace('.mp3', '').replace('.m4a', '');
+        }
+      }
+
       // 将背景音乐音量设置为最大
       audio.volume = 1.0;
 
@@ -168,46 +176,48 @@
 
       // 暴露音乐信息给全局，让AI可以实时获取
       window.currentMusic = {
-        getInfo: () => ({
-          title: audio.src.split('/').pop().replace('.mp3', ''),
-          src: audio.src,
-          isPlaying: !audio.paused,
-          currentTime: audio.currentTime,
-          duration: audio.duration,
-          volume: audio.volume,
-          nextTitle: null,
-          nextSrc: null,
-          isLooping: audio.loop
-        }),
-        nextSong: () => {
+        getInfo: function() {
+          return {
+            title: getMusicTitleFromPath(audio.src),
+            src: audio.src,
+            isPlaying: !audio.paused,
+            currentTime: audio.currentTime,
+            duration: audio.duration,
+            volume: audio.volume,
+            nextTitle: null,
+            nextSrc: null,
+            isLooping: audio.loop
+          };
+        },
+        nextSong: function() {
           audio.currentTime = 0;
           if (!audio.paused || userInteracted) {
-            audio.play().catch(err => {
+            audio.play().catch(function(err) {
               console.log('重新播放失败', err);
             });
           }
-          return audio.src.split('/').pop().replace('.mp3', '');
+          return getMusicTitleFromPath(audio.src);
         },
-        toggleLoop: () => {
+        toggleLoop: function() {
           audio.loop = !audio.loop;
           return audio.loop;
         },
-        setLoop: (shouldLoop) => {
+        setLoop: function(shouldLoop) {
           audio.loop = shouldLoop;
           return audio.loop;
         }
       };
 
-      const tryPlay = () => {
+      const tryPlay = function() {
         // 如果正在播放，无需操作
         if (!audio.paused) return;
 
-        audio.play().catch((err) => {
+        audio.play().catch(function(err) {
           console.log("自动恢复播放失败，等待用户交互", err);
         });
       };
 
-      const handleInteraction = () => {
+      const handleInteraction = function() {
         userInteracted = true;
         tryPlay();
       };
@@ -217,7 +227,7 @@
       document.addEventListener('touchstart', handleInteraction);
 
       // 监听页面可见性变化，解决切后台再切回音频不恢复的问题
-      document.addEventListener('visibilitychange', () => {
+      document.addEventListener('visibilitychange', function() {
         if (document.visibilityState === 'visible' && userInteracted) {
           tryPlay();
         }

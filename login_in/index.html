@@ -1062,11 +1062,15 @@
 
         function getRandomMusicPath() {
             const randomIndex = Math.floor(Math.random() * musicFiles.length);
-            return `./link/music/${musicFiles[randomIndex]}`;
+            return './link/music/' + musicFiles[randomIndex];
         }
 
         function getMusicTitleFromPath(path) {
-            return path.split('/').pop().replace('.mp3', '').replace('.m4a', '');
+            try {
+                return decodeURIComponent(path.split('/').pop()).replace('.mp3', '').replace('.m4a', '');
+            } catch (e) {
+                return path.split('/').pop().replace('.mp3', '').replace('.m4a', '');
+            }
         }
 
         function prepareNextMusic() {
@@ -1085,45 +1089,47 @@
 
         // 暴露音乐信息给全局，让AI可以实时获取
         window.currentMusic = {
-            getInfo: () => ({
-                title: getMusicTitleFromPath(audio.src),
-                src: audio.src,
-                isPlaying: !audio.paused,
-                currentTime: audio.currentTime,
-                duration: audio.duration,
-                volume: audio.volume,
-                nextTitle: nextMusicTitle,
-                nextSrc: nextMusicPath,
-                isLooping: audio.loop
-            }),
-            nextSong: () => {
+            getInfo: function() {
+                return {
+                    title: getMusicTitleFromPath(audio.src),
+                    src: audio.src,
+                    isPlaying: !audio.paused,
+                    currentTime: audio.currentTime,
+                    duration: audio.duration,
+                    volume: audio.volume,
+                    nextTitle: nextMusicTitle,
+                    nextSrc: nextMusicPath,
+                    isLooping: audio.loop
+                };
+            },
+            nextSong: function() {
                 audio.src = nextMusicPath;
                 prepareNextMusic();
                 if (!audio.paused || userInteracted) {
-                    audio.play().catch(err => {
+                    audio.play().catch(function(err) {
                         console.log('播放下一首失败', err);
                     });
                 }
                 return getMusicTitleFromPath(audio.src);
             },
-            toggleLoop: () => {
+            toggleLoop: function() {
                 audio.loop = !audio.loop;
                 return audio.loop;
             },
-            setLoop: (shouldLoop) => {
+            setLoop: function(shouldLoop) {
                 audio.loop = shouldLoop;
                 return audio.loop;
             }
         };
 
-        const tryPlay = () => {
+        const tryPlay = function() {
             if (!audio.paused) return;
-            audio.play().catch(err => {
+            audio.play().catch(function(err) {
                 console.log('自动播放失败，等待用户交互', err);
             });
         };
 
-        const handleInteraction = () => {
+        const handleInteraction = function() {
             userInteracted = true;
             tryPlay();
             document.getElementById('audio-toggle').src = 'link/img/music_on.png';
@@ -1133,27 +1139,31 @@
         document.addEventListener('click', handleInteraction);
         document.addEventListener('touchstart', handleInteraction);
 
-        audio.addEventListener('ended', function () {
-            // 播放下一首歌曲
-            this.src = nextMusicPath;
-            // 准备新的下一首歌曲
-            prepareNextMusic();
-            if (userInteracted) {
-                this.play();
+        audio.addEventListener('ended', function() {
+            if (!audio.loop) {
+                this.src = nextMusicPath;
+                prepareNextMusic();
+                if (userInteracted) {
+                    this.play().catch(function(err) {
+                        console.log('播放下一首失败', err);
+                    });
+                }
             }
         });
 
         // 监听页面可见性变化
-        document.addEventListener('visibilitychange', () => {
+        document.addEventListener('visibilitychange', function() {
             if (document.visibilityState === 'visible' && userInteracted) {
                 tryPlay();
             }
         });
 
         // 保留原有的音乐开关功能
-        document.getElementById('audio-toggle').addEventListener('click', function () {
+        document.getElementById('audio-toggle').addEventListener('click', function() {
             if (audio.paused) {
-                audio.play();
+                audio.play().catch(function(err) {
+                    console.log('播放失败', err);
+                });
                 this.src = 'link/img/music_on.png';
             } else {
                 audio.pause();
