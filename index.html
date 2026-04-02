@@ -151,7 +151,7 @@
 </head>
 
 <body class="home wp-singular page-template-default page page-id-8 wp-theme-creatorspc">
-  <audio id="bgMusic" src="login_in/link/music/我记得.mp3" loop preload="auto"></audio>
+  <audio id="bgMusic" loop preload="none"></audio>
 
   <!-- 引入AI助手 -->
   <script src="login_in/js/ai-assistant.js"></script>
@@ -168,6 +168,10 @@
           return path.split('/').pop().replace('.mp3', '').replace('.m4a', '');
         }
       }
+
+      setTimeout(function() {
+        audio.src = 'login_in/link/music/我记得.mp3';
+      }, 1000);
 
       // 将背景音乐音量设置为最大
       audio.volume = 1.0;

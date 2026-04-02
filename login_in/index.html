@@ -916,17 +916,18 @@
                 });
         });
     </script>
-    <audio id="bg-music"></audio>
+    <audio id="bg-music" preload="none"></audio>
     <img id="audio-toggle" src="link/img/music_off.png"
         style="position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; cursor: pointer; z-index: 1000; transition: all 0.3s ease; border-radius: 50%; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // const musicFiles = [
-            //  '西楼别序.mp3'
-            // ];
+            setTimeout(function() {
+                // const musicFiles = [
+                //  '西楼别序.mp3'
+                // ];
 
 
-             const musicFiles = [
+                 const musicFiles = [
                 '我记得.m4a',
                 '一直很安静.mp3',
                 '洋葱.mp3',
@@ -1159,18 +1160,19 @@
             }
         });
 
-            // 保留原有的音乐开关功能
-            document.getElementById('audio-toggle').addEventListener('click', function() {
-                if (audio.paused) {
-                    audio.play().catch(function(err) {
-                        console.log('播放失败', err);
-                    });
-                    this.src = 'link/img/music_on.png';
-                } else {
-                    audio.pause();
-                    this.src = 'link/img/music_off.png';
-                }
-            });
+                // 保留原有的音乐开关功能
+                document.getElementById('audio-toggle').addEventListener('click', function() {
+                    if (audio.paused) {
+                        audio.play().catch(function(err) {
+                            console.log('播放失败', err);
+                        });
+                        this.src = 'link/img/music_on.png';
+                    } else {
+                        audio.pause();
+                        this.src = 'link/img/music_off.png';
+                    }
+                });
+            }, 1000);
         });
     </script>
     <script>
