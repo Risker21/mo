@@ -164,6 +164,18 @@
 
       let userInteracted = false;
 
+      // 暴露音乐信息给全局，让AI可以实时获取
+      window.currentMusic = {
+        getInfo: () => ({
+          title: audio.src.split('/').pop().replace('.mp3', ''),
+          src: audio.src,
+          isPlaying: !audio.paused,
+          currentTime: audio.currentTime,
+          duration: audio.duration,
+          volume: audio.volume
+        })
+      };
+
       const tryPlay = () => {
         // 如果正在播放，无需操作
         if (!audio.paused) return;
