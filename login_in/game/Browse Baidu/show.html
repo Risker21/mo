@@ -260,7 +260,21 @@
                                     if (sequence.length === 0) {
                                         S.Shape.switchShape(S.ShapeBuilder.letter(''));
                                     } else {
-                                        window.open('result.html', '_self');
+                                        var search = window.location.search || '';
+                                        var targetUrl = 'result.html' + search;
+
+                                        if (!search) {
+                                            try {
+                                                var savedKeyword = sessionStorage.getItem('browseBaiduKeyword');
+                                                if (savedKeyword) {
+                                                    targetUrl += '?wd=' + encodeURIComponent(savedKeyword);
+                                                }
+                                            } catch (error) {
+                                                console.log('读取搜索词失败', error);
+                                            }
+                                        }
+
+                                        window.open(targetUrl, '_self');
                                         performAction(sequence);
                                     }
                                 } else {

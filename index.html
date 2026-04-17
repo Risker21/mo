@@ -160,6 +160,7 @@
     (function () {
       const audio = document.getElementById('bgMusic');
       if (!audio) return;
+      let musicSourceTimer = null;
 
       function getMusicTitleFromPath(path) {
         try {
@@ -169,7 +170,7 @@
         }
       }
 
-      setTimeout(function() {
+      musicSourceTimer = setTimeout(function() {
         audio.src = 'login_in/link/music/一直很安静.mp3';
       }, 1000);
 
@@ -226,16 +227,58 @@
         tryPlay();
       };
 
+      const stopMusic = function(resetTime) {
+        if (!audio.paused) {
+          audio.pause();
+        }
+
+        if (resetTime) {
+          audio.currentTime = 0;
+        }
+      };
+
+      const cleanupMusic = function() {
+        stopMusic(true);
+
+        if (musicSourceTimer) {
+          clearTimeout(musicSourceTimer);
+          musicSourceTimer = null;
+        }
+
+        document.removeEventListener('click', handleInteraction);
+        document.removeEventListener('touchstart', handleInteraction);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        window.removeEventListener('pagehide', handlePageHide);
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+
+      const handleVisibilityChange = function() {
+        if (document.visibilityState === 'hidden') {
+          stopMusic(false);
+          return;
+        }
+
+        if (document.visibilityState === 'visible' && userInteracted) {
+          tryPlay();
+        }
+      };
+
+      const handlePageHide = function() {
+        cleanupMusic();
+      };
+
+      const handleBeforeUnload = function() {
+        cleanupMusic();
+      };
+
       // 监听用户交互事件，用于首次播放和暂停后的恢复
       document.addEventListener('click', handleInteraction);
       document.addEventListener('touchstart', handleInteraction);
 
-      // 监听页面可见性变化，解决切后台再切回音频不恢复的问题
-      document.addEventListener('visibilitychange', function() {
-        if (document.visibilityState === 'visible' && userInteracted) {
-          tryPlay();
-        }
-      });
+      // 页面隐藏时立即暂停，返回首页时再按需恢复，避免多个页面同时播放
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      window.addEventListener('pagehide', handlePageHide);
+      window.addEventListener('beforeunload', handleBeforeUnload);
 
 
     })();
@@ -3049,5 +3092,4 @@
 </body>
 
 </html>
-
 

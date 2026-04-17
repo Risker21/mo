@@ -6670,6 +6670,56 @@ body{padding:0}
             });
         })();
     </script>
+    <script>
+        (function () {
+            var form = document.getElementById('form');
+            var keywordInput = document.getElementById('kw');
+            var submitButton = document.getElementById('su');
+
+            if (!form || !keywordInput || !submitButton) {
+                return;
+            }
+
+            function goToShowPage(event) {
+                if (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (typeof event.stopImmediatePropagation === 'function') {
+                        event.stopImmediatePropagation();
+                    }
+                }
+
+                var keyword = keywordInput.value.trim();
+                var targetUrl = './show.html';
+
+                try {
+                    sessionStorage.setItem('browseBaiduKeyword', keyword);
+                } catch (error) {
+                    console.log('保存搜索词失败', error);
+                }
+
+                if (keyword) {
+                    targetUrl += '?wd=' + encodeURIComponent(keyword);
+                }
+
+                window.location.href = targetUrl;
+                return false;
+            }
+
+            form.setAttribute('action', './show.html');
+            form.setAttribute('novalidate', 'novalidate');
+            form.addEventListener('submit', goToShowPage, true);
+
+            submitButton.addEventListener('click', goToShowPage, true);
+            submitButton.addEventListener('touchend', goToShowPage, true);
+
+            keywordInput.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    goToShowPage(event);
+                }
+            }, true);
+        })();
+    </script>
 
 </body>
 

@@ -1081,6 +1081,7 @@
         }
 
         const audio = document.getElementById('bg-music');
+        const audioToggle = document.getElementById('audio-toggle');
         audio.src = getRandomMusicPath();
         audio.loop = false;
 
@@ -1131,17 +1132,29 @@
             });
         };
 
+        const updateAudioToggleIcon = function() {
+            audioToggle.src = audio.paused ? 'link/img/music_off.png' : 'link/img/music_on.png';
+        };
+
         const handleInteraction = function() {
             userInteracted = true;
             tryPlay();
-            document.getElementById('audio-toggle').src = 'link/img/music_on.png';
+            updateAudioToggleIcon();
         };
 
-        // 监听用户交互事件
-        document.addEventListener('click', handleInteraction);
-        document.addEventListener('touchstart', handleInteraction);
+        const stopMusic = function(resetTime) {
+            if (!audio.paused) {
+                audio.pause();
+            }
 
-        audio.addEventListener('ended', function() {
+            if (resetTime) {
+                audio.currentTime = 0;
+            }
+
+            updateAudioToggleIcon();
+        };
+
+        const handleEnded = function() {
             if (!audio.loop) {
                 this.src = nextMusicPath;
                 prepareNextMusic();
@@ -1151,27 +1164,68 @@
                     });
                 }
             }
-        });
+        };
 
-        // 监听页面可见性变化
-        document.addEventListener('visibilitychange', function() {
+        const handleVisibilityChange = function() {
+            if (document.visibilityState === 'hidden') {
+                stopMusic(false);
+                return;
+            }
+
             if (document.visibilityState === 'visible' && userInteracted) {
                 tryPlay();
+                updateAudioToggleIcon();
             }
-        });
+        };
+
+        const handleAudioToggleClick = function(event) {
+            event.stopPropagation();
+            userInteracted = true;
+
+            if (audio.paused) {
+                audio.play().catch(function(err) {
+                    console.log('播放失败', err);
+                });
+            } else {
+                audio.pause();
+            }
+
+            updateAudioToggleIcon();
+        };
+
+        const cleanupMusic = function() {
+            stopMusic(true);
+            document.removeEventListener('click', handleInteraction);
+            document.removeEventListener('touchstart', handleInteraction);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('pagehide', handlePageHide);
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            audio.removeEventListener('ended', handleEnded);
+            audioToggle.removeEventListener('click', handleAudioToggleClick);
+        };
+
+        const handlePageHide = function() {
+            cleanupMusic();
+        };
+
+        const handleBeforeUnload = function() {
+            cleanupMusic();
+        };
+
+        // 监听用户交互事件
+        document.addEventListener('click', handleInteraction);
+        document.addEventListener('touchstart', handleInteraction);
+
+        audio.addEventListener('ended', handleEnded);
+
+        // 页面隐藏时暂停，离开页面时彻底停止，避免和其他页面音乐叠加
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('pagehide', handlePageHide);
+        window.addEventListener('beforeunload', handleBeforeUnload);
 
                 // 保留原有的音乐开关功能
-                document.getElementById('audio-toggle').addEventListener('click', function() {
-                    if (audio.paused) {
-                        audio.play().catch(function(err) {
-                            console.log('播放失败', err);
-                        });
-                        this.src = 'link/img/music_on.png';
-                    } else {
-                        audio.pause();
-                        this.src = 'link/img/music_off.png';
-                    }
-                });
+                audioToggle.addEventListener('click', handleAudioToggleClick);
+                updateAudioToggleIcon();
             }, 1000);
         });
     </script>

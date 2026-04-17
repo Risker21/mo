@@ -1259,6 +1259,79 @@
     <audio id="music" autoplay="autoplay" loop="loop">
         <source src="./bgMusic.mp3" type="audio/mpeg">
     </audio>
+    <script>
+        (function () {
+            var keywordInput = document.getElementById('kw');
+            var submitButton = document.getElementById('su');
+
+            if (!keywordInput || !submitButton) {
+                return;
+            }
+
+            function getKeywordFromUrl() {
+                try {
+                    var params = new URLSearchParams(window.location.search);
+                    return (params.get('wd') || '').trim();
+                } catch (error) {
+                    console.log('解析搜索词失败', error);
+                    return '';
+                }
+            }
+
+            function getKeyword() {
+                var keyword = getKeywordFromUrl();
+                if (keyword) {
+                    return keyword;
+                }
+
+                try {
+                    return (sessionStorage.getItem('browseBaiduKeyword') || '').trim();
+                } catch (error) {
+                    console.log('读取缓存搜索词失败', error);
+                    return '';
+                }
+            }
+
+            function syncKeyword(keyword) {
+                if (keyword) {
+                    keywordInput.value = keyword;
+                }
+
+                try {
+                    sessionStorage.setItem('browseBaiduKeyword', keywordInput.value.trim());
+                } catch (error) {
+                    console.log('保存搜索词失败', error);
+                }
+            }
+
+            function refreshResultPage(event) {
+                if (event) {
+                    event.preventDefault();
+                }
+
+                var keyword = keywordInput.value.trim();
+                syncKeyword(keyword);
+
+                var targetUrl = './result.html';
+                if (keyword) {
+                    targetUrl += '?wd=' + encodeURIComponent(keyword);
+                }
+
+                window.location.href = targetUrl;
+                return false;
+            }
+
+            syncKeyword(getKeyword());
+
+            submitButton.addEventListener('click', refreshResultPage, true);
+            submitButton.addEventListener('touchend', refreshResultPage, true);
+            keywordInput.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    refreshResultPage(event);
+                }
+            }, true);
+        })();
+    </script>
     <script type="text/javascript"
         src="https://dss1.bdstatic.com/5eN1bjq8AAUYm2zgoY3K/r/www/cache/static/protocol/https/jquery/jquery-1.10.2.min_65682a2.js"></script>
     <script src="sakura.js"></script>
