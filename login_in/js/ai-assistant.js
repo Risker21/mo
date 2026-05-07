@@ -8,88 +8,33 @@
             right: 18px;
             bottom: 86px;
             z-index: 2000;
-            width: 64px;
-            height: 64px;
+            width: 56px;
+            height: 56px;
             border: none;
             border-radius: 50%;
             cursor: pointer;
-            background: radial-gradient(circle at 30% 30%, #fff 0%, #d8e9ff 18%, #8ab2ff 48%, #5665ff 72%, #2b1e73 100%);
-            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.36), 0 0 0 1px rgba(255, 255, 255, 0.35) inset;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            box-shadow: 0 4px 15px rgba(255, 154, 158, 0.4);
             animation: mo-ai-orbit-float 3.8s ease-in-out infinite;
-            display: grid;
-            place-items: center;
-            overflow: visible;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
             touch-action: none;
             user-select: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .mo-ai-entry:hover {
-            transform: translateY(-2px) scale(1.04);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 154, 158, 0.6);
         }
 
         .mo-ai-entry.active {
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.42), 0 0 0 8px rgba(117, 142, 255, 0.2);
+            box-shadow: 0 8px 25px rgba(255, 154, 158, 0.6), 0 0 0 4px rgba(255, 154, 158, 0.2);
         }
 
-        .mo-ai-core {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.95), rgba(201, 225, 255, 0.55) 42%, rgba(140, 170, 255, 0.3) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            position: relative;
-            box-shadow: 0 0 16px rgba(158, 191, 255, 0.55);
-        }
 
-        .mo-ai-core::before {
-            content: '';
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.9);
-            top: 6px;
-            left: 7px;
-        }
-
-        .mo-ai-ring {
-            position: absolute;
-            inset: -6px;
-            border-radius: 50%;
-            border: 1px solid rgba(173, 193, 255, 0.75);
-            animation: mo-ai-rotate 6s linear infinite;
-        }
-
-        .mo-ai-ring::before,
-        .mo-ai-ring::after {
-            content: '';
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: #dff2ff;
-            box-shadow: 0 0 8px rgba(223, 242, 255, 0.9);
-        }
-
-        .mo-ai-ring::before {
-            top: -3px;
-            left: 12px;
-        }
-
-        .mo-ai-ring::after {
-            bottom: -3px;
-            right: 10px;
-        }
-
-        .mo-ai-halo {
-            position: absolute;
-            width: 84px;
-            height: 84px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(120, 155, 255, 0.35) 0%, rgba(120, 155, 255, 0) 70%);
-            z-index: -1;
-            animation: mo-ai-halo 2.8s ease-out infinite;
-        }
 
         .mo-ai-panel {
             position: fixed;
@@ -161,7 +106,7 @@
 
         .mo-ai-msg.user {
             margin-left: auto;
-            background: #7a5cff;
+            background: linear-gradient(135deg, #ff6fb3, #9a6bff);
             color: #fff;
         }
 
@@ -211,40 +156,31 @@
             50% { transform: translateY(-4px); }
         }
 
-        @keyframes mo-ai-rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
 
-        @keyframes mo-ai-halo {
-            0% { transform: scale(0.88); opacity: 0.56; }
-            100% { transform: scale(1.22); opacity: 0; }
-        }
     `;
     document.head.appendChild(style);
 
     const entry = document.createElement('button');
     entry.className = 'mo-ai-entry';
     entry.type = 'button';
-    entry.title = '打开 AI 小助手';
-    entry.setAttribute('aria-label', '打开 AI 小助手');
+    entry.title = '召唤贴心伴侣';
+    entry.setAttribute('aria-label', '召唤贴心伴侣');
     entry.innerHTML = `
-        <span class="mo-ai-halo" aria-hidden="true"></span>
-        <span class="mo-ai-core" aria-hidden="true">
-            <span class="mo-ai-ring"></span>
-        </span>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
     `;
 
     const panel = document.createElement('section');
     panel.className = 'mo-ai-panel';
     panel.innerHTML = `
         <div class="mo-ai-header">
-            <span>Mo AI 小助手</span>
+            <span>贴心小伴侣</span>
             <button class="mo-ai-close" id="mo-ai-close" type="button" aria-label="关闭 AI 面板">×</button>
         </div>
         <div class="mo-ai-messages" id="mo-ai-messages"></div>
         <div class="mo-ai-input-wrap">
-            <input class="mo-ai-input" id="mo-ai-input" type="text" placeholder="输入你的问题..." />
+            <input class="mo-ai-input" id="mo-ai-input" type="text" placeholder="想跟我聊点什么呢？..." />
             <button class="mo-ai-send" id="mo-ai-send" type="button">发送</button>
         </div>
     `;
@@ -417,7 +353,7 @@
             return;
         }
 
-        const botMessageEl = appendMessage('bot', '思考中...');
+        const botMessageEl = appendMessage('bot', '让我想想哦...');
 
         try {
             // 获取当前页面的音乐信息
@@ -484,10 +420,10 @@
             }
 
             if (!fullText.trim()) {
-                botMessageEl.textContent = '我暂时没有想到合适的回复。';
+                botMessageEl.textContent = '哎呀，这个问题把我难住了，要不换个话题聊聊？';
             }
         } catch (err) {
-            botMessageEl.textContent = '连接 AI 服务失败：' + (err && err.message ? err.message : '请稍后再试。');
+            botMessageEl.textContent = '呜呜，我的小脑瓜短路了（连接失败）：' + (err && err.message ? err.message : '等我休息一下再试好不好？');
             console.error(err);
         } finally {
             send.disabled = false;
@@ -495,7 +431,7 @@
         }
     }
 
-    appendMessage('bot', '你好，我是 Mo小窝 AI 小助手。我可以帮你快速找到功能入口、介绍每个 Demo 怎么玩、以及排查常见问题。');
+    appendMessage('bot', '嗨～终于等到你啦，我是 Mo小窝的贴心小伴侣。有什么我可以帮你的吗？还是说...只是想陪我聊聊天呀？😉');
 
     loadOrInitEntryPosition();
     updatePanelPosition();
